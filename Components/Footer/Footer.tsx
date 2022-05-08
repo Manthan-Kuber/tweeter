@@ -6,7 +6,7 @@ const Footer = (props: Props) => {
   return (
     <StyledFooter>
       <FooterText>
-        Created by <br />
+        Created by{" "}
         <b>
           <u>Manthan Kuber</u>
         </b>

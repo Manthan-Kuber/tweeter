@@ -1,4 +1,4 @@
-import { ProfileContainer, ProfilePic } from "./profile.styles";
+import { ProfileContainer, ProfilePic } from "./Profile.styles";
 import { AiFillCaretDown } from "react-icons/ai";
 
 interface Props {}
