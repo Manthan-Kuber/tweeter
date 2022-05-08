@@ -8,7 +8,8 @@ export const StyledUl = styled.ul`
 
 export const Li = styled.li<{ active: boolean }>`
   font: 500 1.4rem var(--ff-poppins);
-  color: ${props => props.active ? "var(--clr-primary)" : "var(--clr-gray)"};
+  color: ${(props) =>
+    props.active ? "var(--clr-primary)" : "var(--clr-gray)"};
   cursor: pointer;
   position: relative;
   &:hover {
@@ -16,7 +17,19 @@ export const Li = styled.li<{ active: boolean }>`
   }
 `;
 
-export const StyledNav = styled.nav``;
+export const StyledNav = styled.nav`
+  position: fixed;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  @media (min-width: 50em) {
+    position: revert;
+    bottom: revert;
+    left: revert;
+    transform: revert;
+  }
+`;
 
 export const UnderlinedDiv = styled.div`
   position: absolute;

@@ -5,6 +5,7 @@ import { AiFillHome } from "react-icons/ai";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import useWindowDimensions from "../../../Hooks/useWindowDimensions";
 
 const NavList = [
   { id: 1, name: "Home", icon: <AiFillHome size={20} /> },
@@ -15,6 +16,7 @@ const NavList = [
 type Props = {};
 const Navbar = (props: Props) => {
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const [activeTab, setActiveTab] = useState(NavList[0].name);
   return (
     <StyledNav>
@@ -28,7 +30,7 @@ const Navbar = (props: Props) => {
             }}
             active={activeTab === item.name ? true : false}
           >
-            {item.name}
+            {width! < 800 ? item.icon : item.name}
             {activeTab === item.name && (
               <UnderlinedDiv as={motion.div} layoutId="underlinedDiv" />
             )}
