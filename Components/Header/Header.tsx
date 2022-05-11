@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Navbar from "./Navbar/Navbar";
 import { StyledHeader } from "./Header.styles";
-import Profile from "./Profile/Profile";
+import Profile from "./Profile";
 
 
 type Props = {};
