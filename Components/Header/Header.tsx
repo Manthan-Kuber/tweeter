@@ -10,13 +10,13 @@ import BottomNav from "./Navbar/BottomNav";
 import { useState } from "react";
 
 const NavList = [
-  { id: 1, name: "Home", url: "/", icon: <AiFillHome size={20} /> },
-  { id: 2, name: "Explore", url: "/explore", icon: <FaCompass size={20} /> },
+  { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
+  { id: 2, name: "Explore", url: "/explore", icon: <FaCompass size={24} /> },
   {
     id: 3,
     name: "Bookmarks",
     url: "/bookmarks",
-    icon: <BsFillBookmarkFill size={20} />,
+    icon: <BsFillBookmarkFill size={24} />,
   },
 ];
 
@@ -33,10 +33,10 @@ const Header = (props: Props) => {
     <>
       <StyledHeader>
         <Image src="/tweeter.svg" width={"100%"} height={30} />
-        {width! > 800 && <Navbar {...PassedNavProps} />}
+        {width! > 768 && <Navbar {...PassedNavProps} />}
         <Profile />
       </StyledHeader>
-      {width! < 800 && <BottomNav {...PassedNavProps} />}
+      {width! < 768 && <BottomNav {...PassedNavProps} />}
     </>
   );
 };

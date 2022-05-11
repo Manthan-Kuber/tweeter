@@ -21,7 +21,7 @@ export const Li = styled.li<{ active: boolean }>`
 
 export const UnderlinedDiv = styled.div`
   position: absolute;
-  bottom: -24px;
+  bottom: -15px;
   inset-inline: 0;
   height: 3px;
   background: var(--clr-primary);
