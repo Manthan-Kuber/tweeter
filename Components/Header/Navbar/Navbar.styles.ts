@@ -17,19 +17,7 @@ export const Li = styled.li<{ active: boolean }>`
   }
 `;
 
-export const StyledNav = styled.nav`
-  position: fixed;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
 
-  @media (min-width: 50em) {
-    position: revert;
-    bottom: revert;
-    left: revert;
-    transform: revert;
-  }
-`;
 
 export const UnderlinedDiv = styled.div`
   position: absolute;

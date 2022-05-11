@@ -1,22 +1,14 @@
-import { StyledUl, StyledNav, UnderlinedDiv, Li } from "./Navbar.styles";
-
+import { StyledUl, UnderlinedDiv, Li } from "./Navbar.styles";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { useRouter } from "next/router";
+import { NavProps } from "../../../interfaces/HeaderInterface";
 
-interface Props  {
-  NavList: {
-    id: number;
-    name: string;
-    url: string;
-    icon: JSX.Element;
-  }[];
-};
-const Navbar = ({NavList}: Props) => {
+
+const Navbar = ({NavList,activeTab,setActiveTab}: NavProps) => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState(NavList[0].name);
+  
   return (
-    <StyledNav>
+    <nav>
       <StyledUl>
         {NavList.map((item) => (
           <Li
@@ -34,7 +26,7 @@ const Navbar = ({NavList}: Props) => {
           </Li>
         ))}
       </StyledUl>
-    </StyledNav>
+    </nav>
   );
 };
 export default Navbar;

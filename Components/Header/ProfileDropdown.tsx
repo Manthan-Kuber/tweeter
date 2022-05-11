@@ -13,8 +13,8 @@ const ProfileOptionsList = [
 ];
 
 const variant = {
-  initial: { opacity: 0, x: -8, y: -8 },
-  animate: { opacity: 1, x: 0, y: 0 },
+  initial: { opacity: 0, y: -8 },
+  animate: { opacity: 1, y: 0 },
 };
 
 function ProfileDropdown() {
@@ -47,7 +47,7 @@ const Container = styled.div`
   padding: 1.5rem 1.3rem;
   box-shadow: 0px 2px 4px 0px #0000000d;
   border-radius: 12px;
-  font-family: var(--ff-noto);
+  
 
   hr {
     margin-block: 1rem;
