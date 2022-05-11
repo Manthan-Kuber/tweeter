@@ -38,7 +38,8 @@ const Container = styled.nav`
   bottom: 0;
   width: 100%;
   background-color: white;
-  padding-block: 2.8rem;
+  padding-bottom: 2.4rem;
+  padding-top: 1.8rem;
 `;
 
 const BottomNavUl = styled(StyledUl)`
