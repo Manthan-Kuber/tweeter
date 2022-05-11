@@ -20,7 +20,7 @@ const Profile = (props: Props) => {
         className="dropdownIcon"
         size={16}
         onClick={() => setVisible(!visible)}
-        visible={visible !== undefined ? visible : undefined}
+        $visible={visible}
       />
       <AnimatePresence>{visible && <ProfileDropdown />}</AnimatePresence>
     </ProfileContainer>
@@ -33,11 +33,11 @@ const ProfilePic = styled(Image)`
   border: 1px solid red;
 `;
 
-const DropDownIcon = styled(AiFillCaretDown)<{ visible: boolean | undefined }>`
+const DropDownIcon = styled(AiFillCaretDown)<{ $visible?: boolean }>`
   transition: transform 0.3s;
 
   ${(props) =>
-    props.visible &&
+    props.$visible &&
     css`
       transform: rotate(180deg);
     `}
