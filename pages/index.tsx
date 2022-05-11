@@ -9,6 +9,7 @@ const Home: NextPage = () => {
         <meta name="description" content="Tweeter - Twitter Clone" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <h1>Home</h1>
     </>
   );
 };

@@ -1,7 +1,7 @@
 interface Props {}
 function bookmarks({}: Props) {
   return (
-    <div>bookmarks</div>
+    <h1>bookmarks</h1>
   )
 }
 export default bookmarks

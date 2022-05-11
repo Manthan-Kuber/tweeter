@@ -1,5 +1,5 @@
 interface Props {}
 function Explore({}: Props) {
-  return <div>Explore</div>;
+  return <h1>Explore</h1>;
 }
 export default Explore;

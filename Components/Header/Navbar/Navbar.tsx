@@ -8,9 +8,9 @@ import { useRouter } from "next/router";
 import useWindowDimensions from "../../../Hooks/useWindowDimensions";
 
 const NavList = [
-  { id: 1, name: "Home", icon: <AiFillHome size={20} /> },
-  { id: 2, name: "Explore", icon: <FaCompass size={20} /> },
-  { id: 3, name: "Bookmarks", icon: <BsFillBookmarkFill size={20} /> },
+  { id: 1, name: "Home",url:"/", icon: <AiFillHome size={20} /> },
+  { id: 2, name: "Explore",url:"/explore", icon: <FaCompass size={20} /> },
+  { id: 3, name: "Bookmarks",url:"/bookmarks", icon: <BsFillBookmarkFill size={20} /> },
 ];
 
 type Props = {};
@@ -26,7 +26,7 @@ const Navbar = (props: Props) => {
             key={item.id}
             onClick={() => {
               setActiveTab(item.name);
-              router.push(`/${item.name.toLowerCase()}`);
+              router.push(item.url);
             }}
             active={activeTab === item.name ? true : false}
           >
