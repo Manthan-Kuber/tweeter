@@ -20,12 +20,13 @@ const NavList = [
 
 function Layout({
   children,
-  pageUrl,
+  Tab,
 }: {
   children: React.ReactElement;
-  pageUrl?: string;
+  Tab?: string;
 }) {
-  const [activeTab, setActiveTab] = useState(NavList[0].name);
+  console.log(Tab);
+  const [activeTab, setActiveTab] = useState(Tab!);
   return (
     <>
       <Head>

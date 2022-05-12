@@ -3,7 +3,7 @@ import Layout from "../../Components/Layout";
 interface Props {}
 function bookmarks({}: Props) {
   return (
-    <Layout>
+    <Layout Tab="Bookmarks" >
       <h1>bookmarks</h1>
     </Layout>
   );
