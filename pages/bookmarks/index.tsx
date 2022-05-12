@@ -1,7 +1,11 @@
+import Layout from "../../Components/Layout";
+
 interface Props {}
 function bookmarks({}: Props) {
   return (
-    <h1>bookmarks</h1>
-  )
+    <Layout>
+      <h1>bookmarks</h1>
+    </Layout>
+  );
 }
-export default bookmarks
+export default bookmarks;

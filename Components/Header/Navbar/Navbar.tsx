@@ -6,7 +6,6 @@ import { NavProps } from "../../../interfaces/HeaderInterface";
 
 const Navbar = ({NavList,activeTab,setActiveTab}: NavProps) => {
   const router = useRouter();
-  
   return (
     <nav>
       <StyledUl>

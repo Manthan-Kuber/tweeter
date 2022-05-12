@@ -2,28 +2,13 @@ import Image from "next/image";
 import Navbar from "./Navbar/Navbar";
 import { StyledHeader } from "./Header.styles";
 import Profile from "./Profile";
-import useWindowSize from "../../Hooks/useWindowDimensions";
-import { FaCompass } from "react-icons/fa";
-import { BsFillBookmarkFill } from "react-icons/bs";
-import { AiFillHome } from "react-icons/ai";
 import BottomNav from "./Navbar/BottomNav";
-import { useState } from "react";
+import { NavProps } from "../../interfaces/HeaderInterface";
+import useWindowSize from "../../Hooks/useWindowDimensions";
 
-const NavList = [
-  { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
-  { id: 2, name: "Explore", url: "/explore", icon: <FaCompass size={24} /> },
-  {
-    id: 3,
-    name: "Bookmarks",
-    url: "/bookmarks",
-    icon: <BsFillBookmarkFill size={24} />,
-  },
-];
 
-type Props = {};
-const Header = (props: Props) => {
+const Header = ({NavList,activeTab,setActiveTab}: NavProps) => {
   const { width } = useWindowSize();
-  const [activeTab, setActiveTab] = useState(NavList[0].name);
   const PassedNavProps = {
     NavList: NavList,
     activeTab: activeTab,

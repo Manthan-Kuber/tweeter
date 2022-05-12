@@ -10,4 +10,6 @@ export interface NavProps  {
     }[];
     activeTab:string;
     setActiveTab:Dispatch<SetStateAction<string>>;
+    width?:number;
+    pageUrl?:string;
   };

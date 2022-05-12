@@ -10,6 +10,8 @@ export default function BottomNav({
   activeTab,
 }: NavProps) {
   const router = useRouter();
+  console.table(NavList)
+  console.log(activeTab)
   return (
     <Container>
       <BottomNavUl>
