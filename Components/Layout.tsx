@@ -6,6 +6,7 @@ import { FaCompass } from "react-icons/fa";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -25,12 +26,11 @@ function Layout({
   children: React.ReactElement;
   Tab?: string;
 }) {
-  console.log(Tab);
   const [activeTab, setActiveTab] = useState(Tab!);
   return (
     <>
       <Head>
-        <title>Tweeter</title>
+        <title>Tweeter - {Tab}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <GlobalStyles />
@@ -39,7 +39,9 @@ function Layout({
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <main>{children}</main>
+      <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        {children}
+      </motion.main>
       <Footer />
     </>
   );

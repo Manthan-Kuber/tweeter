@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { NavProps } from "../../../interfaces/HeaderInterface";
 import { StyledUl, UnderlinedDiv,Li } from "./Navbar.styles";
-import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
 export default function BottomNav({
@@ -24,7 +23,7 @@ export default function BottomNav({
           >
             {item.icon}
             {activeTab === item.name && (
-              <UnderlinedDiv as={motion.div} layoutId="underlinedDiv" />
+              <UnderlinedDiv/>
             )}
           </Li>
         ))}
