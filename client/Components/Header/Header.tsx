@@ -17,7 +17,7 @@ const Header = ({NavList,activeTab,setActiveTab}: NavProps) => {
   return (
     <>
       <StyledHeader>
-        <Image src="/tweeter.svg" width={"100%"} height={30} />
+        <Image src="/tweeter.svg" width={"100%"} height={30} alt='tweeter' />
         {width! > 768 && <Navbar {...PassedNavProps} />}
         <Profile />
       </StyledHeader>

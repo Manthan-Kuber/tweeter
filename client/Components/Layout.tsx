@@ -39,7 +39,11 @@ function Layout({
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.25 }}
+      >
         {children}
       </motion.main>
       <Footer />

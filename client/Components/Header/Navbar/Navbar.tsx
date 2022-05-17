@@ -1,10 +1,8 @@
 import { StyledUl, UnderlinedDiv, Li } from "./Navbar.styles";
-import { useRouter } from "next/router";
 import { NavProps } from "../../../interfaces/HeaderInterface";
+import Link from "next/link";
 
-
-const Navbar = ({NavList,activeTab,setActiveTab}: NavProps) => {
-  const router = useRouter();
+const Navbar = ({ NavList, activeTab, setActiveTab }: NavProps) => {
   return (
     <nav>
       <StyledUl>
@@ -13,14 +11,13 @@ const Navbar = ({NavList,activeTab,setActiveTab}: NavProps) => {
             key={item.id}
             onClick={() => {
               setActiveTab(item.name);
-              router.push(item.url);
             }}
             active={activeTab === item.name ? true : false}
           >
-            {item.name}
-            {activeTab === item.name && (
-              <UnderlinedDiv />
-            )}
+            <Link href={item.url}>
+              <a>{item.name}</a>
+            </Link>
+            {activeTab === item.name && <UnderlinedDiv />}
           </Li>
         ))}
       </StyledUl>

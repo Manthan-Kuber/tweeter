@@ -13,8 +13,26 @@ const ProfileOptionsList = [
 ];
 
 const variant = {
-  initial: { opacity: 0, y: -8 },
-  animate: { opacity: 1, y: 0 },
+  initial: {
+    opacity: 0,
+    y: -10,
+    scale: 0.9,
+    transition: {
+      type: "spring",
+      bounce: 0,
+      duration: 0.25,
+    },
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      bounce: 0,
+      duration: 0.25,
+    },
+  },
 };
 
 function ProfileDropdown() {
@@ -42,12 +60,11 @@ export default ProfileDropdown;
 
 const Container = styled.div`
   position: absolute;
-  bottom: -27rem;
+  bottom: -26rem;
   background-color: white;
   padding: 1.5rem 1.3rem;
   box-shadow: 0px 2px 4px 0px #0000000d;
   border-radius: 12px;
-  
 
   hr {
     margin-block: 1rem;

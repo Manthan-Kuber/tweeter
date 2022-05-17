@@ -1,30 +1,26 @@
 import styled from "styled-components";
 import { NavProps } from "../../../interfaces/HeaderInterface";
-import { StyledUl, UnderlinedDiv,Li } from "./Navbar.styles";
-import { useRouter } from "next/router";
+import { StyledUl, UnderlinedDiv, Li } from "./Navbar.styles";
+import Link from "next/link";
 
 export default function BottomNav({
   NavList,
   setActiveTab,
   activeTab,
 }: NavProps) {
-  const router = useRouter();
   return (
     <Container>
       <BottomNavUl>
         {NavList.map((item) => (
           <Li
             key={item.id}
-            onClick={() => {
-              setActiveTab(item.name);
-              router.push(item.url);
-            }}
+            onClick={() => setActiveTab(item.name)}
             active={activeTab === item.name ? true : false}
           >
-            {item.icon}
-            {activeTab === item.name && (
-              <UnderlinedDiv/>
-            )}
+            <Link href={item.url}>
+              <a>{item.icon}</a>
+            </Link>
+            {activeTab === item.name && <UnderlinedDiv />}
           </Li>
         ))}
       </BottomNavUl>
@@ -43,4 +39,4 @@ const Container = styled.nav`
 
 const BottomNavUl = styled(StyledUl)`
   justify-content: center;
-`
+`;
