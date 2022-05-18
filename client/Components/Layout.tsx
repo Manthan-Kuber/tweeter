@@ -55,5 +55,5 @@ function Layout({
 export default Layout;
 
 const Main = styled.main`
-  height: calc(100vh - 14rem);
+  min-height: calc(100vh - 14rem);
 `;
