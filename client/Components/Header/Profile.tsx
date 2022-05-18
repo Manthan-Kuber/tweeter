@@ -34,7 +34,7 @@ const ProfilePic = styled(Image)`
 `;
 
 const DropDownIcon = styled(AiFillCaretDown)<{ $visible?: boolean }>`
-  transition: transform 0.3s;
+  transition: transform 0.25s;
 
   ${(props) =>
     props.$visible &&

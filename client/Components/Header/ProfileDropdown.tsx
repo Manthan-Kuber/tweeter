@@ -16,7 +16,7 @@ const variant = {
   initial: {
     opacity: 0,
     y: -10,
-    scale: 0.9,
+    scale: 0.69,
     transition: {
       type: "spring",
       bounce: 0,
