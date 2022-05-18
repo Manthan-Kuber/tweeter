@@ -7,6 +7,7 @@ import { BsFillBookmarkFill } from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import styled from "styled-components";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -39,15 +40,20 @@ function Layout({
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <motion.main
+      <Main
+        as={motion.main}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.25 }}
       >
         {children}
-      </motion.main>
+      </Main>
       <Footer />
     </>
   );
 }
 export default Layout;
+
+const Main = styled.main`
+  height: calc(100vh - 14rem);
+`;
