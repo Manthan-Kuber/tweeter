@@ -6,9 +6,13 @@ interface Props {
   imgUrl: string;
 }
 
+const scaleOnHover = {
+    whileHover:{ scale: 1.2, y: -5,transition:{type:"spring",bounce:0,duration:0.25} }
+}
+
 function SignInIcon({ imgUrl }: Props) {
   return (
-    <IconWrapper as={motion.div} whileHover={{ scale: 1.2, y: -5 }}>
+    <IconWrapper as={motion.div} variants={scaleOnHover} whileHover="whileHover">
       <Image src={imgUrl} width={24} height={24} />
     </IconWrapper>
   );

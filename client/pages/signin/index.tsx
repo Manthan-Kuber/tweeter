@@ -24,12 +24,13 @@ function SignUp({}: Props) {
         <Image src="/tweeter.svg" height={30} width="100%" />
         <h5>Create Your Account</h5>
         <Form>
-          <Input icon="mail" placeholder="Email" />
+          <Input icon="mail" placeholder="Email" type="text" />
           <Input
             icon="password"
             placeholder="Password"
             visible={visible}
             setVisible={setVisible}
+            type="password"
           />
           <Button
             as={motion.button}

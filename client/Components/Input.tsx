@@ -8,11 +8,12 @@ interface Props {
   icon?: string;
   visible?: boolean;
   setVisible?: Dispatch<SetStateAction<boolean>>;
+  type?:string;
 }
-function Input({ placeholder, icon, visible, setVisible }: Props) {
+function Input({ placeholder, icon, visible, setVisible,type }: Props) {
   return (
     <Wrapper>
-      <StyledInput placeholder={placeholder} />
+      <StyledInput placeholder={placeholder} type={type && visible ? "text" : type } />
       {icon === "mail" ? (
         <Icon as={MdEmail} size={20} />
       ) : icon === "password" ? (
@@ -44,6 +45,10 @@ const StyledInput = styled.input`
   border: 1px solid #bdbdbd;
   accent-color: var(--clr-primary);
   width: 100%;
+
+  &:focus{
+    border-color: var(--clr-primary);
+  }
 `;
 
 const Wrapper = styled.div`
