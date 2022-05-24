@@ -1,4 +1,4 @@
-import {Schema, model, connect} from 'mongoose';
+import {Schema, model} from 'mongoose';
 
 interface IUser {
     firstname: string
@@ -13,11 +13,11 @@ interface IUser {
 const userSchema = new Schema<IUser>({
     firstname: {type: String, required: true},
     lastname: {type: String, required: true},
-    email: {type: String, required: true},cd ..
+    email: {type: String, required: true},
     username: {type: String, required: true},
     mobile: String,
     dob: String,
     bio: String 
 }, {timestamps: true});
 
-const User = model<IUser>('User', userSchema);
+module.exports = model<IUser>('User', userSchema);
