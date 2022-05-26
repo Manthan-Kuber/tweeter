@@ -1,6 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import {Mongoose} from "mongoose";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
@@ -9,9 +10,18 @@ const port = process.env.PORT;
 const mongoURL:string = String(process.env.MONGODB_URI);
 const mongoose:Mongoose = new Mongoose();
 
+//Instead of body parser
+app.use(express.json())
+
+//Including Routers
+
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.send("Pel Dunga");
 });
+
+app.use(authRoutes)
+
+// app.set("view engine",viewEngine_name)
 
 app.listen(port, async(): Promise<void> => {
   try {
