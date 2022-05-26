@@ -6,7 +6,6 @@ import Head from "next/head";
 import Image from "next/image";
 import Input from "../../Components/Input";
 import SignInIcon from "../../Components/SignInIcon";
-import { motion } from "framer-motion";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -33,20 +32,14 @@ function SignUp({}: Props) {
             type="password"
           />
           <Button
-            as={motion.button}
-            whileHover={{
-              scale: 1.05,
-              textShadow: "0px 0px 8px rgb(255,255,255)",
-            }}
-            whileTap={{ scale: 0.95 }}
-            type='submit'
+            type="submit"
           >
             Sign In
           </Button>
         </Form>
         <SignInIconsWrapper>
           {IconArray.map((icon) => (
-            <SignInIcon imgUrl={icon.imgUrl} />
+            <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />
           ))}
         </SignInIconsWrapper>
       </SignUpBox>
@@ -105,6 +98,10 @@ const Button = styled.button`
   cursor: pointer;
   margin-top: 1.5rem;
   width: 100%;
+
+  &:hover{
+    background-color: hsl(214.42105263157893, 84.070796460177%, 45.68627450980392%);
+  }
 `;
 
 const Form = styled.form`
