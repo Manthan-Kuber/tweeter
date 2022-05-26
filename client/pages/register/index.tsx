@@ -6,6 +6,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Input from "../../Components/Input";
 import SignInIcon from "../../Components/SignInIcon";
+import {
+  Li,
+  StyledUl,
+  UnderlinedDiv,
+} from "../../Components/Header/Navbar/Navbar.styles";
+import { motion } from "framer-motion";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -14,29 +20,72 @@ const IconArray = [
   { id: 4, imgUrl: "/icons8-github.svg" },
 ];
 
+const TabList = [
+  { id: 1, name: "Log In" },
+  { id: 2, name: "Sign Up" },
+];
+
 interface Props {}
 function SignUp({}: Props) {
   const [visible, setVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState(TabList[0].id);
   return (
     <Container>
       <SignUpBox>
         <Image src="/tweeter.svg" height={30} width="100%" />
         <h5>Create Your Account</h5>
-        <Form>
-          <Input icon="mail" placeholder="Email" type="text" />
-          <Input
-            icon="password"
-            placeholder="Password"
-            visible={visible}
-            setVisible={setVisible}
-            type="password"
-          />
-          <Button
-            type="submit"
+        <FormTabUl>
+          {TabList.map((item) => (
+            <FormLi
+              key={item.id}
+              onClick={() => {
+                setActiveTab(item.id);
+              }}
+              active={activeTab === item.id ? true : false}
+            >
+              {item.name}
+              {activeTab === item.id && (
+                <FormUnderlinedDiv as={motion.div} layoutId="underline" />
+              )}
+            </FormLi>
+          ))}
+        </FormTabUl>
+        {activeTab === 1 ? (
+          <Form
+            as={motion.form}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15 }}
           >
-            Sign In
-          </Button>
-        </Form>
+            <Input icon="mail" placeholder="Email" type="text" />
+            <Input
+              icon="password"
+              placeholder="Password"
+              visible={visible}
+              setVisible={setVisible}
+              type="password"
+            />
+            <Button type="submit">Log In</Button>
+          </Form>
+        ) : (
+          <Form
+            as={motion.form}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15 }}
+          >
+            <Input icon="mail" placeholder="Email" type="text" />
+            <Input
+              icon="password"
+              placeholder="Password"
+              visible={visible}
+              setVisible={setVisible}
+              type="password"
+            />
+            <Button type="submit">Sign Up</Button>
+          </Form>
+        )}
+
         <SignInIconsWrapper>
           {IconArray.map((icon) => (
             <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />
@@ -99,8 +148,12 @@ const Button = styled.button`
   margin-top: 1.5rem;
   width: 100%;
 
-  &:hover{
-    background-color: hsl(214.42105263157893, 84.070796460177%, 45.68627450980392%);
+  &:hover {
+    background-color: hsl(
+      214.42105263157893,
+      84.070796460177%,
+      45.68627450980392%
+    );
   }
 `;
 
@@ -113,4 +166,24 @@ const SignInIconsWrapper = styled.div`
   gap: clamp(1rem, 2vw + 0.5rem, 2rem);
   justify-content: center;
   align-items: center;
+`;
+
+const FormTabUl = styled(StyledUl)`
+  margin-bottom: 3rem;
+  gap: revert;
+  justify-content: space-evenly;
+`;
+
+const FormLi = styled(Li)<{active:boolean}>`
+  flex: 1;
+  text-align:center;
+  padding-block:.8rem;
+  background-color: ${({active}) => active && "#eee" };
+  transition: background-color 0.15s ease-in;
+`;
+
+const FormUnderlinedDiv = styled(UnderlinedDiv)`
+  height: 1px;
+  border-radius: revert;
+  bottom:-1px;
 `;

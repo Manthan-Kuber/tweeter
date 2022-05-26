@@ -17,8 +17,6 @@ export const Li = styled.li<{ active: boolean }>`
   }
 `;
 
-
-
 export const UnderlinedDiv = styled.div`
   position: absolute;
   bottom: -15px;
