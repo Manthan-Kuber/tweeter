@@ -20,4 +20,4 @@ const userSchema = new Schema<IUser>({
     bio: String 
 }, {timestamps: true});
 
-module.exports = model<IUser>('User', userSchema);
+export default model<IUser>('User', userSchema);

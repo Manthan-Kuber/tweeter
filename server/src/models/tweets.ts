@@ -14,4 +14,4 @@ const tweetSchema = new Schema<ITweet>({
     likes: {type: Number, default: 0}
 }, {timestamps: true});
 
-module.exports = model<ITweet>('Tweet', tweetSchema);
+export default model<ITweet>('Tweet', tweetSchema);

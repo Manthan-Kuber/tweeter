@@ -12,4 +12,4 @@ const commentSchema = new Schema<IComment>({
     likes: {type: Number, default: 0}
 }, {timestamps: true});
 
-module.exports = model<IComment>('Comment', commentSchema);
+export default model<IComment>('Comment', commentSchema);
