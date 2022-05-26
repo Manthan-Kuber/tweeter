@@ -1,6 +1,6 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
-import {Mongoose} from "mongoose";
+import {connect} from "mongoose";
 import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
@@ -8,7 +8,6 @@ dotenv.config();
 const app: Application = express();
 const port = process.env.PORT;
 const mongoURL:string = String(process.env.MONGODB_URI);
-const mongoose:Mongoose = new Mongoose();
 
 //Instead of body parser
 app.use(express.json())
@@ -25,7 +24,7 @@ app.use(authRoutes)
 
 app.listen(port, async(): Promise<void> => {
   try {
-    await mongoose.connect(mongoURL);
+    await connect(mongoURL);
     console.log('Successfully connected to MongoDB');
 } catch (e) {
     console.error(e);
