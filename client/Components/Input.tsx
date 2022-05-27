@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import styled, { css } from "styled-components";
 
@@ -20,6 +20,7 @@ interface Props {
     email: string;
     password: string;
   };
+  myRef?: RefObject<HTMLInputElement>;
 }
 function Input({
   placeholder,
@@ -31,6 +32,7 @@ function Input({
   type,
   name,
   value,
+  myRef,
 }: Props) {
   return (
     <Wrapper>
@@ -41,6 +43,7 @@ function Input({
         onChange={(e) =>
           setformValues({ ...formValues, [name]: e.currentTarget.value })
         }
+        ref={myRef}
       />
       <PlaceholderText
         className="placeholder-text"
@@ -55,14 +58,28 @@ function Input({
             as={AiFillEye}
             size={20}
             $cursorPointer
-            onClick={setVisible ? () => setVisible(!visible) : undefined}
+            onClick={
+              setVisible
+                ? () => {
+                    setVisible(!visible);
+                    myRef?.current?.focus();
+                  }
+                : undefined
+            }
           />
         ) : (
           <Icon
             as={AiFillEyeInvisible}
             size={20}
             $cursorPointer
-            onClick={setVisible ? () => setVisible(!visible) : undefined}
+            onClick={
+              setVisible
+                ? () => {
+                    setVisible(!visible);
+                    myRef?.current?.focus();
+                  }
+                : undefined
+            }
           />
         )
       ) : null}

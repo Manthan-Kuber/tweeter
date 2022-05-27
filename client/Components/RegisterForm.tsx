@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { Button } from "../pages/register";
 import Input from "./Input";
 
@@ -15,12 +15,26 @@ interface Props {
     email: string;
     password: string;
   };
-  placeholder1:string;
-  placeholder2:string;
+  placeholder1: string;
+  placeholder2: string;
 }
-const LoginForm = ({visible,setVisible,setformValues,formValues,placeholder1,placeholder2}: Props) => {
+const RegisterForm = ({
+  visible,
+  setVisible,
+  setformValues,
+  formValues,
+  placeholder1,
+  placeholder2,
+}: Props) => {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!emailRef.current) throw Error("emailRef is not assigned");
+    emailRef.current.focus();
+  }, []);
+
   return (
-    <>
+    <form>
       <Input
         formValues={formValues}
         setformValues={setformValues}
@@ -29,6 +43,7 @@ const LoginForm = ({visible,setVisible,setformValues,formValues,placeholder1,pla
         icon="MdEmail"
         placeholder={placeholder1}
         type="text"
+        myRef={emailRef}
       />
       <Input
         formValues={formValues}
@@ -40,9 +55,10 @@ const LoginForm = ({visible,setVisible,setformValues,formValues,placeholder1,pla
         icon="password"
         placeholder={placeholder2}
         type="password"
+        myRef={passwordRef}
       />
       <Button type="submit">Sign In</Button>
-    </>
+    </form>
   );
 };
-export default LoginForm;
+export default RegisterForm;

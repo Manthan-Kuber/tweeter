@@ -24,8 +24,7 @@ const TabList = [
   { id: 2, name: "Sign Up" },
 ];
 
-interface Props {}
-function SignUp({}: Props) {
+function Register() {
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TabList[0].id);
   const [formValues, setformValues] = useState({
@@ -62,13 +61,13 @@ function SignUp({}: Props) {
           ))}
         </FormTabUl>
         {activeTab === 1 ? (
-          <Form>
+          <FormWrapper>
             <RegisterForm {...FormProps} placeholder1="Email or Phone" placeholder2="Password" />
-          </Form>
+          </FormWrapper>
         ) : (
-          <Form>
+          <FormWrapper>
             <RegisterForm {...FormProps} placeholder1="Email" placeholder2="Password" />
-          </Form>
+          </FormWrapper>
         )}
         <SignInIconsWrapper>
           {IconArray.map((icon) => (
@@ -80,7 +79,7 @@ function SignUp({}: Props) {
   );
 }
 
-SignUp.getLayout = function getLayout(page: ReactElement) {
+Register.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
       <Head>
@@ -93,7 +92,7 @@ SignUp.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export default SignUp;
+export default Register;
 
 const Container = styled.div`
   display: flex;
@@ -140,7 +139,7 @@ export const Button = styled.button`
   }
 `;
 
-export const Form = styled.form`
+export const FormWrapper = styled.div`
   margin-bottom: 3rem;
 `;
 
