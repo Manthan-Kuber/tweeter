@@ -1,6 +1,5 @@
 import { ReactElement, useState } from "react";
 import Footer from "../../Components/Footer/Footer";
-import GlobalStyles from "../../GlobalStyles";
 import styled from "styled-components";
 import Head from "next/head";
 import Image from "next/image";
@@ -51,31 +50,38 @@ function SignUp({}: Props) {
           ))}
         </FormTabUl>
         {activeTab === 1 ? (
-          <Form
-            as={motion.form}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.15 }}
-          >
-            <Input icon="mail" placeholder="Email" type="text" />
+          <Form>
+            {/* Change form values ! when form state is added */}
             <Input
+              value=""
+              name="phone_email_pass"
+              icon="MdEmail"
+              placeholder="Phone or Email"
+              type="text"
+            />
+            <Input
+              value=""
+              name="password"
               icon="password"
               placeholder="Password"
               visible={visible}
               setVisible={setVisible}
               type="password"
             />
-            <Button type="submit">Log In</Button>
+            <Button type="submit">Sign In</Button>
           </Form>
         ) : (
-          <Form
-            as={motion.form}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.15 }}
-          >
-            <Input icon="mail" placeholder="Email" type="text" />
+          <Form>
             <Input
+              value=""
+              name="email"
+              icon="mail"
+              placeholder="Email"
+              type="text"
+            />
+            <Input
+              value=""
+              name="password"
               icon="password"
               placeholder="Password"
               visible={visible}
@@ -99,9 +105,8 @@ function SignUp({}: Props) {
 SignUp.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
-      <GlobalStyles />
       <Head>
-        <title>Tweeter - SignIn</title>
+        <title>Tweeter - Register</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       {page}
@@ -137,7 +142,7 @@ const SignUpBox = styled.div`
   }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   background-color: var(--clr-primary);
   border: none;
   color: white;
@@ -157,7 +162,7 @@ const Button = styled.button`
   }
 `;
 
-const Form = styled.form`
+export const Form = styled.form`
   margin-bottom: 3rem;
 `;
 
@@ -174,16 +179,16 @@ const FormTabUl = styled(StyledUl)`
   justify-content: space-evenly;
 `;
 
-const FormLi = styled(Li)<{active:boolean}>`
+const FormLi = styled(Li)<{ active: boolean }>`
   flex: 1;
-  text-align:center;
-  padding-block:.8rem;
-  background-color: ${({active}) => active && "#eee" };
+  text-align: center;
+  padding-block: 0.8rem;
+  background-color: ${({ active }) => active && "#eee"};
   transition: background-color 0.15s ease-in;
 `;
 
 const FormUnderlinedDiv = styled(UnderlinedDiv)`
   height: 1px;
   border-radius: revert;
-  bottom:-1px;
+  bottom: -1px;
 `;

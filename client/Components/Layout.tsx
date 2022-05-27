@@ -1,4 +1,3 @@
-import GlobalStyles from "../GlobalStyles";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import Head from "next/head";
@@ -34,7 +33,6 @@ function Layout({
         <title>Tweeter - {Tab}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <GlobalStyles />
       <Header
         NavList={NavList}
         activeTab={activeTab}

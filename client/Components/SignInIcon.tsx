@@ -7,7 +7,7 @@ interface Props {
 }
 
 const scaleOnHover = {
-    whileHover:{ scale: 1.2, y: -5,transition:{type:"spring",bounce:0,duration:0.25} }
+    whileHover:{ scale: 1.2,transition:{type:"spring",bounce:0,duration:0.15} }
 }
 
 function SignInIcon({ imgUrl }: Props) {

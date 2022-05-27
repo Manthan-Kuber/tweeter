@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { MdEmail } from "react-icons/md";
 import styled, { css } from "styled-components";
 
 interface Props {
@@ -8,15 +7,34 @@ interface Props {
   icon?: string;
   visible?: boolean;
   setVisible?: Dispatch<SetStateAction<boolean>>;
-  type?:string;
+  type?: string;
+  name: string;
+  value: string;
 }
-function Input({ placeholder, icon, visible, setVisible,type }: Props) {
+function Input({
+  placeholder,
+  icon,
+  visible,
+  setVisible,
+  type,
+  name,
+  value,
+}: Props) {
   return (
     <Wrapper>
-      <StyledInput placeholder={placeholder} type={type && visible ? "text" : type } />
-      {icon === "mail" ? (
-        <Icon as={MdEmail} size={20} />
-      ) : icon === "password" ? (
+      <StyledInput
+        type={type && visible ? "text" : type}
+        name={name}
+        value={value}
+      />
+      <PlaceholderText
+        className="placeholder-text"
+        htmlFor={name}
+        id={`placeholder-${name}`}
+      >
+        <Text className="text">{placeholder}</Text>
+      </PlaceholderText>
+      {icon === "password" ? (
         visible ? (
           <Icon
             as={AiFillEye}
@@ -38,16 +56,47 @@ function Input({ placeholder, icon, visible, setVisible,type }: Props) {
 }
 export default Input;
 
+const Text = styled.div`
+  font: 1.4rem var(--ff-noto);
+  background-color: transparent;
+  color: #c7c7cd;
+  transform: translate(0);
+  transition: all 0.15s ease-in-out;
+`;
+
+const PlaceholderText = styled.label`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1.8rem;
+  right: 0;
+  border: 3px solid transparent;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+`;
+
 const StyledInput = styled.input`
   padding-block: 1.6rem;
-  padding-left: 4.4rem;
+  padding-right: 4rem;
+  padding-left: 2rem;
   border-radius: 8px;
   border: 1px solid #bdbdbd;
   accent-color: var(--clr-primary);
   width: 100%;
 
-  &:focus{
+  &:focus + .placeholder-text .text,
+  :not(&[value=""]) + .placeholder-text .text {
+    background-color: white;
+    font-size: 1.2rem;
+    transform: translateY(-160%);
+    padding-inline: 0.3rem;
+  }
+
+  &:focus + .placeholder-text .text {
     border-color: var(--clr-primary);
+    color: var(--clr-primary);
   }
 `;
 
@@ -58,7 +107,7 @@ const Wrapper = styled.div`
 
 const Icon = styled.object<{ $cursorPointer?: boolean }>`
   position: absolute;
-  left: 1.4rem;
+  right: 1.4rem;
   top: 15px;
   color: #828282;
   ${(props) =>
