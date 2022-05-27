@@ -1,9 +1,8 @@
-import { ReactElement, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import Footer from "../../Components/Footer/Footer";
 import styled from "styled-components";
 import Head from "next/head";
 import Image from "next/image";
-import Input from "../../Components/Input";
 import SignInIcon from "../../Components/SignInIcon";
 import {
   Li,
@@ -11,6 +10,7 @@ import {
   UnderlinedDiv,
 } from "../../Components/Header/Navbar/Navbar.styles";
 import { motion } from "framer-motion";
+import RegisterForm from "../../Components/RegisterForm";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -28,6 +28,18 @@ interface Props {}
 function SignUp({}: Props) {
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TabList[0].id);
+  const [formValues, setformValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  const FormProps = {
+    visible: visible,
+    setVisible: setVisible,
+    formValues: formValues,
+    setformValues: setformValues,
+  };
+
   return (
     <Container>
       <SignUpBox>
@@ -51,47 +63,13 @@ function SignUp({}: Props) {
         </FormTabUl>
         {activeTab === 1 ? (
           <Form>
-            {/* Change form values ! when form state is added */}
-            <Input
-              value=""
-              name="phone_email_pass"
-              icon="MdEmail"
-              placeholder="Phone or Email"
-              type="text"
-            />
-            <Input
-              value=""
-              name="password"
-              icon="password"
-              placeholder="Password"
-              visible={visible}
-              setVisible={setVisible}
-              type="password"
-            />
-            <Button type="submit">Sign In</Button>
+            <RegisterForm {...FormProps} placeholder1="Email or Phone" placeholder2="Password" />
           </Form>
         ) : (
           <Form>
-            <Input
-              value=""
-              name="email"
-              icon="mail"
-              placeholder="Email"
-              type="text"
-            />
-            <Input
-              value=""
-              name="password"
-              icon="password"
-              placeholder="Password"
-              visible={visible}
-              setVisible={setVisible}
-              type="password"
-            />
-            <Button type="submit">Sign Up</Button>
+            <RegisterForm {...FormProps} placeholder1="Email" placeholder2="Password" />
           </Form>
         )}
-
         <SignInIconsWrapper>
           {IconArray.map((icon) => (
             <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />

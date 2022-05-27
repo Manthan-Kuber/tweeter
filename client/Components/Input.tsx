@@ -10,12 +10,24 @@ interface Props {
   type?: string;
   name: string;
   value: string;
+  setformValues: React.Dispatch<
+    React.SetStateAction<{
+      email: string;
+      password: string;
+    }>
+  >;
+  formValues: {
+    email: string;
+    password: string;
+  };
 }
 function Input({
   placeholder,
   icon,
   visible,
   setVisible,
+  setformValues,
+  formValues,
   type,
   name,
   value,
@@ -26,6 +38,9 @@ function Input({
         type={type && visible ? "text" : type}
         name={name}
         value={value}
+        onChange={(e) =>
+          setformValues({ ...formValues, [name]: e.currentTarget.value })
+        }
       />
       <PlaceholderText
         className="placeholder-text"
@@ -66,8 +81,7 @@ const Text = styled.div`
 
 const PlaceholderText = styled.label`
   position: absolute;
-  top: 0;
-  bottom: 0;
+  inset-block: 0;
   left: 1.8rem;
   right: 0;
   border: 3px solid transparent;
@@ -84,6 +98,7 @@ const StyledInput = styled.input`
   border-radius: 8px;
   border: 1px solid #bdbdbd;
   accent-color: var(--clr-primary);
+  outline-color: var(--clr-primary);
   width: 100%;
 
   &:focus + .placeholder-text .text,
