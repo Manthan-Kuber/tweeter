@@ -113,10 +113,14 @@ const StyledInput = styled.input`
   padding-right: 4rem;
   padding-left: 2rem;
   border-radius: 8px;
-  border: 1px solid #bdbdbd;
+  outline: 1px solid #bdbdbd;
+  border: none;
   accent-color: var(--clr-primary);
-  outline-color: var(--clr-primary);
   width: 100%;
+
+  &:focus {
+    outline-color: var(--clr-primary);
+  }
 
   &:focus + .placeholder-text .text,
   :not(&[value=""]) + .placeholder-text .text {

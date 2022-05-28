@@ -20,7 +20,7 @@ const IconArray = [
 ];
 
 const TabList = [
-  { id: 1, name: "Log In" },
+  { id: 1, name: "Sign In" },
   { id: 2, name: "Sign Up" },
 ];
 
@@ -60,15 +60,23 @@ function Register() {
             </FormLi>
           ))}
         </FormTabUl>
+
         {activeTab === 1 ? (
-          <FormWrapper>
-            <RegisterForm {...FormProps} placeholder1="Email or Phone" placeholder2="Password" />
-          </FormWrapper>
+          <RegisterForm
+            {...FormProps}
+            placeholder1="Email"
+            placeholder2="Password"
+            btnText="Sign In"
+          />
         ) : (
-          <FormWrapper>
-            <RegisterForm {...FormProps} placeholder1="Email" placeholder2="Password" />
-          </FormWrapper>
+          <RegisterForm
+            {...FormProps}
+            placeholder1="Email"
+            placeholder2="Password"
+            btnText="Sign Up"
+          />
         )}
+
         <SignInIconsWrapper>
           {IconArray.map((icon) => (
             <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />
@@ -139,11 +147,8 @@ export const Button = styled.button`
   }
 `;
 
-export const FormWrapper = styled.div`
-  margin-bottom: 3rem;
-`;
-
 const SignInIconsWrapper = styled.div`
+  margin-top: 2rem;
   display: flex;
   gap: clamp(1rem, 2vw + 0.5rem, 2rem);
   justify-content: center;

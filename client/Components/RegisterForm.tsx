@@ -17,6 +17,7 @@ interface Props {
   };
   placeholder1: string;
   placeholder2: string;
+  btnText: string;
 }
 const RegisterForm = ({
   visible,
@@ -25,6 +26,7 @@ const RegisterForm = ({
   formValues,
   placeholder1,
   placeholder2,
+  btnText,
 }: Props) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -57,7 +59,7 @@ const RegisterForm = ({
         type="password"
         myRef={passwordRef}
       />
-      <Button type="submit">Sign In</Button>
+      <Button type="submit">{btnText}</Button>
     </form>
   );
 };
