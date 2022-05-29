@@ -25,13 +25,13 @@ const userSchema = new Schema<IUser>(
       required: [true, "Please Enter an Email"],
       unique: true,
       lowercase: true,
-      validate: [isEmail, "Please enter a valid email"],
+      validate: [isEmail, "Please enter a valid Email"],
     },
     //Temporary
     password: {
       type: String,
-      required: [true, "Please Enter a password"],
-      minlength: [8, "Minimum password length is 8 characters"],
+      required: [true, "Please Enter a Password"],
+      minlength: [8, "Minimum Password length is 8 characters"],
     },
     username: String,
     mobile: String,

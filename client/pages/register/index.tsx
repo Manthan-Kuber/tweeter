@@ -57,13 +57,13 @@ function Register() {
         }),
       });
       const data = await response.json();
-      console.log(data);
+      console.log(data);//remove later
       if (data.errors) {
         setErrMessage({
           email: data.errors.email,
           password: data.errors.password,
         });
-        console.log(errMessage);
+        console.log(errMessage);//remove later
       }
       if (data.user) {
         router.replace("/");
@@ -86,7 +86,6 @@ function Register() {
     <Container>
       <SignUpBox>
         <Image src="/tweeter.svg" height={30} width="100%" />
-        <h5>Create Your Account</h5>
         <FormTabUl>
           {TabList.map((item) => (
             <FormLi
@@ -165,11 +164,6 @@ const SignUpBox = styled.div`
   background-color: white;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 
-  h5 {
-    margin-block: 3rem;
-    font: 600 clamp(1.8rem, 2vw + 0.5rem, 2.4rem) var(--ff-noto);
-    color: #333;
-  }
 `;
 
 export const Button = styled.button`
@@ -201,7 +195,7 @@ const SignInIconsWrapper = styled.div`
 `;
 
 const FormTabUl = styled(StyledUl)`
-  margin-bottom: 3rem;
+  margin-block: 3rem;
   gap: revert;
   justify-content: space-evenly;
 `;

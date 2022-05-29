@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import styled from "styled-components";
 import { Button } from "../pages/register";
 import Input from "./Input";
 
@@ -63,7 +64,7 @@ const RegisterForm = ({
         type="text"
         myRef={emailRef}
       />
-      <small>{errMessage.email}</small>
+      <ErrorMessage>{errMessage.email}</ErrorMessage>
       <Input
         formValues={formValues}
         setformValues={setformValues}
@@ -76,9 +77,14 @@ const RegisterForm = ({
         type="password"
         myRef={passwordRef}
       />
-      <small>{errMessage.password}</small>
+      <ErrorMessage>{errMessage.password}</ErrorMessage>
       <Button onClick={(e) => handleSubmit(e, url)}>{btnText}</Button>
     </form>
   );
 };
 export default RegisterForm;
+
+const ErrorMessage = styled.small`
+  color: red;
+  font: 600 1.2rem var(--ff-noto);
+`;

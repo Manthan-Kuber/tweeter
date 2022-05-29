@@ -137,7 +137,7 @@ const StyledInput = styled.input`
 `;
 
 const Wrapper = styled.div`
-  margin-bottom: 1.5rem;
+  margin-block: 1.5rem;
   position: relative;
 `;
 
