@@ -1,22 +1,47 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/users";
 
-export const signUpPost = async (req: Request, res: Response, next: NextFunction) => {
+const errHandler = (err: any) => {
+  console.log(err.message, err.code);
+  
+  let errors = {
+    email: "",
+    password: "",
+  };
 
-    const { firstname, lastname,email,username } = req.body;
-    console.log( firstname, lastname,email,username)
+  if (err.code === 11000) {
+    errors.email = "That email is already registered";
+    return errors;
+  }
 
-    try {
-       const user = await User.create({ firstname, lastname,email,username })
-       res.status(201).json(user);
-    } catch (err) {
-        console.log(err);
-        res.status(400).send("Error in creating user")
-    }
+  if (err.message.includes("User validation failed")) {
+    Object.values(err.errors).forEach(({ properties }: any) => {
+      errors[properties.path as keyof typeof errors] = properties.message;
+    });
+  }
+
+  return errors;
+};
+
+export const signUpPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+
+  try {
+    const user = await User.create({ email, password });
+    res.status(201).json(user);
+  } catch (err) {
+    const errorMessages = errHandler(err);
+    res.status(400).json(errorMessages);
+  }
 };
 
 export const logInPost = (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
-    console.log(email,password)
-    res.send("<h1>Login</h1>");
+  const { email, password } = req.body;
+  console.log(email, password);
+  res.send("<h1>Login</h1>");
 };
