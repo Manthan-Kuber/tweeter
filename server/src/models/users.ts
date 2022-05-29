@@ -1,7 +1,7 @@
 import { NextFunction } from "express";
-import { Schema, model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
 import isEmail from "validator/lib/isEmail";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 interface IUser {
   // firstname: string;
@@ -15,7 +15,12 @@ interface IUser {
   bio?: string;
 }
 
-const userSchema = new Schema<IUser>(
+//Interface for Model
+interface UserModel extends Model<IUser> {
+  login(email: string, password: string): any;
+}
+
+const userSchema = new Schema<IUser, UserModel>(
   {
     // firstname: { type: String, required: true },
     // lastname: { type: String, required: true },
@@ -27,7 +32,6 @@ const userSchema = new Schema<IUser>(
       lowercase: true,
       validate: [isEmail, "Please enter a valid Email"],
     },
-    //Temporary
     password: {
       type: String,
       required: [true, "Please Enter a Password"],
@@ -47,12 +51,23 @@ userSchema.post("save", (doc, next: NextFunction) => {
   next();
 });
 
-userSchema.pre("save",async function (next) {
+userSchema.pre("save", async function (next) {
   //this refers to 'user' in authController
   console.log("New user about to be created and saved", this); //remove later
   const salt = await bcrypt.genSalt();
-  this.password = await bcrypt.hash(this.password,salt);
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-export default model<IUser>("User", userSchema);
+//login method
+userSchema.static("login", async function (email: string, password: string) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) return user;
+    throw Error("Incorrect Password");
+  }
+  throw Error("Incorrect Email");
+});
+
+export default model<IUser, UserModel>("User", userSchema);

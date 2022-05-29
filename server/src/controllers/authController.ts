@@ -51,12 +51,20 @@ export const signUpPost = async (
     res.status(201).json({ user: user._id }); //return mongodb userid to client
   } catch (err) {
     const errors = errHandler(err);
-    res.status(400).json({errors});
+    res.status(400).json({ errors });
   }
 };
 
-export const logInPost = (req: Request, res: Response, next: NextFunction) => {
+export const logInPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
-  console.log(email, password);
-  res.send("<h1>Login</h1>");
+  try {
+    const user = await User.login(email, password);
+    res.status(200).json({ user: user._id });
+  } catch (err) {
+    res.status(400).json({});
+  }
 };
