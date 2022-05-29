@@ -11,6 +11,7 @@ import {
 } from "../../Components/Header/Navbar/Navbar.styles";
 import { motion } from "framer-motion";
 import RegisterForm from "../../Components/RegisterForm";
+import { useRouter } from "next/router";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -24,29 +25,31 @@ const TabList = [
   { id: 2, name: "Sign Up" },
 ];
 
+const InitialState = {
+  email: "",
+  password: "",
+};
+
 function Register() {
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TabList[0].id);
-  const [formValues, setformValues] = useState({
-    email: "",
-    password: "",
-  });
+  const [formValues, setformValues] = useState(InitialState);
+  const [errMessage, setErrMessage] = useState(InitialState);
+  const router = useRouter();
 
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     url: string
   ) => {
     e.preventDefault();
-    alert(
-      `Form Submitted: email:${formValues.email} password:${formValues.password}`
-    );
+    setErrMessage({ ...InitialState }); // Reset errMessages when submitting form
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers:{
+        headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin":"*",
-          "Accept":"*/*"
+          "Access-Control-Allow-Origin": "*",
+          Accept: "*/*",
         },
         body: JSON.stringify({
           email: formValues.email,
@@ -55,9 +58,20 @@ function Register() {
       });
       const data = await response.json();
       console.log(data);
+      if (data.errors) {
+        setErrMessage({
+          email: data.errors.email,
+          password: data.errors.password,
+        });
+        console.log(errMessage);
+      }
+      if (data.user) {
+        router.replace("/");
+      }
     } catch (err) {
       console.log(err);
     }
+    setformValues({ ...InitialState });
   };
 
   const FormProps = {
@@ -65,6 +79,7 @@ function Register() {
     setVisible: setVisible,
     formValues: formValues,
     setformValues: setformValues,
+    errMessage: errMessage,
   };
 
   return (

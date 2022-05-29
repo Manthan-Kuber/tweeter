@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connect } from "mongoose";
 import authRoutes from "./routes/authRoutes";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ app.use(cors());
 
 //Instead of body parser
 app.use(express.json());
+
+app.use(cookieParser());
 
 //Including Routers
 

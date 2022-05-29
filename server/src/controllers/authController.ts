@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/users";
+import jwt from "jsonwebtoken";
+import { ObjectId } from "mongodb";
 
 const errHandler = (err: any) => {
   console.log(err.message, err.code);
-  
+
   let errors = {
     email: "",
     password: "",
@@ -23,6 +25,14 @@ const errHandler = (err: any) => {
   return errors;
 };
 
+const maxAge = 3 * 60 * 60 * 24;
+const createToken = (id: ObjectId) => {
+  //change secret later
+  return jwt.sign({ id }, "Monty's secret max", {
+    expiresIn: maxAge, //time in seconds unlike ms in cookies
+  });
+};
+
 export const signUpPost = async (
   req: Request,
   res: Response,
@@ -33,10 +43,15 @@ export const signUpPost = async (
 
   try {
     const user = await User.create({ email, password });
-    res.status(201).json(user);
+    const token = createToken(user._id);
+    res.cookie("Json Babe Token", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000, //cookie maxAge in ms
+    });
+    res.status(201).json({ user: user._id }); //return mongodb userid to client
   } catch (err) {
-    const errorMessages = errHandler(err);
-    res.status(400).json(errorMessages);
+    const errors = errHandler(err);
+    res.status(400).json({errors});
   }
 };
 

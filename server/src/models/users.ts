@@ -49,7 +49,7 @@ userSchema.post("save", (doc, next: NextFunction) => {
 
 userSchema.pre("save",async function (next) {
   //this refers to 'user' in authController
-  console.log("New user about to be created and saved", this);
+  console.log("New user about to be created and saved", this); //remove later
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password,salt);
   next();

@@ -22,6 +22,10 @@ interface Props {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     url: string
   ) => Promise<void>;
+  errMessage: {
+    email: string;
+    password: string;
+  };
 }
 const RegisterForm = ({
   visible,
@@ -32,6 +36,7 @@ const RegisterForm = ({
   placeholder2,
   btnText,
   handleSubmit,
+  errMessage,
 }: Props) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -58,6 +63,7 @@ const RegisterForm = ({
         type="text"
         myRef={emailRef}
       />
+      <small>{errMessage.email}</small>
       <Input
         formValues={formValues}
         setformValues={setformValues}
@@ -70,6 +76,7 @@ const RegisterForm = ({
         type="password"
         myRef={passwordRef}
       />
+      <small>{errMessage.password}</small>
       <Button onClick={(e) => handleSubmit(e, url)}>{btnText}</Button>
     </form>
   );
