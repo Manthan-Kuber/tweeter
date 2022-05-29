@@ -11,6 +11,14 @@ const errHandler = (err: any) => {
     password: "",
   };
 
+  if(err.message === "Incorrect Email"){
+    errors.email = "Incorrect Email Entered"
+  }
+  
+  if(err.message === "Incorrect Password"){
+    errors.password = "Incorrect Password Entered"
+  }
+
   if (err.code === 11000) {
     errors.email = "That email is already registered";
     return errors;
@@ -44,7 +52,7 @@ export const signUpPost = async (
   try {
     const user = await User.create({ email, password });
     const token = createToken(user._id);
-    res.cookie("Json Babe Token", token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000, //cookie maxAge in ms
     });
@@ -63,8 +71,14 @@ export const logInPost = async (
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
+    const token = createToken(user._id);
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000, //cookie maxAge in ms
+    });
     res.status(200).json({ user: user._id });
   } catch (err) {
-    res.status(400).json({});
+    const errors = errHandler(err);
+    res.status(400).json({ errors });
   }
 };

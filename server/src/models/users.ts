@@ -16,11 +16,11 @@ interface IUser {
 }
 
 //Interface for Model
-interface UserModel extends Model<IUser> {
+interface IUserModel extends Model<IUser> {
   login(email: string, password: string): any;
 }
 
-const userSchema = new Schema<IUser, UserModel>(
+const userSchema = new Schema<IUser, IUserModel>(
   {
     // firstname: { type: String, required: true },
     // lastname: { type: String, required: true },
@@ -70,4 +70,4 @@ userSchema.static("login", async function (email: string, password: string) {
   throw Error("Incorrect Email");
 });
 
-export default model<IUser, UserModel>("User", userSchema);
+export default model<IUser, IUserModel>("User", userSchema);
