@@ -32,6 +32,34 @@ function Register() {
     password: "",
   });
 
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    url: string
+  ) => {
+    e.preventDefault();
+    alert(
+      `Form Submitted: email:${formValues.email} password:${formValues.password}`
+    );
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin":"*",
+          "Accept":"*/*"
+        },
+        body: JSON.stringify({
+          email: formValues.email,
+          password: formValues.password,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const FormProps = {
     visible: visible,
     setVisible: setVisible,
@@ -67,6 +95,7 @@ function Register() {
             placeholder1="Email"
             placeholder2="Password"
             btnText="Sign In"
+            handleSubmit={handleSubmit}
           />
         ) : (
           <RegisterForm
@@ -74,6 +103,7 @@ function Register() {
             placeholder1="Email"
             placeholder2="Password"
             btnText="Sign Up"
+            handleSubmit={handleSubmit}
           />
         )}
 

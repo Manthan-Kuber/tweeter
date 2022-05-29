@@ -18,6 +18,10 @@ interface Props {
   placeholder1: string;
   placeholder2: string;
   btnText: string;
+  handleSubmit: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    url: string
+  ) => Promise<void>;
 }
 const RegisterForm = ({
   visible,
@@ -27,13 +31,20 @@ const RegisterForm = ({
   placeholder1,
   placeholder2,
   btnText,
+  handleSubmit,
 }: Props) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (!emailRef.current) throw Error("emailRef is not assigned");
     emailRef.current.focus();
   }, []);
+
+  const url =
+    btnText === "Sign Up"
+      ? "http://localhost:6969/signup"
+      : "http://localhost:6969/login";
 
   return (
     <form>
@@ -59,7 +70,7 @@ const RegisterForm = ({
         type="password"
         myRef={passwordRef}
       />
-      <Button type="submit">{btnText}</Button>
+      <Button onClick={(e) => handleSubmit(e, url)}>{btnText}</Button>
     </form>
   );
 };
