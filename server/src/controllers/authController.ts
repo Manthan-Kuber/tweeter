@@ -34,6 +34,12 @@ const errHandler = (err: any) => {
 };
 
 const maxAge = 3 * 60 * 60 * 24;
+
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: maxAge * 1000, //cookie maxAge in ms
+};
+
 const createToken = (id: ObjectId) => {
   //change secret later
   return jwt.sign({ id }, process.env.TOKEN_SECRET as string, {
@@ -52,16 +58,17 @@ export const signUpPost = async (
   try {
     const user = await User.create({ email, password });
     const token = createToken(user._id);
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: maxAge * 1000, //cookie maxAge in ms
-    });
+
+    res.cookie("jwt", token, cookieOptions);
+    res.cookie("isAuthenticated", true, { ...cookieOptions, httpOnly: false });
+    
     res.status(201).json({ user: user._id }); //return mongodb userid to client
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });
   }
 };
+
 
 export const logInPost = async (
   req: Request,
@@ -72,10 +79,10 @@ export const logInPost = async (
   try {
     const user = await User.login(email, password);
     const token = createToken(user._id);
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: maxAge * 1000, //cookie maxAge in ms
-    });
+
+    res.cookie("jwt", token, cookieOptions);
+    res.cookie("isAuthenticated", true, { ...cookieOptions, httpOnly: false });
+
     res.status(200).json({ user: user._id });
   } catch (err) {
     const errors = errHandler(err);
