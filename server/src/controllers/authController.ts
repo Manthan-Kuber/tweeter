@@ -11,12 +11,12 @@ const errHandler = (err: any) => {
     password: "",
   };
 
-  if(err.message === "Incorrect Email"){
-    errors.email = "Incorrect Email Entered"
+  if (err.message === "Incorrect Email") {
+    errors.email = "Incorrect Email Entered";
   }
-  
-  if(err.message === "Incorrect Password"){
-    errors.password = "Incorrect Password Entered"
+
+  if (err.message === "Incorrect Password") {
+    errors.password = "Incorrect Password Entered";
   }
 
   if (err.code === 11000) {
@@ -36,7 +36,7 @@ const errHandler = (err: any) => {
 const maxAge = 3 * 60 * 60 * 24;
 const createToken = (id: ObjectId) => {
   //change secret later
-  return jwt.sign({ id }, "Monty's secret max", {
+  return jwt.sign({ id }, process.env.TOKEN_SECRET as string, {
     expiresIn: maxAge, //time in seconds unlike ms in cookies
   });
 };
