@@ -1,24 +1,9 @@
 import { NextFunction } from "express";
-import { Schema, model, Model } from "mongoose";
+import { Schema, model } from "mongoose";
 import isEmail from "validator/lib/isEmail";
 import bcrypt from "bcrypt";
+import { IUserModel,IUser } from "../types/types";
 
-interface IUser {
-  // firstname: string;
-  // lastname: string;
-  name: string;
-  email: string;
-  password: string;
-  username?: string;
-  mobile?: string;
-  dob?: string;
-  bio?: string;
-}
-
-//Interface for Model
-interface IUserModel extends Model<IUser> {
-  login(email: string, password: string): any;
-}
 
 const userSchema = new Schema<IUser, IUserModel>(
   {

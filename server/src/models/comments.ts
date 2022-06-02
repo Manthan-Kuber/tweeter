@@ -1,10 +1,5 @@
 import {Schema, model} from 'mongoose';
-
-interface IComment {
-    author: Schema.Types.ObjectId
-    tweet: Schema.Types.ObjectId
-    likes?: number
-}
+import { IComment } from '../types/types';
 
 const commentSchema = new Schema<IComment>({
     author: {type: Schema.Types.ObjectId, ref: 'User', required: true},

@@ -1,11 +1,6 @@
 import {Schema, model} from 'mongoose';
+import { ITweet } from '../types/types';
 
-interface ITweet {
-    creator: Schema.Types.ObjectId
-    tweet: string
-    media?: string[]
-    likes?: number
-}
 
 const tweetSchema = new Schema<ITweet>({
     creator: {type: Schema.Types.ObjectId, ref: 'User', required: true},

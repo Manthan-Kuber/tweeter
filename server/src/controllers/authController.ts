@@ -2,48 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/users";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-
-const errHandler = (err: any) => {
-  console.log(err.message, err.code);
-
-  let errors = {
-    email: "",
-    password: "",
-  };
-
-  if (err.message === "Incorrect Email") {
-    errors.email = "Incorrect Email Entered";
-  }
-
-  if (err.message === "Incorrect Password") {
-    errors.password = "Incorrect Password Entered";
-  }
-
-  if (err.code === 11000) {
-    errors.email = "That email is already registered";
-    return errors;
-  }
-
-  if (err.message.includes("User validation failed")) {
-    Object.values(err.errors).forEach(({ properties }: any) => {
-      errors[properties.path as keyof typeof errors] = properties.message;
-    });
-  }
-
-  return errors;
-};
-
-const maxAge = 3 * 60 * 60 * 24;
-
-const cookieOptions = {
-  httpOnly: true,
-  maxAge: maxAge * 1000, //cookie maxAge in ms
-};
+import { errHandler } from "../utils/errorHandler";
 
 const createToken = (id: ObjectId) => {
-  //change secret later
-  return jwt.sign({ id }, process.env.TOKEN_SECRET as string, {
-    expiresIn: maxAge, //time in seconds unlike ms in cookies
+  return jwt.sign({ id }, process.env.TOKEN_SECRET!, {
+    expiresIn: process.env.JWT_EXPIRE,
   });
 };
 
@@ -59,16 +22,12 @@ export const signUpPost = async (
     const user = await User.create({ email, password });
     const token = createToken(user._id);
 
-    res.cookie("jwt", token, cookieOptions);
-    res.cookie("isAuthenticated", true, { ...cookieOptions, httpOnly: false });
-    
-    res.status(201).json({ user: user._id }); //return mongodb userid to client
+    res.status(201).json({ userId: user._id, email: user.email, token: token });
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });
   }
 };
-
 
 export const logInPost = async (
   req: Request,
@@ -80,10 +39,7 @@ export const logInPost = async (
     const user = await User.login(email, password);
     const token = createToken(user._id);
 
-    res.cookie("jwt", token, cookieOptions);
-    res.cookie("isAuthenticated", true, { ...cookieOptions, httpOnly: false });
-
-    res.status(200).json({ user: user._id });
+    res.status(200).json({ userId: user._id, email: user.email, token: token });
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });
