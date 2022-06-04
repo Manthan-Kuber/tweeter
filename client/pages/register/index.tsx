@@ -56,22 +56,27 @@ function Register() {
           password: formValues.password,
         }),
       });
+      const headers = response.headers;
+      console.log(headers);
       const data = await response.json();
-      console.log(data);//remove later
+      console.log(data); //remove later
       if (data.errors) {
         setErrMessage({
           email: data.errors.email,
           password: data.errors.password,
         });
-        console.log(errMessage);//remove later
+        if (data.errors.email) setformValues({ ...formValues, email: "" });
+        if (data.errors.password)
+          setformValues({ ...formValues, password: "" });
+        console.log(errMessage); //remove later
       }
-      if (data.user) {
+      if (data.userId) {
+        setformValues({ ...InitialState });
         router.replace("/");
       }
     } catch (err) {
       console.log(err);
     }
-    setformValues({ ...InitialState });
   };
 
   const FormProps = {
@@ -161,9 +166,10 @@ const SignUpBox = styled.div`
   width: min(90%, 48rem);
   display: flex;
   flex-direction: column;
-  background-color: white;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 
+  @media all and (min-width: 55em) {
+    box-shadow: 0 4px 12px -1px rgb(0 0 0 / 0.1), 0 2px 8px -2px rgb(0 0 0 / 0.1);
+  }
 `;
 
 export const Button = styled.button`
@@ -198,18 +204,18 @@ const FormTabUl = styled(StyledUl)`
   margin-block: 3rem;
   gap: revert;
   justify-content: space-evenly;
+  border-bottom: 1px solid #bdbdbd;
 `;
 
 const FormLi = styled(Li)<{ active: boolean }>`
   flex: 1;
   text-align: center;
-  padding-block: 0.8rem;
-  background-color: ${({ active }) => active && "#eee"};
+  padding-block: 1rem;
   transition: background-color 0.15s ease-in;
+  font-weight: ${({active}) => active ? 600 : 400 };
 `;
 
 const FormUnderlinedDiv = styled(UnderlinedDiv)`
-  height: 1px;
-  border-radius: revert;
-  bottom: -1px;
+  height: 3px;
+  bottom: -0.7px;
 `;

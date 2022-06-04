@@ -28,9 +28,9 @@ a{
   text-decoration: inherit;
 }
 
-body{
+/* body{
   background-color: #f2f2f2;
-}
+} */
 `;
 
 export default GlobalStyles;

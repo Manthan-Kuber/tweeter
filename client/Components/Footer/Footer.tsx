@@ -1,8 +1,7 @@
 import { StyledFooter, FooterText } from "./Footer.styles";
 
-interface Props {}
 
-const Footer = (props: Props) => {
+const Footer = () => {
   return (
     <StyledFooter>
       <FooterText>
