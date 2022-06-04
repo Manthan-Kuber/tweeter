@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Button } from "../pages/register";
+import { Button } from "../../pages/register";
 import Input from "./Input";
 
 interface Props {
@@ -78,7 +78,7 @@ const RegisterForm = ({
         myRef={passwordRef}
       />
       <ErrorMessage>{errMessage.password}</ErrorMessage>
-      <Button onClick={(e) => handleSubmit(e, url)}>{btnText}</Button>
+      <Button onClick={(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleSubmit(e, url)}>{btnText}</Button>
     </form>
   );
 };

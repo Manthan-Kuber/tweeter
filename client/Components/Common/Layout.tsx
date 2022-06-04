@@ -1,5 +1,5 @@
-import Footer from "./Footer/Footer";
-import Header from "./Header/Header";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
 import Head from "next/head";
 import { FaCompass } from "react-icons/fa";
 import { BsFillBookmarkFill } from "react-icons/bs";
