@@ -20,8 +20,7 @@ interface Props {
   placeholder2: string;
   btnText: string;
   handleSubmit: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    url: string
+    e: React.FormEvent,
   ) => Promise<void>;
   errMessage: {
     email: string;
@@ -47,13 +46,8 @@ const RegisterForm = ({
     emailRef.current.focus();
   }, []);
 
-  const url =
-    btnText === "Sign Up"
-      ? "http://localhost:6969/signup"
-      : "http://localhost:6969/login";
-
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Input
         formValues={formValues}
         setformValues={setformValues}
@@ -78,7 +72,7 @@ const RegisterForm = ({
         myRef={passwordRef}
       />
       <ErrorMessage>{errMessage.password}</ErrorMessage>
-      <Button onClick={(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleSubmit(e, url)}>{btnText}</Button>
+      <Button type="submit" >{btnText}</Button>
     </form>
   );
 };

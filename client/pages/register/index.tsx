@@ -12,6 +12,9 @@ import {
 import { motion } from "framer-motion";
 import RegisterForm from "../../Components/Common/RegisterForm";
 import { useRouter } from "next/router";
+import { useAppDispatch } from "../../Hooks/store";
+import { useLoginMutation, useSignupMutation } from "../../app/services/auth";
+import { setCredentials } from "../../features/auth/authSlice";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -33,52 +36,52 @@ const InitialState = {
 function Register() {
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TabList[0].id);
-  const [formValues, setformValues] = useState(InitialState);
-  const [errMessage, setErrMessage] = useState(InitialState);
-  const router = useRouter();
+  const [formValues, setformValues] = useState<LoginRequest>(InitialState);
+  const [errMessage, setErrMessage] = useState<LoginRequest>(InitialState);
+  const { replace } = useRouter();
+  const dispatch = useAppDispatch();
+  const [login] = useLoginMutation();
+  const [signup] = useSignupMutation();
 
-  const handleSubmit = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    url: string
-  ) => {
+  
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrMessage({ ...InitialState }); // Reset errMessages when submitting form
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Accept: "*/*",
-        },
-        body: JSON.stringify({
-          email: formValues.email,
-          password: formValues.password,
-        }),
+      const user = await login(formValues).unwrap();
+      console.log(
+        `user info: ${user.user.id} ${user.user.email} and token is ${user.token}`
+      );
+      dispatch(setCredentials(user));
+      replace("/");
+    } catch (err: any) {
+      const { errors } = err.data;
+      console.log(errors);
+      setErrMessage({
+        email: errors.email,
+        password: errors.password,
       });
-      const headers = response.headers;
-      console.log(headers);
-      const data = await response.json();
-      console.log(data); //remove later
-      if (data.errors) {
-        setErrMessage({
-          email: data.errors.email,
-          password: data.errors.password,
-        });
-        if (data.errors.email) setformValues({ ...formValues, email: "" });
-        if (data.errors.password)
-          setformValues({ ...formValues, password: "" });
-        console.log(errMessage); //remove later
-      }
-      if (data.userId) {
-        setformValues({ ...InitialState });
-        router.replace("/");
-      }
-    } catch (err) {
-      console.log(err);
     }
   };
 
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const user = await signup(formValues).unwrap();
+      console.log(
+        `user info: ${user.user.id} ${user.user.email} and token is ${user.token}`
+      );
+      dispatch(setCredentials(user));
+      replace("/");
+    } catch (err: any) {
+      const { errors } = err.data;
+      console.log(errors);
+      setErrMessage({
+        email: errors.email,
+        password: errors.password,
+      });
+    }
+  };
+  
   const FormProps = {
     visible: visible,
     setVisible: setVisible,
@@ -114,7 +117,7 @@ function Register() {
             placeholder1="Email"
             placeholder2="Password"
             btnText="Sign In"
-            handleSubmit={handleSubmit}
+            handleSubmit={handleLogin}
           />
         ) : (
           <RegisterForm
@@ -122,7 +125,7 @@ function Register() {
             placeholder1="Email"
             placeholder2="Password"
             btnText="Sign Up"
-            handleSubmit={handleSubmit}
+            handleSubmit={handleSignup}
           />
         )}
 
@@ -168,7 +171,8 @@ const SignUpBox = styled.div`
   flex-direction: column;
 
   @media all and (min-width: 55em) {
-    box-shadow: 0 4px 12px -1px rgb(0 0 0 / 0.1), 0 2px 8px -2px rgb(0 0 0 / 0.1);
+    box-shadow: 0 4px 12px -1px rgb(0 0 0 / 0.1),
+      0 2px 8px -2px rgb(0 0 0 / 0.1);
   }
 `;
 
@@ -212,7 +216,7 @@ const FormLi = styled(Li)<{ active: boolean }>`
   text-align: center;
   padding-block: 1rem;
   transition: background-color 0.15s ease-in;
-  font-weight: ${({active}) => active ? 600 : 400 };
+  font-weight: ${({ active }) => (active ? 600 : 400)};
 `;
 
 const FormUnderlinedDiv = styled(UnderlinedDiv)`
