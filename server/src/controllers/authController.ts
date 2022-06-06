@@ -22,7 +22,9 @@ export const signUpPost = async (
     const user = await User.create({ email, password });
     const token = createToken(user._id);
 
-    res.status(201).json({ userId: user._id, email: user.email, token: token });
+    res
+      .status(201)
+      .json({ user: { id: user._id, email: user.email }, token: token });
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });
@@ -39,7 +41,9 @@ export const logInPost = async (
     const user = await User.login(email, password);
     const token = createToken(user._id);
 
-    res.status(200).json({ userId: user._id, email: user.email, token: token });
+    res
+      .status(200)
+      .json({ user: { id: user._id, email: user.email }, token: token });
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });
