@@ -16,9 +16,12 @@ interface IUser {
   email: string;
   password: string;
   username?: string;
+  profilePic?: string;
   mobile?: string;
   dob?: string;
   bio?: string;
+  following?: Schema.Types.ObjectId[];
+  followers?: Schema.Types.ObjectId[];
 }
 
 //Interface for Model

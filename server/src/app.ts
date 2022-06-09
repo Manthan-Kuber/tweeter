@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connect } from "mongoose";
 import authRoutes from "./routes/authRoutes";
 import privRoutes from "./routes/privateRoutes";
+import userRoutes from "./routes/userRoutes";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -26,6 +27,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 
 app.use(authRoutes);
 app.use(privRoutes);
+app.use("/users", userRoutes);
 // app.set("view engine",viewEngine_name)
 
 app.listen(port, async (): Promise<void> => {

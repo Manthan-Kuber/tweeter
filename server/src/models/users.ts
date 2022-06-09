@@ -23,9 +23,18 @@ const userSchema = new Schema<IUser, IUserModel>(
       minlength: [8, "Minimum Password length is 8 characters"],
     },
     username: String,
+    profilePic: String,
     mobile: String,
     dob: String,
     bio: String,
+    following: {
+      type: [Schema.Types.ObjectId], 
+      ref: 'User'
+    },
+    followers: {
+      type: [Schema.Types.ObjectId], 
+      ref: 'User'
+    },
   },
   { timestamps: true }
 );
