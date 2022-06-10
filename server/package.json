@@ -17,15 +17,15 @@
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/multer": "^1.4.7",
     "@types/node": "^17.0.31",
+    "@types/streamifier": "^0.1.0",
     "@types/validator": "^13.7.2",
     "nodemon": "^2.0.16",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "@types/multer": "^1.4.7",
-    "@types/streamifier": "^0.1.0",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.30.0",
     "cookie-parser": "^1.4.6",
