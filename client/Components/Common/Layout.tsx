@@ -4,9 +4,11 @@ import Head from "next/head";
 import { FaCompass } from "react-icons/fa";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { useRouter } from "next/router";
+import { useAppSelector } from "../../Hooks/store";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -27,6 +29,17 @@ function Layout({
   Tab?: string;
 }) {
   const [activeTab, setActiveTab] = useState(Tab!);
+  const { push } = useRouter();
+  const token = useAppSelector((state) => state.auth.token)
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const token = localStorage.getItem("token");
+  //     token ? push("/") : push("/register");
+  //   }
+  // }, []);
+  useEffect(() => {
+    token ? push("/") : push("/register")
+  },[])
   return (
     <>
       <Head>

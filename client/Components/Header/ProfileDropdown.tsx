@@ -4,13 +4,9 @@ import { GrGroup } from "react-icons/gr";
 import { MdLogout } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { motion } from "framer-motion";
-
-const ProfileOptionsList = [
-  { id: 1, icon: <CgProfile size={16} />, name: "My Profile" },
-  { id: 2, icon: <GrGroup size={16} />, name: "Group Chat" },
-  { id: 3, icon: <IoMdSettings size={16} />, name: "Settings" },
-  { id: 4, icon: <MdLogout size={16} />, name: "Logout" },
-];
+import { useAppDispatch } from "../../Hooks/store";
+import { logOut } from "../../features/auth/authSlice";
+import { useRouter } from "next/router";
 
 const variant = {
   initial: {
@@ -36,6 +32,36 @@ const variant = {
 };
 
 function ProfileDropdown() {
+  const dispatch = useAppDispatch();
+  const { replace } = useRouter();
+  const ProfileOptionsList = [
+    {
+      id: 1,
+      icon: <CgProfile size={16} />,
+      name: "My Profile",
+      onClick: () => {},
+    },
+    {
+      id: 2,
+      icon: <GrGroup size={16} />,
+      name: "Group Chat",
+      onClick: () => {},
+    },
+    {
+      id: 3,
+      icon: <IoMdSettings size={16} />,
+      name: "Settings",
+      onClick: () => {},
+    },
+    {
+      id: 4,
+      icon: <MdLogout size={16} />,
+      name: "Logout",
+      onClick: () => {
+        dispatch(logOut());
+      },
+    },
+  ];
   return (
     <Container
       as={motion.div}
@@ -46,7 +72,7 @@ function ProfileDropdown() {
     >
       {ProfileOptionsList.map((option) => (
         <>
-          <div key={option.id}>
+          <div key={option.id} onClick={option.onClick}>
             {option.icon}
             <h4>{option.name}</h4>
           </div>

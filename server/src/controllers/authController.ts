@@ -6,7 +6,7 @@ import { errHandler } from "../utils/errorHandler";
 
 const createToken = (id: ObjectId) => {
   return jwt.sign({ id }, process.env.TOKEN_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: "1d",
   });
 };
 
