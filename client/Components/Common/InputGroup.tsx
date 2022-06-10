@@ -1,28 +1,8 @@
-import { Dispatch, RefObject, SetStateAction } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import styled, { css } from "styled-components";
 
-interface Props {
-  placeholder?: string;
-  icon?: string;
-  visible?: boolean;
-  setVisible?: Dispatch<SetStateAction<boolean>>;
-  type?: string;
-  name: string;
-  value: string;
-  setformValues: React.Dispatch<
-    React.SetStateAction<{
-      email: string;
-      password: string;
-    }>
-  >;
-  formValues: {
-    email: string;
-    password: string;
-  };
-  myRef?: RefObject<HTMLInputElement>;
-}
-function Input({
+
+function InputGroup({
   placeholder,
   icon,
   visible,
@@ -33,7 +13,7 @@ function Input({
   name,
   value,
   myRef,
-}: Props) {
+}: InputGroupProps) {
   return (
     <Wrapper>
       <StyledInput
@@ -86,7 +66,7 @@ function Input({
     </Wrapper>
   );
 }
-export default Input;
+export default InputGroup;
 
 const Text = styled.div`
   font: 1.4rem var(--ff-noto);

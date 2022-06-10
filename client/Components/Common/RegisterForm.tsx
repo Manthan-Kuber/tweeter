@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Button } from "../../pages/register";
-import Input from "./Input";
+import InputGroup from "./InputGroup";
 
 interface Props {
   visible?: boolean;
@@ -19,9 +19,7 @@ interface Props {
   placeholder1: string;
   placeholder2: string;
   btnText: string;
-  handleSubmit: (
-    e: React.FormEvent,
-  ) => Promise<void>;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
   errMessage: {
     email: string;
     password: string;
@@ -48,7 +46,7 @@ const RegisterForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Input
+      <InputGroup
         formValues={formValues}
         setformValues={setformValues}
         value={formValues.email}
@@ -59,7 +57,7 @@ const RegisterForm = ({
         myRef={emailRef}
       />
       <ErrorMessage>{errMessage.email}</ErrorMessage>
-      <Input
+      <InputGroup
         formValues={formValues}
         setformValues={setformValues}
         visible={visible}
@@ -72,7 +70,7 @@ const RegisterForm = ({
         myRef={passwordRef}
       />
       <ErrorMessage>{errMessage.password}</ErrorMessage>
-      <Button type="submit" >{btnText}</Button>
+      <Button type="submit">{btnText}</Button>
     </form>
   );
 };
