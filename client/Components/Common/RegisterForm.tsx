@@ -1,41 +1,9 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Button } from "../../pages/register";
+import { Button } from "../../styles/registerPageStyles";
 import InputGroup from "./InputGroup";
 
-interface Props {
-  visible?: boolean;
-  setVisible?: Dispatch<SetStateAction<boolean>>;
-  setformValues: React.Dispatch<
-    React.SetStateAction<{
-      email: string;
-      password: string;
-    }>
-  >;
-  formValues: {
-    email: string;
-    password: string;
-  };
-  placeholder1: string;
-  placeholder2: string;
-  btnText: string;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
-  errMessage: {
-    email: string;
-    password: string;
-  };
-}
-const RegisterForm = ({
-  visible,
-  setVisible,
-  setformValues,
-  formValues,
-  placeholder1,
-  placeholder2,
-  btnText,
-  handleSubmit,
-  errMessage,
-}: Props) => {
+const RegisterForm = (props: RegisterFormProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -45,32 +13,32 @@ const RegisterForm = ({
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={props.handleSubmit}>
       <InputGroup
-        formValues={formValues}
-        setformValues={setformValues}
-        value={formValues.email}
+        formValues={props.formValues}
+        setformValues={props.setformValues}
+        value={props.formValues.email}
         name="email"
         icon="MdEmail"
-        placeholder={placeholder1}
+        placeholder={props.placeholder1}
         type="text"
         myRef={emailRef}
       />
-      <ErrorMessage>{errMessage.email}</ErrorMessage>
+      <ErrorMessage>{props.errMessage.email}</ErrorMessage>
       <InputGroup
-        formValues={formValues}
-        setformValues={setformValues}
-        visible={visible}
-        setVisible={setVisible}
-        value={formValues.password}
+        formValues={props.formValues}
+        setformValues={props.setformValues}
+        visible={props.visible}
+        setVisible={props.setVisible}
+        value={props.formValues.password}
         name="password"
         icon="password"
-        placeholder={placeholder2}
+        placeholder={props.placeholder2}
         type="password"
         myRef={passwordRef}
       />
-      <ErrorMessage>{errMessage.password}</ErrorMessage>
-      <Button type="submit">{btnText}</Button>
+      <ErrorMessage>{props.errMessage.password}</ErrorMessage>
+      <Button type="submit">{props.btnText}</Button>
     </form>
   );
 };

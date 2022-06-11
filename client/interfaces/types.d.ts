@@ -38,3 +38,26 @@ interface InputGroupProps {
   };
   myRef?: React.RefObject<HTMLInputElement>;
 }
+
+interface RegisterFormProps {
+  visible?: boolean;
+  setVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  setformValues: React.Dispatch<
+    React.SetStateAction<{
+      email: string;
+      password: string;
+    }>
+  >;
+  formValues: {
+    email: string;
+    password: string;
+  };
+  placeholder1: string;
+  placeholder2: string;
+  btnText: string;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  errMessage: {
+    email: string;
+    password: string;
+  };
+}
