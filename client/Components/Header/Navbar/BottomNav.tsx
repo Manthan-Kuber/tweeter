@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { NavProps } from "../../../interfaces/HeaderInterface";
-import { StyledUl, UnderlinedDiv, Li } from "./Navbar.styles";
+import { StyledUl, UnderlinedDiv, Li } from "../../../styles/Navbar.styles";
 import Link from "next/link";
 
 export default function BottomNav({

@@ -1,4 +1,4 @@
-import { StyledUl, UnderlinedDiv, Li } from "./Navbar.styles";
+import { StyledUl, UnderlinedDiv, Li } from "../../../styles/Navbar.styles";
 import { NavProps } from "../../../interfaces/HeaderInterface";
 import Link from "next/link";
 

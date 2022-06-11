@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Li, StyledUl, UnderlinedDiv } from "../Components/Header/Navbar/Navbar.styles";
+import { Li, StyledUl, UnderlinedDiv } from "./Navbar.styles";
 
 export const Container = styled.div`
   display: flex;

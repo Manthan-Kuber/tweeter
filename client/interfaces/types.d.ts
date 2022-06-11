@@ -61,3 +61,16 @@ interface RegisterFormProps {
     password: string;
   };
 }
+
+interface NavProps {
+  NavList: {
+    id: number;
+    name: string;
+    url: string;
+    icon: JSX.Element;
+  }[];
+  activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  width?: number;
+  Tab?: string;
+}
