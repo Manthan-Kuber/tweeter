@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { useLoginMutation, useSignupMutation } from "../../app/services/auth";
 import { setCredentials } from "../../features/auth/authSlice";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
-import { Container, FormLi, FormTabUl, FormUnderlinedDiv, SignInIconsWrapper, SignUpBox } from "../../styles/registerPageStyles";
+import { Container, FormLi, FormTabUl, FormUnderlinedDiv, SignInIconsWrapper, SignUpBox } from "../../styles/registerPage.styles";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },

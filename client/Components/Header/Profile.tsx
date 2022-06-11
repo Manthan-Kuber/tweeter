@@ -5,8 +5,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
-interface Props {}
-const Profile = (props: Props) => {
+const Profile = () => {
   const [visible, setVisible] = useState(false);
   return (
     <ProfileContainer>

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Button } from "../../styles/registerPageStyles";
+import { Button } from "../../styles/registerPage.styles";
 import InputGroup from "./InputGroup";
 
 const RegisterForm = (props: RegisterFormProps) => {

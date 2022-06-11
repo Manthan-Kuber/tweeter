@@ -1,13 +1,12 @@
 import Image from "next/image";
 import Navbar from "./Navbar/Navbar";
-import { StyledHeader } from "./Header.styles";
+import styled from "styled-components";
 import Profile from "./Profile";
 import BottomNav from "./Navbar/BottomNav";
 import { NavProps } from "../../interfaces/HeaderInterface";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
-
-const Header = ({NavList,activeTab,setActiveTab}: NavProps) => {
+const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {
   const { width } = useWindowSize();
   const PassedNavProps = {
     NavList: NavList,
@@ -17,7 +16,7 @@ const Header = ({NavList,activeTab,setActiveTab}: NavProps) => {
   return (
     <>
       <StyledHeader>
-        <Image src="/tweeter.svg" width={"100%"} height={30} alt='tweeter' />
+        <Image src="/tweeter.svg" width={"100%"} height={30} alt="tweeter" />
         {width! > 768 && <Navbar {...PassedNavProps} />}
         <Profile />
       </StyledHeader>
@@ -26,3 +25,11 @@ const Header = ({NavList,activeTab,setActiveTab}: NavProps) => {
   );
 };
 export default Header;
+
+export const StyledHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 3rem;
+  background-color: white;
+`;

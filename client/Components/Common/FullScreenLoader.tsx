@@ -1,8 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 
-interface Props {}
-const FullScreenLoader = (props: Props) => {
+const FullScreenLoader = () => {
   return (
     <Wrapper>
       <Loader size={48} />

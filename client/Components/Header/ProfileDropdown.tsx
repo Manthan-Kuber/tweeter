@@ -6,7 +6,6 @@ import { IoMdSettings } from "react-icons/io";
 import { motion } from "framer-motion";
 import { useAppDispatch } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
-import { useRouter } from "next/router";
 
 const variant = {
   initial: {
@@ -33,7 +32,6 @@ const variant = {
 
 function ProfileDropdown() {
   const dispatch = useAppDispatch();
-  const { replace } = useRouter();
   const ProfileOptionsList = [
     {
       id: 1,
@@ -71,13 +69,13 @@ function ProfileDropdown() {
       exit="initial"
     >
       {ProfileOptionsList.map((option) => (
-        <>
-          <div key={option.id} onClick={option.onClick}>
+        <OptionWrapper key={option.id}>
+          <div onClick={option.onClick}>
             {option.icon}
             <h4>{option.name}</h4>
           </div>
           {option.id === 3 && <hr />}
-        </>
+        </OptionWrapper>
       ))}
     </Container>
   );
@@ -89,9 +87,15 @@ const Container = styled.div`
   bottom: -26rem;
   background-color: white;
   padding: 1.5rem 1.3rem;
-  box-shadow: 0px 2px 4px 0px #0000000d;
+  box-shadow: 0 4px 12px -1px rgb(0 0 0 / 0.1), 0 2px 8px -2px rgb(0 0 0 / 0.1);
   border-radius: 12px;
 
+  & > div:last-child > div {
+    color: red;
+  }
+`;
+
+const OptionWrapper = styled.div`
   hr {
     margin-block: 1rem;
   }
@@ -104,10 +108,6 @@ const Container = styled.div`
     place-items: center;
     color: #4f4f4f;
     cursor: pointer;
-
-    &:last-child {
-      color: red;
-    }
 
     &:hover {
       background-color: #f2f2f2;
