@@ -30,16 +30,11 @@ function Layout({
 }) {
   const [activeTab, setActiveTab] = useState(Tab!);
   const { push } = useRouter();
-  const token = useAppSelector((state) => state.auth.token)
+  const token = useAppSelector((state) => state.auth.token);
+
   // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const token = localStorage.getItem("token");
-  //     token ? push("/") : push("/register");
-  //   }
-  // }, []);
-  useEffect(() => {
-    token ? push("/") : push("/register")
-  },[])
+  //   token ? push("/") : push("/register");
+  // }, [token]);
   return (
     <>
       <Head>
