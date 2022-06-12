@@ -10,7 +10,14 @@ import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { useLoginMutation, useSignupMutation } from "../../app/services/auth";
 import { setCredentials } from "../../features/auth/authSlice";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
-import { Container, FormLi, FormTabUl, FormUnderlinedDiv, SignInIconsWrapper, SignUpBox } from "../../styles/registerPage.styles";
+import {
+  Container,
+  FormLi,
+  FormTabUl,
+  FormUnderlinedDiv,
+  SignInIconsWrapper,
+  SignUpBox,
+} from "../../styles/registerPage.styles";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -25,6 +32,8 @@ const TabList = [
 ];
 
 const InitialState = {
+  fname: "",
+  lname: "",
   email: "",
   password: "",
 };
@@ -32,8 +41,12 @@ const InitialState = {
 function Register() {
   const [visible, setVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TabList[0].id);
-  const [formValues, setformValues] = useState<LoginRequest>(InitialState);
-  const [errMessage, setErrMessage] = useState<LoginRequest>(InitialState);
+  const [formValues, setformValues] = useState(InitialState);
+  const [errMessage, setErrMessage] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const { replace } = useRouter();
   const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
@@ -52,12 +65,14 @@ function Register() {
     }
   }, [token]);
 
+  const {fname,lname,email,password} = formValues
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await login(formValues).unwrap();
+      const user = await login({email,password}).unwrap();
       console.log(
-        `user info: ${user.user.id} ${user.user.email} and token is ${user.token}`
+        `user info: ${user.user.id} ${user.user.name} ${user.user.email} and token is ${user.token}`
       );
       dispatch(setCredentials(user));
       replace("/");
@@ -65,6 +80,7 @@ function Register() {
       const { errors } = err.data;
       console.log(errors);
       setErrMessage({
+        name: errors.name,
         email: errors.email,
         password: errors.password,
       });
@@ -74,9 +90,9 @@ function Register() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await signup(formValues).unwrap();
+      const user = await signup({name:`${fname} ${lname}`,email,password}).unwrap();
       console.log(
-        `user info: ${user.user.id} ${user.user.email} and token is ${user.token}`
+        `user info: ${user.user.id} ${user.user.name} ${user.user.email} and token is ${user.token}`
       );
       dispatch(setCredentials(user));
       replace("/");
@@ -84,6 +100,7 @@ function Register() {
       const { errors } = err.data;
       console.log(errors);
       setErrMessage({
+        name: errors.name,
         email: errors.email,
         password: errors.password,
       });
@@ -117,7 +134,11 @@ function Register() {
                 >
                   {item.name}
                   {activeTab === item.id && (
-                    <FormUnderlinedDiv as={motion.div} layoutId="underline" />
+                    <FormUnderlinedDiv
+                      as={motion.div}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    />
                   )}
                 </FormLi>
               ))}
@@ -126,18 +147,19 @@ function Register() {
             {activeTab === 1 ? (
               <RegisterForm
                 {...FormProps}
-                placeholder1="Email"
-                placeholder2="Password"
+                emailPlaceholder="Email"
+                passwordPlaceholder="Password"
                 btnText="Sign In"
                 handleSubmit={handleLogin}
               />
             ) : (
               <RegisterForm
                 {...FormProps}
-                placeholder1="Email"
-                placeholder2="Password"
+                emailPlaceholder="Email"
+                passwordPlaceholder="Password"
                 btnText="Sign Up"
                 handleSubmit={handleSignup}
+                isSignupForm
               />
             )}
 
@@ -167,4 +189,3 @@ Register.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default Register;
-

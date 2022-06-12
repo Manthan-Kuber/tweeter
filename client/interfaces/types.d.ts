@@ -1,5 +1,6 @@
 interface User {
   id: string;
+  name: string;
   email: string;
 }
 
@@ -13,7 +14,8 @@ interface UserResponse {
   token: string;
 }
 
-interface LoginRequest {
+interface UserRequest {
+  name: string;
   email: string;
   password: string;
 }
@@ -28,11 +30,15 @@ interface InputGroupProps {
   value: string;
   setformValues: React.Dispatch<
     React.SetStateAction<{
+      fname: string;
+      lname: string;
       email: string;
       password: string;
     }>
   >;
   formValues: {
+    fname: string;
+    lname: string;
     email: string;
     password: string;
   };
@@ -44,22 +50,28 @@ interface RegisterFormProps {
   setVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   setformValues: React.Dispatch<
     React.SetStateAction<{
+      fname: string;
+      lname: string;
       email: string;
       password: string;
     }>
   >;
   formValues: {
+    fname: string;
+    lname: string;
     email: string;
     password: string;
   };
-  placeholder1: string;
-  placeholder2: string;
+  emailPlaceholder: string;
+  passwordPlaceholder: string;
   btnText: string;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   errMessage: {
+    name: string;
     email: string;
     password: string;
   };
+  isSignupForm?: boolean;
 }
 
 interface NavProps {

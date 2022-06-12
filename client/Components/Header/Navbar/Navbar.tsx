@@ -1,5 +1,4 @@
 import { StyledUl, UnderlinedDiv, Li } from "../../../styles/Navbar.styles";
-import { NavProps } from "../../../interfaces/HeaderInterface";
 import Link from "next/link";
 
 const Navbar = ({ NavList, activeTab, setActiveTab }: NavProps) => {

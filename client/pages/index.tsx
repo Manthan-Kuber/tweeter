@@ -6,7 +6,7 @@ import Layout from "../Components/Common/Layout";
 import { useAppSelector } from "../Hooks/store";
 
 const Home: NextPage = () => {
-  const email = useAppSelector((state) => state.auth.user?.email);
+  const name = useAppSelector((state) => state.auth.user?.name)
   const token = useAppSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(true);
   const { replace } = useRouter();
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
         <FullScreenLoader />
       ) : (
         <Layout Tab="Home">
-          <h1>{`Welcome home ${email}`}</h1>
+          <h1>{`Welcome home ${name}`}</h1>
         </Layout>
       )}
     </>

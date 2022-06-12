@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 export const Text = styled.div`
-  font: 1.4rem var(--ff-noto);
+  font: 500 1.4rem var(--ff-noto);
   background-color: transparent;
   color: #c7c7cd;
   transform: translate(0);
@@ -25,31 +25,32 @@ export const StyledInput = styled.input`
   padding-right: 4rem;
   padding-left: 2rem;
   border-radius: 8px;
-  outline: 1px solid #bdbdbd;
+  outline: 1.5px solid #bdbdbd;
   border: none;
   accent-color: var(--clr-primary);
   width: 100%;
 
   &:focus {
     outline-color: var(--clr-primary);
+    outline-width: 2.5px;
   }
 
   &:focus + .placeholder-text .text,
   :not(&[value=""]) + .placeholder-text .text {
     background-color: white;
     font-size: 1.2rem;
+    font-weight: 600;
     transform: translateY(-160%);
     padding-inline: 0.3rem;
   }
 
   &:focus + .placeholder-text .text {
-    border-color: var(--clr-primary);
     color: var(--clr-primary);
   }
 `;
 
 export const Wrapper = styled.div`
-  margin-block: 1.5rem;
+  margin-top: 1.8rem;
   position: relative;
 `;
 

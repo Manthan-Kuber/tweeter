@@ -85,10 +85,13 @@ export default ProfileDropdown;
 const Container = styled.div`
   position: absolute;
   bottom: -26rem;
+  right: -0.6rem;
   background-color: white;
   padding: 1.5rem 1.3rem;
   box-shadow: 0 4px 12px -1px rgb(0 0 0 / 0.1), 0 2px 8px -2px rgb(0 0 0 / 0.1);
   border-radius: 12px;
+  white-space: nowrap;
+  min-width: 17rem;
 
   & > div:last-child > div {
     color: red;

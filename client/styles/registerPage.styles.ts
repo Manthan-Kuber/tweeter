@@ -31,8 +31,8 @@ export const Button = styled.button`
   padding-block: 1rem;
   font: 600 clamp(1.4rem, 2vw + 0.5rem, 1.6rem) var(--ff-noto);
   cursor: pointer;
-  margin-top: 1.5rem;
   width: 100%;
+  margin-top: 1.8rem;
 
   &:hover {
     background-color: hsl(
@@ -52,7 +52,8 @@ export const SignInIconsWrapper = styled.div`
 `;
 
 export const FormTabUl = styled(StyledUl)`
-  margin-block: 3rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
   gap: revert;
   justify-content: space-evenly;
   border-bottom: 1px solid #bdbdbd;

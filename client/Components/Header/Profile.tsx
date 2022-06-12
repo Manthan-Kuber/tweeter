@@ -4,9 +4,11 @@ import Image from "next/image";
 import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useAppSelector } from "../../Hooks/store";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
+  const name = useAppSelector(state => state.auth.user?.name)
   return (
     <ProfileContainer>
       <ProfilePic
@@ -14,7 +16,7 @@ const Profile = () => {
         width={42}
         height={37}
       />
-      <h4>Marco Turser</h4>
+      <h4>{name}</h4>
       <DropDownIcon
         className="dropdownIcon"
         size={16}

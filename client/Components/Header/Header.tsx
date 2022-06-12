@@ -3,7 +3,6 @@ import Navbar from "./Navbar/Navbar";
 import styled from "styled-components";
 import Profile from "./Profile";
 import BottomNav from "./Navbar/BottomNav";
-import { NavProps } from "../../interfaces/HeaderInterface";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
 const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {

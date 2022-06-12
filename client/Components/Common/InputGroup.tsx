@@ -1,5 +1,14 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Icon, PlaceholderText, StyledInput, Text, Wrapper } from "../../styles/inputGroup.styles";
+import {
+  Icon,
+  PlaceholderText,
+  StyledInput,
+  Text,
+  Wrapper,
+} from "../../styles/inputGroup.styles";
+
+const capitalize = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 function InputGroup({
   placeholder,
@@ -20,7 +29,12 @@ function InputGroup({
         name={name}
         value={value}
         onChange={(e) =>
-          setformValues({ ...formValues, [name]: e.currentTarget.value })
+          name === "fname" || name === "lname"
+            ? setformValues({
+                ...formValues,
+                [name]: capitalize(e.currentTarget.value),
+              })
+            : setformValues({ ...formValues, [name]: e.currentTarget.value })
         }
         ref={myRef}
       />
@@ -66,5 +80,3 @@ function InputGroup({
   );
 }
 export default InputGroup;
-
-

@@ -14,13 +14,33 @@ const RegisterForm = (props: RegisterFormProps) => {
 
   return (
     <form onSubmit={props.handleSubmit}>
+      {props.isSignupForm && (
+        <InputWrapper>
+          <InputGroup
+            formValues={props.formValues}
+            setformValues={props.setformValues}
+            value={props.formValues.fname}
+            name="fname"
+            placeholder="First Name"
+            type="text"
+          />
+          <InputGroup
+            formValues={props.formValues}
+            setformValues={props.setformValues}
+            value={props.formValues.lname}
+            name="lname"
+            placeholder="Last Name"
+            type="text"
+          />
+          <ErrorMessage>{props.errMessage.name}</ErrorMessage>
+        </InputWrapper>
+      )}
       <InputGroup
         formValues={props.formValues}
         setformValues={props.setformValues}
         value={props.formValues.email}
         name="email"
-        icon="MdEmail"
-        placeholder={props.placeholder1}
+        placeholder={props.emailPlaceholder}
         type="text"
         myRef={emailRef}
       />
@@ -33,7 +53,7 @@ const RegisterForm = (props: RegisterFormProps) => {
         value={props.formValues.password}
         name="password"
         icon="password"
-        placeholder={props.placeholder2}
+        placeholder={props.passwordPlaceholder}
         type="password"
         myRef={passwordRef}
       />
@@ -47,4 +67,10 @@ export default RegisterForm;
 const ErrorMessage = styled.small`
   color: red;
   font: 600 1.2rem var(--ff-noto);
+`;
+
+const InputWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1rem;
 `;

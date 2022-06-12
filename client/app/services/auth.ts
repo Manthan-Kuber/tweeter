@@ -11,7 +11,7 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<UserResponse,LoginRequest>({
+    login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
       query: (credentials) => ({
         url: "login",
         method: "POST",
@@ -19,17 +19,21 @@ export const api = createApi({
       }),
     }),
     //TODO Change signup respone
-    signup: builder.mutation<UserResponse,LoginRequest>({
+    signup: builder.mutation<UserResponse, UserRequest>({
       query: (credentials) => ({
         url: "signup",
         method: "POST",
         body: credentials,
       }),
     }),
-    protected:builder.mutation<{message:string},void>({
-      query: () => "protected"
-    })
+    protected: builder.mutation<{ message: string }, void>({
+      query: () => "protected",
+    }),
+    test: builder.mutation<{ message: string }, void>({
+      query: () => "test",
+    }),
   }),
 });
 
-export const {useLoginMutation,useProtectedMutation,useSignupMutation} = api
+export const { useLoginMutation, useProtectedMutation, useSignupMutation } =
+  api;
