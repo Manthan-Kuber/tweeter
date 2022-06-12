@@ -1,15 +1,20 @@
 import { NextFunction } from "express";
 import { Schema, model } from "mongoose";
 import isEmail from "validator/lib/isEmail";
+import isAlpha from "validator/lib/isAlpha";
 import bcrypt from "bcrypt";
-import { IUserModel,IUser } from "../types/types";
-
+import { IUserModel, IUser } from "../types/types";
 
 const userSchema = new Schema<IUser, IUserModel>(
   {
-    // firstname: { type: String, required: true },
-    // lastname: { type: String, required: true },
-    name: { type: String },
+    name: {
+      type: String,
+      required: [true, "Please Enter your name"],
+      validate: [
+        (val: string) => isAlpha(val.split(" ").join("")),
+        "Please enter a valid name",
+      ],
+    },
     email: {
       type: String,
       required: [true, "Please Enter an Email"],
@@ -28,12 +33,12 @@ const userSchema = new Schema<IUser, IUserModel>(
     dob: String,
     bio: String,
     following: {
-      type: [Schema.Types.ObjectId], 
-      ref: 'User'
+      type: [Schema.Types.ObjectId],
+      ref: "User",
     },
     followers: {
-      type: [Schema.Types.ObjectId], 
-      ref: 'User'
+      type: [Schema.Types.ObjectId],
+      ref: "User",
     },
   },
   { timestamps: true }

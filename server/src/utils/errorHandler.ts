@@ -2,6 +2,7 @@ export const errHandler = (err: any) => {
   console.log(err.message, err.code);
 
   let errors = {
+    name:"",
     email: "",
     password: "",
   };

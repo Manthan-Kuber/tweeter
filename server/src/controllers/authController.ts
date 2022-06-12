@@ -15,16 +15,17 @@ export const signUpPost = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { email, password } = req.body;
-  console.log(email, password);
+  const { name, email, password } = req.body;
+  console.log(name, email, password);
 
   try {
-    const user = await User.create({ email, password });
+    const user = await User.create({ name, email, password });
     const token = createToken(user._id);
 
-    res
-      .status(201)
-      .json({ user: { id: user._id, email: user.email }, token: token });
+    res.status(201).json({
+      user: { id: user._id, name: user.name, email: user.email },
+      token: token,
+    });
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });
@@ -43,7 +44,10 @@ export const logInPost = async (
 
     res
       .status(200)
-      .json({ user: { id: user._id, email: user.email }, token: token });
+      .json({
+        user: { id: user._id, name: user.name, email: user.email },
+        token: token,
+      });
   } catch (err) {
     const errors = errHandler(err);
     res.status(400).json({ errors });

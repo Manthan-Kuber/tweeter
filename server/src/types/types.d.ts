@@ -1,8 +1,8 @@
 import { Request } from "express";
-import {Model} from "mongoose"
+import { Model } from "mongoose";
 
-interface IRequest extends Request{
-  user?:any; //TODO Restrict type
+interface IRequest extends Request {
+  user?: IUser | null;
 }
 
 interface UserPayload extends JwtPayload {
@@ -10,8 +10,6 @@ interface UserPayload extends JwtPayload {
 }
 
 interface IUser {
-  // firstname: string;
-  // lastname: string;
   name: string;
   email: string;
   password: string;
@@ -30,14 +28,14 @@ interface IUserModel extends Model<IUser> {
 }
 
 interface ITweet {
-  creator: Schema.Types.ObjectId
-  tweet: string
-  media?: string[]
-  likes?: number
+  creator: Schema.Types.ObjectId;
+  tweet: string;
+  media?: string[];
+  likes?: number;
 }
 
 interface IComment {
-  author: Schema.Types.ObjectId
-  tweet: Schema.Types.ObjectId
-  likes?: number
+  author: Schema.Types.ObjectId;
+  tweet: Schema.Types.ObjectId;
+  likes?: number;
 }

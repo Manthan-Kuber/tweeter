@@ -1,6 +1,5 @@
 import express from "express";
 const router = express.Router();
-import { requireAuth } from "../middleware/authMiddleware";
 import { getProfile, followUser, unfollowUser, getFollowers, getFollowing, setProfilePic, deleteProfilePic } from "../controllers/userController";
 import { profilePicUpload as upload } from "../middleware/mediaUpload"
 
