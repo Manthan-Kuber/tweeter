@@ -29,6 +29,6 @@ export const StyledHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 3rem;
-  background-color: white;
+  padding: 1.2rem 3rem;
+  border-bottom: 2px solid lightgray;
 `;

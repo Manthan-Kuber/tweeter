@@ -19,9 +19,10 @@ export const Li = styled.li<{ active: boolean }>`
 
 export const UnderlinedDiv = styled.div`
   position: absolute;
-  bottom: -15px;
-  inset-inline: 0;
-  height: 3px;
+  bottom: -21px;
+  height: 4px;
   background: var(--clr-primary);
   border-radius: 8px 8px 0px 0px;
+  width: calc(100% + 20px);
+  left: -10px;
 `;

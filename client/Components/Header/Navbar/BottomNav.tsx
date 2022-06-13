@@ -36,12 +36,14 @@ const Container = styled.nav`
   width: 100%;
   background-color: white;
   padding-block: 1.2rem;
+  border-top:2px solid lightgray;
 `;
 
 const OverlinedDiv = styled(UnderlinedDiv)`
   bottom: revert;
-  top: -12px;
+  top: -13px;
   border-radius: 0px 0px 8px 8px;
+  
 `;
 
 const BottomNavUl = styled(StyledUl)`
