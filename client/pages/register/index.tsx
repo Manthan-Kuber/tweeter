@@ -65,12 +65,12 @@ function Register() {
     }
   }, [token]);
 
-  const {fname,lname,email,password} = formValues
+  const { fname, lname, email, password } = formValues;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await login({email,password}).unwrap();
+      const user = await login({ email, password }).unwrap();
       console.log(
         `user info: ${user.user.id} ${user.user.name} ${user.user.email} and token is ${user.token}`
       );
@@ -90,7 +90,11 @@ function Register() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await signup({name:`${fname} ${lname}`,email,password}).unwrap();
+      const user = await signup({
+        name: `${fname} ${lname}`,
+        email,
+        password,
+      }).unwrap();
       console.log(
         `user info: ${user.user.id} ${user.user.name} ${user.user.email} and token is ${user.token}`
       );
@@ -175,17 +179,5 @@ function Register() {
   );
 }
 
-Register.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <>
-      <Head>
-        <title>Tweeter - Register</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      {page}
-      <Footer />
-    </>
-  );
-};
 
 export default Register;

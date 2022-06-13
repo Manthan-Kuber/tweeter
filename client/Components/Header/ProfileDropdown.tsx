@@ -6,6 +6,7 @@ import { IoMdSettings } from "react-icons/io";
 import { motion } from "framer-motion";
 import { useAppDispatch } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
+import { useTestQuery } from "../../app/services/auth";
 
 const variant = {
   initial: {
@@ -32,12 +33,15 @@ const variant = {
 
 function ProfileDropdown() {
   const dispatch = useAppDispatch();
+  const { data } = useTestQuery();
   const ProfileOptionsList = [
     {
       id: 1,
       icon: <CgProfile size={16} />,
       name: "My Profile",
-      onClick: () => {},
+      onClick: async () => {
+        console.log(data);
+      },
     },
     {
       id: 2,

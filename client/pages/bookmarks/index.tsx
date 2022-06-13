@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
-import Layout from "../../Components/Common/Layout";
 import { useAppSelector } from "../../Hooks/store";
 
 interface Props {}
@@ -25,9 +24,7 @@ function bookmarks({}: Props) {
       {isLoading ? (
         <FullScreenLoader />
       ) : (
-        <Layout Tab="Bookmarks">
           <h1>bookmarks</h1>
-        </Layout>
       )}
     </>
   );

@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
-import Layout from "../Components/Common/Layout";
 import { useAppSelector } from "../Hooks/store";
 
 const Home: NextPage = () => {
@@ -27,9 +26,9 @@ const Home: NextPage = () => {
       {isLoading ? (
         <FullScreenLoader />
       ) : (
-        <Layout Tab="Home">
+        
           <h1>{`Welcome home ${name}`}</h1>
-        </Layout>
+        
       )}
     </>
   );

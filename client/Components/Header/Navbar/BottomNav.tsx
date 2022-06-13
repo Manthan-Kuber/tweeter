@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { StyledUl, UnderlinedDiv, Li } from "../../../styles/Navbar.styles";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function BottomNav({
   NavList,
@@ -16,10 +17,12 @@ export default function BottomNav({
             onClick={() => setActiveTab(item.name)}
             active={activeTab === item.name ? true : false}
           >
+            {activeTab === item.name && (
+              <OverlinedDiv as={motion.div} layoutId="underline" />
+            )}
             <Link href={item.url}>
               <a>{item.icon}</a>
             </Link>
-            {activeTab === item.name && <UnderlinedDiv />}
           </Li>
         ))}
       </BottomNavUl>
@@ -32,8 +35,13 @@ const Container = styled.nav`
   bottom: 0;
   width: 100%;
   background-color: white;
-  padding-bottom: 2.4rem;
-  padding-top: 1.8rem;
+  padding-block: 1.2rem;
+`;
+
+const OverlinedDiv = styled(UnderlinedDiv)`
+  bottom: revert;
+  top: -12px;
+  border-radius: 0px 0px 8px 8px;
 `;
 
 const BottomNavUl = styled(StyledUl)`

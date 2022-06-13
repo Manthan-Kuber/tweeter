@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
-import Layout from "../../Components/Common/Layout";
 import { useAppSelector } from "../../Hooks/store";
 
 interface Props {}
@@ -26,9 +25,7 @@ function Explore({}: Props) {
       {isLoading ? (
         <FullScreenLoader />
       ) : (
-        <Layout Tab="Explore">
           <h1>Explore</h1>
-        </Layout>
       )}
     </>
   );

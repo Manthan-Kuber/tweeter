@@ -26,14 +26,10 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    protected: builder.mutation<{ message: string }, void>({
-      query: () => "protected",
-    }),
-    test: builder.mutation<{ message: string }, void>({
+    test: builder.query<{ message: string }, void>({
       query: () => "test",
     }),
   }),
 });
 
-export const { useLoginMutation, useProtectedMutation, useSignupMutation } =
-  api;
+export const { useLoginMutation, useTestQuery, useSignupMutation } = api;

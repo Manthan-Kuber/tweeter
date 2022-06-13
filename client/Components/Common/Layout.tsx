@@ -7,6 +7,7 @@ import { AiFillHome } from "react-icons/ai";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -19,26 +20,30 @@ const NavList = [
   },
 ];
 
-function Layout({
-  children,
-  Tab,
-}: {
-  children: React.ReactElement;
-  Tab?: string;
-}) {
-  const [activeTab, setActiveTab] = useState(Tab!);
+function Layout({ children }: { children: React.ReactElement }) {
+  const router = useRouter();
+  const pathName =
+    router.pathname.split("/")[1].toUpperCase()[0] +
+    router.pathname.split("/")[1].substring(1);
+  const [activeTab, setActiveTab] = useState(
+    router.pathname.split("/")[1] === "" ? "Home" : pathName
+  );
 
   return (
     <>
       <Head>
-        <title>Tweeter - {Tab}</title>
+        <title>
+          Tweeter - {router.pathname.split("/")[1] === "" ? "Home" : pathName}{" "}
+        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Header
-        NavList={NavList}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      {pathName !== "Register" && (
+        <Header
+          NavList={NavList}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+      )}
       <Main
         as={motion.main}
         initial={{ opacity: 0 }}

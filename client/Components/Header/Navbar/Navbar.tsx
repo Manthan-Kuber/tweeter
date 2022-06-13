@@ -1,5 +1,6 @@
 import { StyledUl, UnderlinedDiv, Li } from "../../../styles/Navbar.styles";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Navbar = ({ NavList, activeTab, setActiveTab }: NavProps) => {
   return (
@@ -16,7 +17,9 @@ const Navbar = ({ NavList, activeTab, setActiveTab }: NavProps) => {
             <Link href={item.url}>
               <a>{item.name}</a>
             </Link>
-            {activeTab === item.name && <UnderlinedDiv />}
+            {activeTab === item.name && (
+              <UnderlinedDiv as={motion.div} layoutId="underline" />
+            )}
           </Li>
         ))}
       </StyledUl>
