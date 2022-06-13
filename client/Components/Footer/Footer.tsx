@@ -1,8 +1,19 @@
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Footer = () => {
+  const {pathname} = useRouter();
+  const [isBgWhite, setIsBgWhite] = useState(false)
+
+  useEffect(() => {
+    if(pathname === "/register") setIsBgWhite(true)
+    console.log(isBgWhite);
+  }, [])
+  
+
   return (
-    <StyledFooter>
+    <StyledFooter isBgWhite={isBgWhite}>
       <FooterText>
         Created by{" "}
         <b>
@@ -19,10 +30,11 @@ const Footer = () => {
 
 export default Footer;
 
-export const StyledFooter = styled.footer`
+export const StyledFooter = styled.footer<{ isBgWhite: boolean }>`
   margin-top: auto;
   padding-top: 2.4rem;
   padding-bottom: 9.6rem;
+  background-color: ${(props) => (props.isBgWhite ? "white" : "#f2f2f2")};
 
   @media (min-width: 55em) {
     padding-bottom: 2.4rem;

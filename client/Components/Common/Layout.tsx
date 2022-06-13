@@ -59,5 +59,6 @@ function Layout({ children }: { children: React.ReactElement }) {
 export default Layout;
 
 const Main = styled.main`
-  min-height: calc(100vh - 14rem);
+  min-height: calc(100vh - 13rem);
+  background-color: #f2f2f2;
 `;

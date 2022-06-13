@@ -49,9 +49,12 @@ const ProfileContainer = styled.div`
   gap: 1rem;
   align-items: center;
   position: relative;
-
-  font: 700 1.2rem var(--ff-noto);
   color: #333;
+
+  & > h4{
+    font: 700 1.4rem var(--ff-noto);
+  }
+  
 
   .dropdownIcon {
     cursor: pointer;

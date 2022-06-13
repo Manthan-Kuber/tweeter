@@ -28,9 +28,6 @@ a{
   text-decoration: inherit;
 }
 
-/* body{
-  background-color: #f2f2f2;
-} */
 `;
 
 export default GlobalStyles;

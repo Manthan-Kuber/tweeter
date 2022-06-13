@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { CgProfile } from "react-icons/cg";
-import { GrGroup } from "react-icons/gr";
-import { MdLogout } from "react-icons/md";
+import {  MdAccountCircle } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
+import { HiUserGroup,HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { useAppDispatch } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
@@ -37,7 +36,7 @@ function ProfileDropdown() {
   const ProfileOptionsList = [
     {
       id: 1,
-      icon: <CgProfile size={16} />,
+      icon: <MdAccountCircle size={20} />,
       name: "My Profile",
       onClick: async () => {
         console.log(data);
@@ -45,19 +44,19 @@ function ProfileDropdown() {
     },
     {
       id: 2,
-      icon: <GrGroup size={16} />,
+      icon: <HiUserGroup size={20} />,
       name: "Group Chat",
       onClick: () => {},
     },
     {
       id: 3,
-      icon: <IoMdSettings size={16} />,
+      icon: <IoMdSettings size={20} />,
       name: "Settings",
       onClick: () => {},
     },
     {
       id: 4,
-      icon: <MdLogout size={16} />,
+      icon: <HiOutlineLogout size={20} />,
       name: "Logout",
       onClick: () => {
         dispatch(logOut());
@@ -88,14 +87,15 @@ export default ProfileDropdown;
 
 const Container = styled.div`
   position: absolute;
-  bottom: -26rem;
-  right: -0.6rem;
+  bottom: -28rem;
+  right: 0;
   background-color: white;
   padding: 1.5rem 1.3rem;
   box-shadow: 0 4px 12px -1px rgb(0 0 0 / 0.1), 0 2px 8px -2px rgb(0 0 0 / 0.1);
   border-radius: 12px;
   white-space: nowrap;
-  min-width: 17rem;
+  min-width: 20rem;
+  border: 1px solid #f2f2f2;
 
   & > div:last-child > div {
     color: red;
@@ -105,6 +105,8 @@ const Container = styled.div`
 const OptionWrapper = styled.div`
   hr {
     margin-block: 1rem;
+    border-color: #f2f2f2;
+    border: 1.5px solid #f2f2f2;
   }
 
   & > div {
@@ -112,9 +114,13 @@ const OptionWrapper = styled.div`
     padding: 1.5rem 1.3rem;
     display: grid;
     grid-template-columns: 1fr 9fr;
-    place-items: center;
+    gap: 1rem;
     color: #4f4f4f;
     cursor: pointer;
+
+    h4 {
+      font: 500 1.4rem var(--ff-montserrat);
+    }
 
     &:hover {
       background-color: #f2f2f2;

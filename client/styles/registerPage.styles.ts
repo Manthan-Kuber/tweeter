@@ -7,6 +7,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 7rem);
+  background-color: white;
 `;
 
 export const SignUpBox = styled.div`
