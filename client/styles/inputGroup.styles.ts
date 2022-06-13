@@ -25,25 +25,33 @@ export const StyledInput = styled.input`
   padding-right: 4rem;
   padding-left: 2rem;
   border-radius: 8px;
-  outline: 1.5px solid #bdbdbd;
+  outline: 1.5px solid hsl(0, 0%, 74%,1);
   border: none;
   accent-color: var(--clr-primary);
   width: 100%;
+  background-color: hsl(0, 0%, 74%,0.1);
+  font-family: var(--ff-poppins);
+  font-size: 1.4rem;
 
   &:focus {
     outline-color: var(--clr-primary);
     outline-width: 2.5px;
+    background-color: white;
+  }
+
+  :not(&[value=""]){
+    background-color: white;
   }
 
   &:focus + .placeholder-text .text,
   :not(&[value=""]) + .placeholder-text .text {
-    background-color: white;
+    background:white;
     font-size: 1.2rem;
     font-weight: 600;
     transform: translateY(-160%);
     padding-inline: 0.3rem;
   }
-
+  
   &:focus + .placeholder-text .text {
     color: var(--clr-primary);
   }
