@@ -28,6 +28,10 @@ a{
   text-decoration: inherit;
 }
 
+li{
+  list-style: none;
+}
+
 `;
 
 export default GlobalStyles;

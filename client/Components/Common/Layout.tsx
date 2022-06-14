@@ -5,7 +5,6 @@ import { FaCompass } from "react-icons/fa";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
@@ -44,14 +43,7 @@ function Layout({ children }: { children: React.ReactElement }) {
           setActiveTab={setActiveTab}
         />
       )}
-      <Main
-        as={motion.main}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25 }}
-      >
-        {children}
-      </Main>
+      <Main>{children}</Main>
       <Footer />
     </>
   );
@@ -61,4 +53,5 @@ export default Layout;
 const Main = styled.main`
   min-height: calc(100vh - 13rem);
   background-color: #f2f2f2;
+  padding-block: 2rem;
 `;

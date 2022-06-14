@@ -8,7 +8,6 @@ const Footer = () => {
 
   useEffect(() => {
     if(pathname === "/register") setIsBgWhite(true)
-    console.log(isBgWhite);
   }, [])
   
 
