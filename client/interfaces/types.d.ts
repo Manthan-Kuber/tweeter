@@ -86,3 +86,16 @@ interface NavProps {
   width?: number;
   Tab?: string;
 }
+
+interface FilterBoxProps {
+  filterList: {
+    1: string;
+    2: string;
+    3: string;
+    4: string;
+  };
+}
+
+interface ProfileDropDownProps{
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>
+}

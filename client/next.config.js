@@ -6,7 +6,7 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['cloudflare-ipfs.com'],
+    domains: ['cloudflare-ipfs.com','loremflickr.com'],
   },
 };
 

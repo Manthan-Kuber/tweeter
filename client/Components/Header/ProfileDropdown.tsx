@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useAppDispatch } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
 import { useTestQuery } from "../../app/services/auth";
+import { useRouter } from "next/router";
 
 const variant = {
   initial: {
@@ -30,35 +31,42 @@ const variant = {
   },
 };
 
-function ProfileDropdown() {
+function ProfileDropdown({setVisible}:ProfileDropDownProps) {
   const dispatch = useAppDispatch();
   const { data } = useTestQuery();
+  const {push} = useRouter();
   const ProfileOptionsList = [
     {
       id: 1,
       icon: <MdAccountCircle size={20} />,
       name: "My Profile",
       onClick: async () => {
-        console.log(data);
+        setVisible(prev => !prev)
+        push("/profile")
       },
     },
     {
       id: 2,
       icon: <HiUserGroup size={20} />,
       name: "Group Chat",
-      onClick: () => {},
+      onClick: () => {
+        setVisible(prev => !prev)
+      },
     },
     {
       id: 3,
       icon: <IoMdSettings size={20} />,
       name: "Settings",
-      onClick: () => {},
+      onClick: () => {
+        setVisible(prev => !prev)
+      },
     },
     {
       id: 4,
       icon: <HiOutlineLogout size={20} />,
       name: "Logout",
       onClick: () => {
+        setVisible(prev => !prev)
         dispatch(logOut());
       },
     },
@@ -96,6 +104,7 @@ const Container = styled.div`
   white-space: nowrap;
   min-width: 20rem;
   border: 1px solid #f2f2f2;
+  z-index: 2;
 
   & > div:last-child > div {
     color: red;

@@ -53,5 +53,5 @@ export default Layout;
 const Main = styled.main`
   min-height: calc(100vh - 13rem);
   background-color: #f2f2f2;
-  padding-block: 2rem;
+  padding-bottom: 2rem;
 `;

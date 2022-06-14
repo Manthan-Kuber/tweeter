@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
+import FilterBox from "../../Components/Common/FilterBox";
 import { useAppSelector } from "../../Hooks/store";
 
 interface Props {}
@@ -20,14 +22,38 @@ function Explore({}: Props) {
     }
   }, [token]);
 
+  const filterList = {
+    1: "Top",
+    2: "Latest",
+    3: "People",
+    4: "Media",
+  };
+
   return (
     <>
       {isLoading ? (
         <FullScreenLoader />
       ) : (
-          <h1>Explore</h1>
+        <Container>
+          <FilterBox filterList={filterList} />
+          <div>Explore Content goes here</div>
+        </Container>
       )}
     </>
   );
 }
 export default Explore;
+
+const Container = styled.div`
+  width: min(95%, 102.4rem);
+  margin-inline: auto;
+  padding-block: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 2rem;
+
+  //delete later
+  & > div:last-child {
+    background-color: green;
+  }
+`;

@@ -23,7 +23,7 @@ const Profile = () => {
         onClick={() => setVisible(!visible)}
         $visible={visible}
       />
-      <AnimatePresence>{visible && <ProfileDropdown />}</AnimatePresence>
+      <AnimatePresence>{visible && <ProfileDropdown setVisible={setVisible} />}</AnimatePresence>
     </ProfileContainer>
   );
 };
