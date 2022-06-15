@@ -7,7 +7,7 @@ import { cloud as cloudinary }  from "../utils/cloudinaryConfig";
 export const getProfile = async(
     req: Request, 
     res: Response
-    ) => {
+) => {
         const { id } = req.body;
 
         try {
@@ -22,6 +22,7 @@ export const getProfile = async(
                         name: 1,
                         username: 1,
                         profilePic: 1,
+                        coverPic: 1,
                         bio: 1,
                         following: { $cond: { if: { $isArray: "$following" }, then: { $size: "$following" }, else: 0}}, 
                         followers: { $cond: { if: { $isArray: "$followers" }, then: { $size: "$followers" }, else: 0}}
@@ -37,7 +38,7 @@ export const getProfile = async(
 export const followUser = async(
     req: Request, 
     res: Response
-    ) => {
+) => {
         const { id, targetid } = req.body;
 
         try {
@@ -58,7 +59,7 @@ export const followUser = async(
 export const unfollowUser = async(
     req: Request, 
     res: Response
-    ) => {
+) => {
         const { id, targetid } = req.body;
 
         try {
@@ -79,7 +80,7 @@ export const unfollowUser = async(
 export const getFollowers = async(
     req: Request,
     res: Response
-    ) => {
+) => {
         const { id, skip } = req.body;
 
         try {
@@ -94,7 +95,7 @@ export const getFollowers = async(
 export const getFollowing = async(
     req: Request,
     res: Response
-    ) => {
+) => {
         const { id, skip } = req.body;
 
         try {
@@ -111,7 +112,7 @@ export const getFollowing = async(
 export const setProfilePic = async(
     req: Request,
     res: Response
-    ) => {
+) => {
         const { id } = req.body;
         const file = req.file;
         if (file) {
@@ -122,7 +123,7 @@ export const setProfilePic = async(
                         {
                             transformation: {width: 500, height: 500, crop: "fill"},
                             folder: "profilePictures",
-                            public_id: `${id}`,
+                            public_id: `${id}-profile`,
                             overwrite: true
                         },
                         async (err, result) => {
@@ -148,18 +149,79 @@ export const setProfilePic = async(
 export const deleteProfilePic = async(
     req: Request,
     res: Response
-    ) => {
+) => {
         const { id } = req.body;
 
         try {
             const user = await User.findById(id);
             if (user) {
-                cloudinary.uploader.destroy(`profilePictures/${id}`, async (err, result) => {
+                cloudinary.uploader.destroy(`profilePictures/${id}-profile`, async (err, result) => {
                     if (err)
                         res.status(400).json({error: err});
                     else {
                         const updatedUser = await User.findByIdAndUpdate(id, {$unset: {profilePic: ""}});
                         res.status(200).json({message: "Profile picture removed sucessfully"});
+
+                    }
+                });
+            }
+        } catch(err) {
+            res.status(400).json({error: err});
+        }
+};
+
+export const setCoverPic = async(
+    req: Request,
+    res: Response
+) => {
+        const { id } = req.body;
+        const file = req.file;
+        if (file) {
+            try {
+                const user = await User.findById(id);
+                if (user) {
+                    const upload_stream = cloudinary.uploader.upload_stream(
+                        {
+                            transformation: {width: 900, height: 350, crop: "fill"},
+                            folder: "coverPictures",
+                            public_id: `${id}-cover`,
+                            overwrite: true
+                        },
+                        async (err, result) => {
+                            if(err)
+                                res.status(400).json({error: err});
+                            else if (result) {
+                                const user = await User.findByIdAndUpdate(id, {$set: {coverPic: result.secure_url}});
+                                const updatedUser = await User.findById(id);
+                                res.status(200).json({data: updatedUser?.coverPic,message: "Cover picture set sucessfully"});
+                            }
+                        }
+                    );
+                    streamifier.createReadStream(file.buffer).pipe(upload_stream);
+                }
+            } catch(err) {
+                res.status(400).json({error: err});
+            }
+        } else {
+            res.status(400).json({error: "Please upload a valid image file"});
+        }
+};
+
+export const deleteCoverPic = async(
+    req: Request,
+    res: Response
+) => {
+        const { id } = req.body;
+
+        try {
+            const user = await User.findById(id);
+            if (user) {
+                cloudinary.uploader.destroy(`coverPictures/${id}-cover`, async (err, result) => {
+                    if (err)
+                        res.status(400).json({error: err});
+                    else {
+                        const updatedUser = await User.findByIdAndUpdate(id, {$unset: {coverPic: ""}});
+                        res.status(200).json({message: "Cover picture removed sucessfully"});
 
                     }
                 });

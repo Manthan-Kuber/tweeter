@@ -29,6 +29,7 @@ const userSchema = new Schema<IUser, IUserModel>(
     },
     username: String,
     profilePic: String,
+    coverPic: String,
     mobile: String,
     dob: String,
     bio: String,
