@@ -30,5 +30,5 @@ export const StyledHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 3rem;
-  border-bottom: 2px solid lightgray;
+  border-bottom: 1px solid lightgray;
 `;

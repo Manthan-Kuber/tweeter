@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Button } from "../../styles/registerPage.styles";
 import InputGroup from "./InputGroup";
+import {motion} from 'framer-motion'
 
 const RegisterForm = (props: RegisterFormProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -58,7 +59,7 @@ const RegisterForm = (props: RegisterFormProps) => {
         myRef={passwordRef}
       />
       <ErrorMessage>{props.errMessage.password}</ErrorMessage>
-      <Button type="submit">{props.btnText}</Button>
+      <Button type="submit" as={motion.button} whileTap={{ scale: 0.9 }}>{props.btnText}</Button>
     </form>
   );
 };

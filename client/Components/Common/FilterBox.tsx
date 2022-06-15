@@ -9,6 +9,7 @@ const FilterBox = ({ filterList }: FilterBoxProps) => {
       <Ul>
         {Object.entries(filterList).map(([key, value]) => (
           <Li
+            key={key}
             onClick={() => setTab(parseInt(key))}
             active={parseInt(key) === tab}
           >
@@ -32,7 +33,7 @@ const FilterBox = ({ filterList }: FilterBoxProps) => {
 };
 export default FilterBox;
 
-const Container = styled.div`
+const Container = styled.aside`
   background-color: white;
   padding-block: 2.5rem;
   font: 600 1.4rem var(--ff-poppins);

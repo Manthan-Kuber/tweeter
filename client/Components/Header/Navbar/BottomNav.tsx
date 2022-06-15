@@ -36,7 +36,7 @@ const Container = styled.nav`
   width: 100%;
   background-color: white;
   padding-block: 1.2rem;
-  border-top:2px solid lightgray;
+  border-top:1px solid lightgray;
 `;
 
 const OverlinedDiv = styled(UnderlinedDiv)`
