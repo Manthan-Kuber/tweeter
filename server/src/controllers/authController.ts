@@ -19,11 +19,14 @@ export const signUpPost = async (
   console.log(name, email, password);
 
   try {
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, 
+    profilePic: "https://res.cloudinary.com/dpp7elupy/image/upload/v1655131058/profilePictures/default-profile-pic_dzma8t.jpg",
+    coverPic: "https://res.cloudinary.com/dpp7elupy/image/upload/v1655195992/coverPictures/default-cover_xokejy.png"
+   });
     const token = createToken(user._id);
 
     res.status(201).json({
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, profilePic: user.profilePic, coverPic: user.coverPic },
       token: token,
     });
   } catch (err) {
@@ -45,7 +48,7 @@ export const logInPost = async (
     res
       .status(200)
       .json({
-        user: { id: user._id, name: user.name, email: user.email },
+        user: { id: user._id, name: user.name, email: user.email, profilePic: user.profilePic, coverPic: user.coverPic },
         token: token,
       });
   } catch (err) {

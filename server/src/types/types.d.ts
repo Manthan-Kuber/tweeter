@@ -15,6 +15,7 @@ interface IUser {
   password: string;
   username?: string;
   profilePic?: string;
+  coverPic?: string;
   mobile?: string;
   dob?: string;
   bio?: string;
@@ -36,6 +37,9 @@ interface ITweet {
 
 interface IComment {
   author: Schema.Types.ObjectId;
-  tweet: Schema.Types.ObjectId;
+  tweetid?: Schema.Types.ObjectId;
+  commentid?: Schema.Types.ObjectId;
+  comment: string;
   likes?: number;
 }
+
