@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
@@ -7,7 +6,7 @@ import styled from "styled-components";
 import FilterBox from "../../Components/Common/FilterBox";
 import Image from "next/image";
 
-const Home: NextPage = () => {
+const Profile = () => {
   const token = useAppSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(true);
   const { replace } = useRouter();
@@ -55,7 +54,7 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Profile;
 
 const Container = styled.div`
   width: min(95%, 102.4rem);

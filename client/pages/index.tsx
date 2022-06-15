@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
@@ -6,7 +5,7 @@ import { useAppSelector } from "../Hooks/store";
 import styled from "styled-components";
 import FilterBox from "../Components/Common/FilterBox";
 
-const Home: NextPage = () => {
+const Home = () => {
   const token = useAppSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(true);
   const { replace } = useRouter();

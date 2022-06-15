@@ -4,7 +4,7 @@ import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import { useAppSelector } from "../../Hooks/store";
 
 interface Props {}
-function bookmarks({}: Props) {
+function Bookmarks({}: Props) {
   const token = useAppSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(true);
   const { replace } = useRouter();
@@ -19,14 +19,7 @@ function bookmarks({}: Props) {
       setIsLoading(false);
     }
   }, [token]);
-  return (
-    <>
-      {isLoading ? (
-        <FullScreenLoader />
-      ) : (
-          <h1>bookmarks</h1>
-      )}
-    </>
-  );
+  return <>{isLoading ? <FullScreenLoader /> : <h1>Bookmarks</h1>}</>;
 }
-export default bookmarks;
+
+export default Bookmarks;

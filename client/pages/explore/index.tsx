@@ -42,6 +42,7 @@ function Explore({}: Props) {
     </>
   );
 }
+
 export default Explore;
 
 const Container = styled.div`

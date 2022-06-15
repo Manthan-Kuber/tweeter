@@ -16,15 +16,22 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const getLayout =
+    Component.getLayout ??
+    ((page) => (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <GlobalStyles />
+          <Layout>{page}</Layout>
+        </PersistGate>
+      </Provider>
+    ));
   return getLayout(
     <>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <GlobalStyles />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <Component {...pageProps} />
         </PersistGate>
       </Provider>
     </>

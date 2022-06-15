@@ -32,17 +32,15 @@ function Layout({ children }: { children: React.ReactElement }) {
     <>
       <Head>
         <title>
-          Tweeter - {router.pathname.split("/")[1] === "" ? "Home" : pathName}{" "}
+        {router.pathname.split("/")[1] === "" ? "Home" : pathName}/Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {pathName !== "Register" && (
-        <Header
-          NavList={NavList}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
-      )}
+      <Header
+        NavList={NavList}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
       <Main>{children}</Main>
       <Footer />
     </>

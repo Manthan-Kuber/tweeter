@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import Footer from "../../Components/Footer/Footer";
-import Head from "next/head";
 import Image from "next/image";
 import SignInIcon from "../../Components/Common/SignInIcon";
 import { motion } from "framer-motion";
@@ -18,6 +17,7 @@ import {
   SignInIconsWrapper,
   SignUpBox,
 } from "../../styles/registerPage.styles";
+import Head from "next/head";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -179,5 +179,19 @@ function Register() {
   );
 }
 
+Register.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <>
+      <Head>
+        <title>
+          Register/Tweeter
+        </title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      {page}
+      <Footer footerBg="white" />
+    </>
+  );
+};
 
 export default Register;
