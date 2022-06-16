@@ -133,7 +133,7 @@ const FollowerContainer = styled.div`
   }
 `;
 
-const FollowButton = styled(Button)`
+export const FollowButton = styled(Button)`
   width: fit-content;
   margin-inline: auto;
   padding: 1.5rem 3rem;

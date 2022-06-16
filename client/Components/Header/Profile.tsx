@@ -31,7 +31,6 @@ export default Profile;
 
 const ProfilePic = styled(Image)`
   border-radius: 6px;
-  border: 1px solid red;
 `;
 
 const DropDownIcon = styled(AiFillCaretDown)<{ $visible?: boolean }>`
