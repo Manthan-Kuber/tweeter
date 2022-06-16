@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { useAppSelector } from "../../Hooks/store";
 import styled from "styled-components";
 import Image from "next/image";
+import useWindowSize from "../../Hooks/useWindowDimensions";
 
 interface Props {}
 const ProfileBox = (props: Props) => {
   const name = useAppSelector((state) => state.auth.user?.name);
+  const { width } = useWindowSize();
 
   return (
     <ProfileContainer>
@@ -17,8 +19,8 @@ const ProfileBox = (props: Props) => {
             "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
           }
           alt="profilePic"
-          width={100}
-          height={100}
+          width={width! > 880 ? 160 : 120}
+          height={width! > 880 ? 160 : 120}
         />
       </ProfileImageWrapper>
       <ContentWrapper>
@@ -34,7 +36,7 @@ const ProfileBox = (props: Props) => {
               </span>
             </FollowerContainer>
           </InfoWrapper>
-          <p>Kim Jong Un Stunt Double | #HustleMax | #UdaDunga </p>
+          <p>Kim Jong Un Stunt Double | #HustleMax | #UdaDunga | It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)</p>
         </ProfileWrapper>
         <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
           <BsFillPersonPlusFill />
@@ -77,7 +79,7 @@ const ProfileImageWrapper = styled.div`
 
   @media screen and (min-width: 55em) {
     margin-inline: revert;
-    margin-top: -6rem;
+    margin-top: -7rem;
   }
 `;
 
@@ -144,11 +146,12 @@ const ProfileWrapper = styled.div`
   & > p {
     font: 500 1.8rem var(--ff-noto);
     color: hsla(0, 0%, 51%, 1);
+    margin-top:2rem;
   }
   @media screen and (min-width: 55em) {
     & > p {
       font-size: 1.4rem;
-      margin-top: 2rem;
+      margin-top:revert;
     }
   }
 `;

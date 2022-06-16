@@ -44,7 +44,7 @@ const Profile = () => {
             alt="banner"
             layout="responsive"
             width={100}
-            height={width! > 800 ? 20 : 45}
+            height={width! > 880 ? 20 : 45}
           />
           <ProfileBox />
           <ContentContainer>
