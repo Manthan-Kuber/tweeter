@@ -30,7 +30,7 @@ const Profile = () => {
 export default Profile;
 
 const ProfilePic = styled(Image)`
-  border-radius: 12px;
+  border-radius: 6px;
   border: 1px solid red;
 `;
 

@@ -99,3 +99,8 @@ interface FilterBoxProps {
 interface ProfileDropDownProps{
   setVisible: React.Dispatch<React.SetStateAction<boolean>>
 }
+
+interface ModalProps {
+  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  modalIsOpen:boolean
+}

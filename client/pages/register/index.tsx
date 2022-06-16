@@ -184,7 +184,7 @@ Register.getLayout = function getLayout(page: ReactElement) {
     <>
       <Head>
         <title>
-          Register/Tweeter
+          Register / Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>

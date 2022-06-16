@@ -6,8 +6,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
-interface Props {}
-const ProfileBox = (props: Props) => {
+const ProfileBox = ({ setModalIsOpen, modalIsOpen }: ModalProps) => {
   const name = useAppSelector((state) => state.auth.user?.name);
   const { width } = useWindowSize();
 
@@ -28,15 +27,22 @@ const ProfileBox = (props: Props) => {
           <InfoWrapper>
             <h3>{name}</h3>
             <FollowerContainer>
-              <span>
+              <span onClick={() => setModalIsOpen(true)}>
                 <span>4200</span> Following
               </span>
-              <span>
+              <span onClick={() => setModalIsOpen(true)}>
                 <span>6969</span> Followers
               </span>
             </FollowerContainer>
           </InfoWrapper>
-          <p>Kim Jong Un Stunt Double | #HustleMax | #UdaDunga | It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)</p>
+          <p>
+            Kim Jong Un Stunt Double | #HustleMax | #UdaDunga | It is a long
+            established fact that a reader will be distracted by the readable
+            content of a page when looking at its layout. The point of using
+            Lorem Ipsum is that it has a more-or-less normal distribution of
+            letters, as opposed to using 'Content here, content here', making it
+            look like readable English. (injected humour and the like)
+          </p>
         </ProfileWrapper>
         <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
           <BsFillPersonPlusFill />
@@ -56,9 +62,9 @@ const ProfileContainer = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
   margin-inline: auto;
-  margin-top: -3rem;
+  margin-top: -10%;
   position: relative;
-  padding-inline: 2rem;
+  padding-inline: 3rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -68,6 +74,7 @@ const ProfileContainer = styled.div`
   @media screen and (min-width: 55em) {
     text-align: revert;
     flex-direction: row;
+    margin-top: -5%;
   }
 `;
 
@@ -76,6 +83,10 @@ const ProfileImageWrapper = styled.div`
   margin-top: -10rem;
   width: fit-content;
   margin-inline: auto;
+  height: fit-content;
+  padding: 4px 4px 0 4px;
+  border-radius: 8px;
+  background-color: white;
 
   @media screen and (min-width: 55em) {
     margin-inline: revert;
@@ -105,10 +116,16 @@ const FollowerContainer = styled.div`
   & > span {
     margin-inline: 1rem;
     color: hsla(0, 0%, 51%, 1);
+    cursor: pointer;
+
     span {
       font-weight: 600;
       color: hsla(0, 0%, 20%, 1);
     }
+  }
+
+  & > span:hover {
+    text-decoration: underline;
   }
 
   @media screen and (min-width: 55em) {
@@ -146,12 +163,12 @@ const ProfileWrapper = styled.div`
   & > p {
     font: 500 1.8rem var(--ff-noto);
     color: hsla(0, 0%, 51%, 1);
-    margin-top:2rem;
+    margin-top: 2rem;
   }
   @media screen and (min-width: 55em) {
     & > p {
       font-size: 1.4rem;
-      margin-top:revert;
+      margin-top: revert;
     }
   }
 `;
