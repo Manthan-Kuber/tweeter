@@ -5,7 +5,6 @@ import { HiUserGroup,HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { useAppDispatch } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
-import { useTestQuery } from "../../app/services/auth";
 import { useRouter } from "next/router";
 
 const variant = {
@@ -33,7 +32,6 @@ const variant = {
 
 function ProfileDropdown({setVisible}:ProfileDropDownProps) {
   const dispatch = useAppDispatch();
-  const { data } = useTestQuery();
   const {push} = useRouter();
   const ProfileOptionsList = [
     {

@@ -16,10 +16,10 @@ const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {
     <>
       <StyledHeader>
         <Image src="/tweeter.svg" width={"100%"} height={30} alt="tweeter" />
-        {width! > 768 && <Navbar {...PassedNavProps} />}
+        {width! > 880 && <Navbar {...PassedNavProps} />}
         <Profile />
       </StyledHeader>
-      {width! < 768 && <BottomNav {...PassedNavProps} />}
+      {width! < 880 && <BottomNav {...PassedNavProps} />}
     </>
   );
 };

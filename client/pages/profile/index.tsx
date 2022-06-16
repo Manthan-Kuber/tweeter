@@ -5,11 +5,14 @@ import { useAppSelector } from "../../Hooks/store";
 import styled from "styled-components";
 import FilterBox from "../../Components/Common/FilterBox";
 import Image from "next/image";
+import useWindowSize from "../../Hooks/useWindowDimensions";
+import ProfileBox from "../../Components/Common/ProfileBox";
 
 const Profile = () => {
   const token = useAppSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(true);
   const { replace } = useRouter();
+  const { width } = useWindowSize();
 
   useEffect(() => {
     if (!token) {
@@ -41,13 +44,13 @@ const Profile = () => {
             alt="banner"
             layout="responsive"
             width={100}
-            height={25}
+            height={width! > 800 ? 20 : 45}
           />
-          <ProfileContainer />
-          <Container>
+          <ProfileBox />
+          <ContentContainer>
             <FilterBox filterList={filterList} />
             <div>Profile content goes here</div>
-          </Container>
+          </ContentContainer>
         </div>
       )}
     </>
@@ -56,7 +59,7 @@ const Profile = () => {
 
 export default Profile;
 
-const Container = styled.div`
+const ContentContainer = styled.div`
   width: min(95%, 102.4rem);
   margin-inline: auto;
   padding-block: 2rem;
@@ -68,16 +71,4 @@ const Container = styled.div`
   & > div:last-child {
     background-color: green;
   }
-`;
-const ProfileContainer = styled.div`
-  width: min(95%, 102.4rem);
-  background-color: white;
-  padding-block: 2.5rem;
-  font: 600 1.4rem var(--ff-poppins);
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  height: 20rem;
-  margin-inline: auto;
-  margin-top: -3.5%;
-  position: relative;
 `;
