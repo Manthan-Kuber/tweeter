@@ -39,6 +39,8 @@ const Container = styled.aside`
   font: 600 1.4rem var(--ff-poppins);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
+  height: fit-content;
+  min-width: 15rem;
 `;
 
 const Ul = styled.ul`

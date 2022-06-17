@@ -104,3 +104,10 @@ interface ModalProps {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   modalIsOpen:boolean
 }
+
+//Remove Optional Later
+interface ProfileInfoProps{
+  name?:string
+  followers?:string
+  profilepic?:string
+}

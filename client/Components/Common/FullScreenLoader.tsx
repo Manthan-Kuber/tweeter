@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { CgSpinner } from "react-icons/cg";
 
 const FullScreenLoader = () => {
   return (
@@ -23,6 +23,6 @@ const spin = keyframes`
     to{transform:rotate(360deg)};
 `;
 
-const Loader = styled(CgSpinnerTwoAlt)`
+const Loader = styled(CgSpinner)`
   animation: 0.5s ${spin} infinite linear;
 `;

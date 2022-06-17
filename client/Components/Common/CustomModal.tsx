@@ -6,6 +6,7 @@ import { FollowButton } from "./ProfileBox";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import ProfileInfo from "./ProfileInfo";
 
 Modal.setAppElement("#__next");
 
@@ -52,17 +53,7 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen }: ModalProps) => {
           <>
             <ProfileElementWrapper key={index}>
               <div>
-                <ProfileInfoWrapper>
-                  <ProfilePic
-                    src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
-                    width={42}
-                    height={37}
-                  />
-                  <div>
-                    <span>Austin Neil</span>
-                    <span>12k Followers</span>
-                  </div>
-                </ProfileInfoWrapper>
+                <ProfileInfo />
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
                   eu erat eu ipsum placerat gravida. Duis nec nisl eget enim
@@ -129,18 +120,4 @@ const StyledFollowButton = styled(FollowButton)`
   align-self: flex-start;
 `;
 
-const ProfilePic = styled(Image)`
-  border-radius: 6px;
-`;
-
-const ProfileInfoWrapper = styled.div`
-  display: flex;
-  gap: 2rem;
-  span {
-    display: block;
-  }
-  span + span {
-    color: hsla(0, 0%, 51%, 1);
-    font-size: 1.2rem;
-  }
-`;
+ 

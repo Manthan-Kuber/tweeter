@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import { useAppSelector } from "../../Hooks/store";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import ProfileBox from "../../Components/Common/ProfileBox";
 import CustomModal from "../../Components/Common/CustomModal";
+import Tweet from "../../Components/Common/Tweet";
 
 
 const Profile = () => {
@@ -40,22 +41,22 @@ const Profile = () => {
       {isLoading ? (
         <FullScreenLoader />
       ) : (
-        <>
+        <Suspense fallback={<FullScreenLoader />}>
           <Image
             src={"https://loremflickr.com/640/480/abstract"}
             className="banner-image"
             alt="banner"
             layout="responsive"
             width={100}
-            height={width! > 880 ? 25 : 35}
+            height={width! > 880 ? 15 : 45}
           />
           <ProfileBox setModalIsOpen={setModalIsOpen} modalIsOpen={modalIsOpen} />
           <CustomModal setModalIsOpen={setModalIsOpen} modalIsOpen={modalIsOpen} />
           <ContentContainer>
             <FilterBox filterList={filterList} />
-            <div>Profile content goes here</div>
+            <Tweet/>
           </ContentContainer>
-        </>
+        </Suspense>
       )}
     </>
   );
@@ -74,12 +75,5 @@ const ContentContainer = styled.div`
     gap: 2rem;
   }
 
-  //delete later
-  & > div:last-child {
-    background-color: green;
-    margin-top: 2rem;
-    @media screen and (min-width: 40em) {
-      margin-top: revert;
-    }
-  }
+ 
 `;

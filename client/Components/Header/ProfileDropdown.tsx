@@ -32,7 +32,7 @@ const variant = {
 
 function ProfileDropdown({setVisible}:ProfileDropDownProps) {
   const dispatch = useAppDispatch();
-  const {push} = useRouter();
+  const {push,replace} = useRouter();
   const ProfileOptionsList = [
     {
       id: 1,
@@ -65,6 +65,7 @@ function ProfileDropdown({setVisible}:ProfileDropDownProps) {
       name: "Logout",
       onClick: () => {
         setVisible(prev => !prev)
+        replace("/")
         dispatch(logOut());
       },
     },
