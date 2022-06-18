@@ -3,6 +3,7 @@ import { AiOutlineRetweet } from "react-icons/ai";
 import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
+import TweetReplies from "./TweetReplies";
 import TweetReply from "./TweetReply";
 
 interface Props {}
@@ -11,6 +12,7 @@ const Tweet = (props: Props) => {
     <TweetWrapper>
       <RetweetWrapper>
         <AiOutlineRetweet size={14} />
+        {/* To be Conditionally Rendered */}
         <span>RasPutin Retweeted</span>
       </RetweetWrapper>
       <TweetBox>
@@ -36,7 +38,14 @@ const Tweet = (props: Props) => {
           <span>234 Saved</span>
         </TweetInfo>
         <TweetOptions />
+        {/* To be Conditionally Rendered */}
         <TweetReply />
+        {/* To be Conditionally Rendered and mapped */}
+        {Array.from(Array(10).keys()).map(() => (
+          <>
+            <TweetReplies />
+          </>
+        ))}
       </TweetBox>
     </TweetWrapper>
   );
