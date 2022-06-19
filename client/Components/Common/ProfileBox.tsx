@@ -6,8 +6,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
-const ProfileBox = ({ setModalIsOpen, modalIsOpen }: ModalProps) => {
-  const name = useAppSelector((state) => state.auth.user?.name);
+const ProfileBox = ({ setModalIsOpen, modalIsOpen,name }: ModalProps) => {
+ 
   const { width } = useWindowSize();
 
   return (

@@ -10,8 +10,8 @@ import ProfileInfo from "./ProfileInfo";
 
 Modal.setAppElement("#__next");
 
-const CustomModal = ({ setModalIsOpen, modalIsOpen }: ModalProps) => {
-  const name = useAppSelector((state) => state.auth.user?.name);
+const CustomModal = ({ setModalIsOpen, modalIsOpen,name }: ModalProps) => {
+  
 
   return (
     <Modal
@@ -50,8 +50,8 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen }: ModalProps) => {
         </CloseIconDivWrapper>
         <hr />
         {Array.from(Array(10).keys()).map((index, item) => (
-          <>
-            <ProfileElementWrapper key={index}>
+          <div key={index}>
+            <ProfileElementWrapper >
               <div>
                 <ProfileInfo />
                 <p>
@@ -69,7 +69,7 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen }: ModalProps) => {
               </StyledFollowButton>
             </ProfileElementWrapper>
             <hr />
-          </>
+          </div>
         ))}
       </MainWrapper>
     </Modal>

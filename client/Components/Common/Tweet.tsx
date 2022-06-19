@@ -41,10 +41,10 @@ const Tweet = (props: Props) => {
         {/* To be Conditionally Rendered */}
         <TweetReply />
         {/* To be Conditionally Rendered and mapped */}
-        {Array.from(Array(10).keys()).map(() => (
-          <>
+        {Array.from(Array(10).keys()).map((index) => (
+          <div key={index}>
             <TweetReplies />
-          </>
+          </div>
         ))}
       </TweetBox>
     </TweetWrapper>

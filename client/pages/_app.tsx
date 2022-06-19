@@ -6,6 +6,7 @@ import { store, persistor } from "../app/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import Layout from "../Components/Common/Layout";
+import FullScreenLoader from "../Components/Common/FullScreenLoader";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -20,21 +21,19 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     Component.getLayout ??
     ((page) => (
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
           <GlobalStyles />
           <Layout>{page}</Layout>
         </PersistGate>
       </Provider>
     ));
   return getLayout(
-    <>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <GlobalStyles />
-          <Component {...pageProps} />
-        </PersistGate>
-      </Provider>
-    </>
+    <Provider store={store}>
+      <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
+        <GlobalStyles />
+        <Component {...pageProps} />
+      </PersistGate>
+    </Provider>
   );
 }
 

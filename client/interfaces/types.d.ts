@@ -103,6 +103,7 @@ interface ProfileDropDownProps{
 interface ModalProps {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   modalIsOpen:boolean
+  name:string // change
 }
 
 //Remove Optional Later

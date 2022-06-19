@@ -18,7 +18,6 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    //TODO Change signup respone
     signup: builder.mutation<UserResponse, UserRequest>({
       query: (credentials) => ({
         url: "signup",
@@ -29,7 +28,11 @@ export const api = createApi({
     test: builder.query<{ message: string }, void>({
       query: () => "test",
     }),
+    profile: builder.query({ //Add Req resp types
+     query : (userId) => `users/${userId}`
+    }),
   }),
 });
 
-export const { useLoginMutation, useTestQuery, useSignupMutation } = api;
+//Check lazyprofile query
+export const { useLoginMutation, useTestQuery, useSignupMutation,useProfileQuery } = api;

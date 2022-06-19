@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import {  MdAccountCircle } from "react-icons/md";
+import { MdAccountCircle } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
-import { HiUserGroup,HiOutlineLogout } from "react-icons/hi";
+import { HiUserGroup, HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
-import { useAppDispatch } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
 import { useRouter } from "next/router";
 
@@ -30,17 +30,19 @@ const variant = {
   },
 };
 
-function ProfileDropdown({setVisible}:ProfileDropDownProps) {
+function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
   const dispatch = useAppDispatch();
-  const {push,replace} = useRouter();
+  const userId = useAppSelector(state => state.auth.user?.id)
+  const router = useRouter();
+  const { push, replace } = router;
   const ProfileOptionsList = [
     {
       id: 1,
       icon: <MdAccountCircle size={20} />,
       name: "My Profile",
       onClick: async () => {
-        setVisible(prev => !prev)
-        push("/profile")
+        setVisible((prev) => !prev);
+        push(`/${userId}`);
       },
     },
     {
@@ -48,7 +50,7 @@ function ProfileDropdown({setVisible}:ProfileDropDownProps) {
       icon: <HiUserGroup size={20} />,
       name: "Group Chat",
       onClick: () => {
-        setVisible(prev => !prev)
+        setVisible((prev) => !prev);
       },
     },
     {
@@ -56,7 +58,7 @@ function ProfileDropdown({setVisible}:ProfileDropDownProps) {
       icon: <IoMdSettings size={20} />,
       name: "Settings",
       onClick: () => {
-        setVisible(prev => !prev)
+        setVisible((prev) => !prev);
       },
     },
     {
@@ -64,8 +66,8 @@ function ProfileDropdown({setVisible}:ProfileDropDownProps) {
       icon: <HiOutlineLogout size={20} />,
       name: "Logout",
       onClick: () => {
-        setVisible(prev => !prev)
-        replace("/")
+        setVisible((prev) => !prev);
+        replace("/");
         dispatch(logOut());
       },
     },
