@@ -19,6 +19,7 @@ const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {
         {width! > 880 && <Navbar {...PassedNavProps} />}
         <Profile />
       </StyledHeader>
+      <Hr/>
       {width! < 880 && <BottomNav {...PassedNavProps} />}
     </>
   );
@@ -29,6 +30,13 @@ export const StyledHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 3rem;
-  border-bottom: 1px solid lightgray;
+  padding-block: 1.2rem ;
+  width: min(95% ,102.4rem);
+  margin-inline: auto;
 `;
+
+const Hr = styled.hr`
+  border: 1px solid lightgray;
+`
+
+
