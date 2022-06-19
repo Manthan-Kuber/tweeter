@@ -4,6 +4,8 @@ import { connect } from "mongoose";
 import authRoutes from "./routes/authRoutes";
 import privRoutes from "./routes/privateRoutes";
 import userRoutes from "./routes/userRoutes";
+import tweetRoutes from "./routes/tweetRoutes";
+import commentRoutes from "./routes/commentRoutes";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -28,6 +30,8 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 app.use(authRoutes);
 app.use(privRoutes);
 app.use("/users", userRoutes);
+app.use("/tweets", tweetRoutes);
+app.use("/comment", commentRoutes);
 // app.set("view engine",viewEngine_name)
 
 app.listen(port, async (): Promise<void> => {
