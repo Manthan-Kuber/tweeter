@@ -27,7 +27,7 @@ const userSchema = new Schema<IUser, IUserModel>(
       required: [true, "Please Enter a Password"],
       minlength: [8, "Minimum Password length is 8 characters"],
     },
-    username: { type: String, maxlength: 50 },
+    username: { type: String, unique: true, maxlength: 50 },
     profilePic: String,
     coverPic: String,
     mobile: String,
