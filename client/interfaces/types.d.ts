@@ -96,26 +96,28 @@ interface FilterBoxProps {
   };
 }
 
-interface ProfileDropDownProps{
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>
+interface ProfileDropDownProps {
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ModalProps {
-  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  modalIsOpen:boolean
+  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalIsOpen: boolean;
   name: string;
   username: string;
-  bio?:string;
+  bio?: string;
   profilePic?: string;
   following: number;
   followers: number;
+  children?: React.ReactNode;
+  modalTitle?: string;
 }
 
 //Remove Optional Later
-interface ProfileInfoProps{
-  name?:string
-  followers?:string
-  profilepic?:string
+interface ProfileInfoProps {
+  name?: string;
+  followers?: string;
+  profilepic?: string;
 }
 
 interface ProfileResponse {
@@ -125,7 +127,7 @@ interface ProfileResponse {
       username: string;
       profilePic: string;
       coverPic: string;
-      bio:string;
+      bio: string;
       following: number;
       followers: number;
     }

@@ -48,9 +48,7 @@ const ProfileBox = ({
           <h4>{`@ ${username}`}</h4>
           <p>{`My bio: ${bio}`}</p>
         </ProfileWrapper>
-        {userId === currentUserId ? (
-          <>Edit Profile Button to be added here</>
-        ) : (
+        {userId === currentUserId ? null : ( // <>Edit Profile Button to be added here</>
           <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
             <BsFillPersonPlusFill />
             Follow

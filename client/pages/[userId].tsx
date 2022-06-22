@@ -11,6 +11,7 @@ import CustomModal from "../Components/Common/CustomModal";
 import Tweet from "../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useUsersQuery } from "../app/services/api";
+import FollowerModalContent from "../Components/Common/FollowerModalContent";
 
 const Profile = (props: any) => {
   const token = useAppSelector((state) => state.auth.token);
@@ -73,7 +74,10 @@ const Profile = (props: any) => {
             username={data?.data[0].username as string}
             followers={data?.data[0].followers as number}
             following={data?.data[0].following as number}
-          />
+            modalTitle={`${data?.data[0].name as string} is Following`}
+          >
+            <FollowerModalContent />
+          </CustomModal>
           <ContentContainer>
             <FilterBox filterList={filterList} />
             <Tweet />
