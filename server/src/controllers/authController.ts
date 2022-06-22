@@ -32,10 +32,6 @@ export const signUpPost = async (
       email,
       password,
       username,
-      profilePic:
-        "https://res.cloudinary.com/dpp7elupy/image/upload/v1655131058/profilePictures/default-profile-pic_dzma8t.jpg",
-      coverPic:
-        "https://res.cloudinary.com/dpp7elupy/image/upload/v1655195992/coverPictures/default-cover_xokejy.png",
     });
     const token = createToken(user._id);
 
