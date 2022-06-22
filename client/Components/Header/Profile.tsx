@@ -5,17 +5,23 @@ import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useAppSelector } from "../../Hooks/store";
+import { useUsersQuery } from "../../app/services/api";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
-  const name = useAppSelector(state => state.auth.user?.name)
+  const name = useAppSelector((state) => state.auth.user?.name);
+  const userId = useAppSelector((state) => state.auth.user?.id);
+  const { data } = useUsersQuery(userId!);
   return (
     <ProfileContainer>
-      <ProfilePic
-        src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
-        width={42}
-        height={37}
-      />
+      {data?.data[0].profilePic !== undefined && (
+        <ProfilePic
+          src={data?.data[0].profilePic}
+          alt={`${name}'s Profile Pic`}
+          width={42}
+          height={37}
+        />
+      )}
       <h4>{name}</h4>
       <DropDownIcon
         className="dropdownIcon"
@@ -23,7 +29,9 @@ const Profile = () => {
         onClick={() => setVisible(!visible)}
         $visible={visible}
       />
-      <AnimatePresence>{visible && <ProfileDropdown setVisible={setVisible} />}</AnimatePresence>
+      <AnimatePresence>
+        {visible && <ProfileDropdown setVisible={setVisible} />}
+      </AnimatePresence>
     </ProfileContainer>
   );
 };
@@ -50,10 +58,9 @@ const ProfileContainer = styled.div`
   position: relative;
   color: #333;
 
-  & > h4{
+  & > h4 {
     font: 700 1.4rem var(--ff-noto);
   }
-  
 
   .dropdownIcon {
     cursor: pointer;

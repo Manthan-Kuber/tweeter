@@ -105,6 +105,7 @@ interface ModalProps {
   modalIsOpen:boolean
   name: string;
   username: string;
+  bio?:string;
   profilePic?: string;
   following: number;
   followers: number;
@@ -124,6 +125,7 @@ interface ProfileResponse {
       username: string;
       profilePic: string;
       coverPic: string;
+      bio:string;
       following: number;
       followers: number;
     }

@@ -64,6 +64,7 @@ const Profile = (props: any) => {
             username={data?.data[0].username as string}
             followers={data?.data[0].followers as number}
             following={data?.data[0].following as number}
+            bio={data?.data[0].bio as string}
           />
           <CustomModal
             setModalIsOpen={setModalIsOpen}

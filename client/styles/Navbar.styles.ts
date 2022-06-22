@@ -15,6 +15,9 @@ export const Li = styled.li<{ active: boolean }>`
   &:hover {
     color: var(--clr-primary);
   }
+  & a{
+    outline: none;
+  }
 `;
 
 export const UnderlinedDiv = styled.div`

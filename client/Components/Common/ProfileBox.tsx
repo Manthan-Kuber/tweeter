@@ -1,26 +1,31 @@
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { Button } from "../../styles/registerPage.styles";
 import { motion } from "framer-motion";
-import { useAppSelector } from "../../Hooks/store";
 import styled from "styled-components";
 import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
+import { useAppSelector } from "../../Hooks/store";
+import { useRouter } from "next/router";
 
 const ProfileBox = ({
   setModalIsOpen,
   modalIsOpen,
   name,
   username,
+  bio,
+  profilePic,
   ...props
 }: ModalProps) => {
   const { width } = useWindowSize();
-
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
+  const router = useRouter();
+  const { userId } = router.query;
   return (
     <ProfileContainer>
       <ProfileImageWrapper>
-        {props.profilePic !== undefined && (
+        {profilePic !== undefined && (
           <ProfileImage
-            src={props.profilePic}
+            src={profilePic}
             alt="profilePic"
             width={width! > 880 ? 160 : 120}
             height={width! > 880 ? 160 : 120}
@@ -31,8 +36,6 @@ const ProfileBox = ({
         <ProfileWrapper>
           <InfoWrapper>
             <h3>{name}</h3>
-            {/* Style Later */}
-            <h2>{`@ ${username}`}</h2>
             <FollowerContainer>
               <span onClick={() => setModalIsOpen(true)}>
                 <span>{props.following}</span> Following
@@ -42,19 +45,17 @@ const ProfileBox = ({
               </span>
             </FollowerContainer>
           </InfoWrapper>
-          <p>
-            Kim Jong Un Stunt Double | #HustleMax | #UdaDunga | It is a long
-            established fact that a reader will be distracted by the readable
-            content of a page when looking at its layout. The point of using
-            Lorem Ipsum is that it has a more-or-less normal distribution of
-            letters, as opposed to using 'Content here, content here', making it
-            look like readable English. (injected humour and the like)
-          </p>
+          <h4>{`@ ${username}`}</h4>
+          <p>{`My bio: ${bio}`}</p>
         </ProfileWrapper>
-        <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
-          <BsFillPersonPlusFill />
-          Follow
-        </FollowButton>
+        {userId === currentUserId ? (
+          <>Edit Profile Button to be added here</>
+        ) : (
+          <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
+            <BsFillPersonPlusFill />
+            Follow
+          </FollowButton>
+        )}
       </ContentWrapper>
     </ProfileContainer>
   );
@@ -171,6 +172,10 @@ const ProfileWrapper = styled.div`
     font: 500 1.8rem var(--ff-noto);
     color: hsla(0, 0%, 51%, 1);
     margin-top: 2rem;
+  }
+  & > h4 {
+    font-size: clamp(1.2rem, 1vw + 0.5rem, 1.4rem);
+    color: hsla(0, 0%, 51%, 1);
   }
   @media screen and (min-width: 55em) {
     & > p {
