@@ -1,24 +1,35 @@
 import express from "express";
 const router = express.Router();
-import { getProfile, followUser, unfollowUser, getFollowers, getFollowing, setProfilePic, deleteProfilePic, setCoverPic, deleteCoverPic } from "../controllers/userController";
-import { profilePicUpload as upload } from "../middleware/mediaUpload"
+import { requireAuth } from "../middleware/authMiddleware";
+import {
+  getProfile,
+  followUser,
+  unfollowUser,
+  getFollowers,
+  getFollowing,
+  setProfilePic,
+  deleteProfilePic,
+  setCoverPic,
+  deleteCoverPic,
+} from "../controllers/userController";
+import { imageUpload as upload } from "../middleware/mediaUpload";
 
-router.get("/profile",getProfile)
+router.get("/:userid", requireAuth, getProfile);
 
-router.put("/follow",followUser)
+router.put("/follow", requireAuth, followUser);
 
-router.put("/unfollow",unfollowUser)
+router.put("/unfollow", requireAuth, unfollowUser);
 
-router.get("/followers",getFollowers)
+router.get("/followers/:userid", requireAuth, getFollowers);
 
-router.get("/following",getFollowing)
+router.get("/following/:userid", requireAuth, getFollowing);
 
-router.post("/profilepic",upload.single('image'),setProfilePic)
+router.post("/profilepic", requireAuth, upload.single("image"), setProfilePic);
 
-router.delete("/profilePic",deleteProfilePic)
+router.delete("/profilePic", requireAuth, deleteProfilePic);
 
-router.post("/coverpic",upload.single("image"),setCoverPic)
+router.post("/coverpic", requireAuth, upload.single("image"), setCoverPic);
 
-router.delete("/coverpic",deleteCoverPic)
+router.delete("/coverpic", requireAuth, deleteCoverPic);
 
 export default router;

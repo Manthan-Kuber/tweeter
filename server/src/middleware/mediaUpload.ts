@@ -1,6 +1,6 @@
 import multer from "multer";
 
-const profilePicFilter = (req: any, file: any, cb: any) => {
+const imageFilter = (req: any, file: any, cb: any) => {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
         return cb(null, false);
     }
@@ -14,8 +14,8 @@ const tweetMediaFilter = (req: any, file: any, cb: any) => {
     cb(null, true);
 };
 
-export const profilePicUpload  = multer({
-    fileFilter: profilePicFilter
+export const imageUpload  = multer({
+    fileFilter: imageFilter
 });
 
 export const tweetMediaUpload = multer({

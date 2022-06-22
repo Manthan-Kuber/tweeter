@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Model } from "mongoose";
+import { Model, Schema } from "mongoose";
 
 interface IRequest extends Request {
   user?: IUser | null;
@@ -32,7 +32,7 @@ interface ITweet {
   creator: Schema.Types.ObjectId;
   tweet: string;
   media?: string[];
-  likes?: number;
+  likes?: Schema.Types.ObjectId[];
 }
 
 interface IComment {
@@ -40,6 +40,6 @@ interface IComment {
   tweetid?: Schema.Types.ObjectId;
   commentid?: Schema.Types.ObjectId;
   comment: string;
-  likes?: number;
+  likes?: Schema.Types.ObjectId[];
+  media?: string;
 }
-
