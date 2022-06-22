@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
+
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:6969/",
@@ -28,11 +30,17 @@ export const api = createApi({
     test: builder.query<{ message: string }, void>({
       query: () => "test",
     }),
-    profile: builder.query({ //Add Req resp types
-     query : (userId) => `users/${userId}`
+    users: builder.query<ProfileResponse, string>({
+      //Add Req resp types
+      query: (userId) => `users/${userId}`,
     }),
   }),
 });
 
 //Check lazyprofile query
-export const { useLoginMutation, useTestQuery, useSignupMutation,useProfileQuery } = api;
+export const {
+  useLoginMutation,
+  useTestQuery,
+  useSignupMutation,
+  useUsersQuery,
+} = api;

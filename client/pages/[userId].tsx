@@ -9,22 +9,19 @@ import useWindowSize from "../Hooks/useWindowDimensions";
 import ProfileBox from "../Components/Common/ProfileBox";
 import CustomModal from "../Components/Common/CustomModal";
 import Tweet from "../Components/Common/Tweet";
-import { useProfileQuery } from "../app/services/auth";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { useUsersQuery } from "../app/services/api";
 
 const Profile = (props: any) => {
   const token = useAppSelector((state) => state.auth.token);
-  // const userId = useAppSelector((state) => state.auth.user?.id);
   const [isLoading, setIsLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const router = useRouter();
+  const userId = router.query.userId;
   const { replace } = router;
-  const { userId } = router.query;
   const { width } = useWindowSize();
+  const { data } = useUsersQuery(userId as string);
 
-  const { data } = useProfileQuery(userId);
-  console.log(data[0]);
   useEffect(() => {
     if (!token) {
       setTimeout(() => {
@@ -49,23 +46,32 @@ const Profile = (props: any) => {
         <FullScreenLoader />
       ) : (
         <Suspense fallback={<FullScreenLoader />}>
-          <Image
-            src={"https://loremflickr.com/640/480/abstract"}
-            className="banner-image"
-            alt="banner"
-            layout="responsive"
-            width={100}
-            height={width! > 880 ? 15 : 45}
-          />
+          {data?.data[0].coverPic !== undefined && (
+            <Image
+              src={data?.data[0].coverPic}
+              className="banner-image"
+              alt="banner"
+              layout="responsive"
+              width={100}
+              height={width! > 880 ? 15 : 45}
+            />
+          )}
           <ProfileBox
             setModalIsOpen={setModalIsOpen}
             modalIsOpen={modalIsOpen}
-            name={data.data[0].name}
+            name={data?.data[0].name as string}
+            profilePic={data?.data[0].profilePic}
+            username={data?.data[0].username as string}
+            followers={data?.data[0].followers as number}
+            following={data?.data[0].following as number}
           />
           <CustomModal
             setModalIsOpen={setModalIsOpen}
             modalIsOpen={modalIsOpen}
-            name={data.data[0].name}
+            name={data?.data[0].name as string}
+            username={data?.data[0].username as string}
+            followers={data?.data[0].followers as number}
+            following={data?.data[0].following as number}
           />
           <ContentContainer>
             <FilterBox filterList={filterList} />
@@ -81,16 +87,18 @@ const Profile = (props: any) => {
 export default Profile;
 
 //Update getStaticPaths here,use next-redux-wrapper
-// export const getStaticPaths: GetStaticPaths = async (ctx) => {
+export const getStaticPaths: GetStaticPaths = async (ctx) => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
 
-//   const paths = data.map
- 
-//   return{
-//     paths:[
-//       params:{}
-//     ]
-//   }
-// };
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {},
+  };
+};
 
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);

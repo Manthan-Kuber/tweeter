@@ -103,7 +103,11 @@ interface ProfileDropDownProps{
 interface ModalProps {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   modalIsOpen:boolean
-  name:string // change
+  name: string;
+  username: string;
+  profilePic?: string;
+  following: number;
+  followers: number;
 }
 
 //Remove Optional Later
@@ -111,4 +115,17 @@ interface ProfileInfoProps{
   name?:string
   followers?:string
   profilepic?:string
+}
+
+interface ProfileResponse {
+  data: [
+    {
+      name: string;
+      username: string;
+      profilePic: string;
+      coverPic: string;
+      following: number;
+      followers: number;
+    }
+  ];
 }

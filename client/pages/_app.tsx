@@ -21,16 +21,16 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     Component.getLayout ??
     ((page) => (
       <Provider store={store}>
+        <GlobalStyles />
         <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
-          <GlobalStyles />
           <Layout>{page}</Layout>
         </PersistGate>
       </Provider>
     ));
   return getLayout(
     <Provider store={store}>
+      <GlobalStyles />
       <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
-        <GlobalStyles />
         <Component {...pageProps} />
       </PersistGate>
     </Provider>

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import RegisterForm from "../../Components/Common/RegisterForm";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
-import { useLoginMutation, useSignupMutation } from "../../app/services/auth";
+import { useLoginMutation, useSignupMutation } from "../../app/services/api";
 import { setCredentials } from "../../features/auth/authSlice";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import {

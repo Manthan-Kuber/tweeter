@@ -6,32 +6,39 @@ import styled from "styled-components";
 import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
-const ProfileBox = ({ setModalIsOpen, modalIsOpen,name }: ModalProps) => {
- 
+const ProfileBox = ({
+  setModalIsOpen,
+  modalIsOpen,
+  name,
+  username,
+  ...props
+}: ModalProps) => {
   const { width } = useWindowSize();
 
   return (
     <ProfileContainer>
       <ProfileImageWrapper>
-        <ProfileImage
-          src={
-            "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
-          }
-          alt="profilePic"
-          width={width! > 880 ? 160 : 120}
-          height={width! > 880 ? 160 : 120}
-        />
+        {props.profilePic !== undefined && (
+          <ProfileImage
+            src={props.profilePic}
+            alt="profilePic"
+            width={width! > 880 ? 160 : 120}
+            height={width! > 880 ? 160 : 120}
+          />
+        )}
       </ProfileImageWrapper>
       <ContentWrapper>
         <ProfileWrapper>
           <InfoWrapper>
             <h3>{name}</h3>
+            {/* Style Later */}
+            <h2>{`@ ${username}`}</h2>
             <FollowerContainer>
               <span onClick={() => setModalIsOpen(true)}>
-                <span>4200</span> Following
+                <span>{props.following}</span> Following
               </span>
               <span onClick={() => setModalIsOpen(true)}>
-                <span>6969</span> Followers
+                <span>{props.followers}</span> Followers
               </span>
             </FollowerContainer>
           </InfoWrapper>
