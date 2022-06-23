@@ -7,6 +7,7 @@ import { AiFillHome } from "react-icons/ai";
 import { useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
+import { useAppSelector } from "../../Hooks/store";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -21,6 +22,7 @@ const NavList = [
 
 function Layout({ children }: { children: React.ReactElement }) {
   const router = useRouter();
+  const username = useAppSelector(state => state.auth.user?.username)
   const pathName =
     router.pathname.split("/")[1].toUpperCase()[0] +
     router.pathname.split("/")[1].substring(1);
@@ -32,7 +34,7 @@ function Layout({ children }: { children: React.ReactElement }) {
     <>
       <Head>
         <title>
-        {router.pathname.split("/")[1] === "" ? "Home" : pathName} / Tweeter
+        {router.pathname.split("/")[1] === "" ? "Home" : pathName === "[userId]" && `${username}` } / Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
