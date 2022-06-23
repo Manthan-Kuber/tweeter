@@ -5,18 +5,27 @@ import {
   createTweet,
   getTweet,
   deleteTweet,
-  fetchTweets,
+  fetchHomeTweets,
   likeTweet,
+  retweet,
+  saveTweet,
+  getBoomarks
 } from "../controllers/tweetController";
 import { tweetMediaUpload as upload } from "../middleware/mediaUpload";
 
-router.get("/", requireAuth, fetchTweets);
+router.get("/", requireAuth, fetchHomeTweets);
 
-router.get("/:tweetid", requireAuth, getTweet);
+router.get("/:tweetId", requireAuth, getTweet);
 
 router.post("/", requireAuth, upload.array("media", 4), createTweet);
 
 router.put("/like", requireAuth, likeTweet);
+
+router.put("/retweet", requireAuth, retweet);
+
+router.get("/bookmarks", requireAuth, getBoomarks);
+
+router.put("/save", requireAuth, saveTweet);
 
 router.delete("/", requireAuth, deleteTweet);
 

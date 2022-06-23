@@ -5,35 +5,72 @@ import Tweet from "../models/tweets";
 import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
-export const fetchTweets = async (req: Request, res: Response) => {
+export const fetchHomeTweets = async (req: Request, res: Response) => {
   var { id, skip } = req.body;
   if (!skip) skip = 0;
   try {
     const user = await User.findById(id);
-    const tweets = await Tweet.find(
-      { creator: { $in: user?.following } },
+    const tweets = await Tweet.aggregate([
       {
-        _id: 0,
-        creator: 1,
-        tweet: 1,
-        media: 1,
-        likes: {
-          $cond: {
-            if: { $isArray: "$likes" },
-            then: { $size: "$likes" },
-            else: 0,
+        $match: {
+          creator: { $in: user?.following },
+        },
+      },
+      {
+        $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
           },
         },
-        createdAt: 1,
-      }
-    )
-      .sort({ createdAt: -1 })
-      .skip(skip * 10)
-      .limit(10)
-      .populate({
-        path: "creator",
-        select: { _id: 0, username: 1, profilePic: 1 },
-      });
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      { $skip: skip * 10 },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          tweet: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          retweeted: 1,
+          saved: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
     res.status(200).json({ data: tweets });
   } catch (err) {
     res.status(400).json({ error: err });
@@ -41,37 +78,145 @@ export const fetchTweets = async (req: Request, res: Response) => {
 };
 
 export const getTweet = async (req: Request, res: Response) => {
-  const tweetId = req.params.tweetid;
+  const { id } = req.body;
+  const tweetId = req.params.tweetId;
 
   try {
-    const tweet = await Tweet.findById(tweetId, {
-      _id: 0,
-      creator: 1,
-      tweet: 1,
-      media: 1,
-      likes: {
-        $cond: {
-          if: { $isArray: "$likes" },
-          then: { $size: "$likes" },
-          else: 0,
+    const user = await User.findById(id);
+    const tweet = await Tweet.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(tweetId),
         },
       },
-      createdAt: 1,
-    }).populate({
-      path: "creator",
-      select: { _id: 0, name: 1, username: 1, profilePic: 1 },
-    });
+      {
+        $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          tweet: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          retweeted: 1,
+          saved: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
     res.status(200).json({ data: tweet });
   } catch (err) {
     res.status(400).json({ error: err });
   }
 };
 
+export const getBoomarks = async (req: Request, res: Response) => {
+  var { id, skip } = req.body;
+  if (!skip) skip = 0;
+
+  try {
+    const user = await User.findById(id);
+    const tweets = await Tweet.aggregate([
+      {
+        $match: {
+          savedBy: id,
+        },
+      },
+      {
+        $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      { $skip: skip * 10 },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          tweet: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          retweeted: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
+    res.status(200).json({ data: tweets });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
 export const createTweet = async (req: Request, res: Response) => {
-  const { id, tweet } = req.body;
+  const { id, tweet, shared } = req.body;
   const files = req.files as Express.Multer.File[];
   try {
-    const newTweet = await Tweet.create({ creator: id, tweet: tweet });
+    const newTweet = await Tweet.create({
+      creator: id,
+      tweet: tweet,
+      shared: shared,
+    });
     if (files) {
       for (var i = 0; i < files.length; i++) {
         let upload_stream = cloudinary.uploader.upload_stream(
@@ -104,11 +249,11 @@ export const createTweet = async (req: Request, res: Response) => {
 };
 
 export const likeTweet = async (req: Request, res: Response) => {
-  const { id, tweetid } = req.body;
+  const { id, tweetId } = req.body;
 
   try {
     const user = await User.findById(id);
-    const tweet = await Tweet.findById(tweetid);
+    const tweet = await Tweet.findById(tweetId);
     if (!tweet?.likes?.includes(id)) {
       const updatedTweet = await Tweet.findByIdAndUpdate(id, {
         $inc: { likes: 1 },
@@ -125,11 +270,55 @@ export const likeTweet = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteTweet = async (req: Request, res: Response) => {
-  const { id, tweetid } = req.body;
+export const retweet = async (req: Request, res: Response) => {
+  const { id, tweetId } = req.body;
 
   try {
-    const tweet = await Tweet.findById(tweetid);
+    const user = await User.findById(id);
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet?.retweetedUsers?.includes(id)) {
+      const updatedtweet = await Tweet.findByIdAndUpdate(tweetId, {
+        $push: { retweetedUsers: id },
+      });
+      res.status(200).json({ message: "Retweeted tweet successfully" });
+    } else {
+      const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
+        $pull: { retweetedUsers: id },
+      });
+      res.status(200).json({ message: "Removed retweet successfully" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
+export const saveTweet = async (req: Request, res: Response) => {
+  const { id, tweetId } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet?.savedBy?.includes(id)) {
+      const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
+        $push: { savedBy: id },
+      });
+      res.status(200).json({ message: "Tweet saved successfully" });
+    } else {
+      const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
+        $pull: { savedBy: id },
+      });
+      res.status(200).json({ message: "Tweet unsaved succesfully" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
+export const deleteTweet = async (req: Request, res: Response) => {
+  const { id, tweetId } = req.body;
+
+  try {
+    const tweet = await Tweet.findById(tweetId);
     if (tweet?.creator.toString() === id) {
       if (tweet?.media) {
         for (var i = 0; i < tweet.media.length; i++) {
@@ -141,7 +330,7 @@ export const deleteTweet = async (req: Request, res: Response) => {
           );
         }
       }
-      const result = await Tweet.deleteOne({ _id: tweetid });
+      const result = await Tweet.deleteOne({ _id: tweetId });
       res.status(200).json({ message: "Tweet deleted successfully" });
     } else {
       res.status(403).json({ message: "You cannot delete this tweet" });

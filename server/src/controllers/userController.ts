@@ -49,7 +49,7 @@ export const followUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetid);
-    if (!user?.following?.includes(targetid)) {
+    if (!user?.following?.includes(targetid) && id !== targetid) {
       const updatedUser = await User.findByIdAndUpdate(id, {
         $push: { following: targetid },
       });
@@ -57,8 +57,10 @@ export const followUser = async (req: Request, res: Response) => {
         $push: { followers: id },
       });
       res.status(200).json({ message: "Successfully followed the user" });
-    } else if (user?.following?.includes(targetid)) {
+    } else if (user?.following?.includes(targetid) && id !== targetid) {
       res.status(200).json({ message: "You already follow the user" });
+    } else {
+      res.status(400).json({ message: "You cannot follow yourself" });
     }
   } catch (err) {
     res.status(400).json({ error: err });
@@ -71,7 +73,7 @@ export const unfollowUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetid);
-    if (!user?.following?.includes(targetid)) {
+    if (!user?.following?.includes(targetid) && id !== targetid) {
       const updatedUser = await User.findByIdAndUpdate(id, {
         $pull: { following: targetid },
       });
@@ -79,8 +81,10 @@ export const unfollowUser = async (req: Request, res: Response) => {
         $pull: { followers: id },
       });
       res.status(200).json({ message: "Successfully unfollowed the user" });
-    } else if (user?.following?.includes(targetid)) {
+    } else if (user?.following?.includes(targetid) && id !== targetid) {
       res.status(200).json({ message: "You already don't follow the user" });
+    } else {
+      res.status(400).json({ message: "You cannot unfollow yourself" });
     }
   } catch (err) {
     res.status(400).json({ error: err });
