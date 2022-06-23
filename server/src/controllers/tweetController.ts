@@ -79,7 +79,7 @@ export const fetchHomeTweets = async (req: Request, res: Response) => {
 
 export const getTweet = async (req: Request, res: Response) => {
   const { id } = req.body;
-  const tweetId = req.params.tweetid;
+  const tweetId = req.params.tweetId;
 
   try {
     const user = await User.findById(id);
@@ -249,11 +249,11 @@ export const createTweet = async (req: Request, res: Response) => {
 };
 
 export const likeTweet = async (req: Request, res: Response) => {
-  const { id, tweetid } = req.body;
+  const { id, tweetId } = req.body;
 
   try {
     const user = await User.findById(id);
-    const tweet = await Tweet.findById(tweetid);
+    const tweet = await Tweet.findById(tweetId);
     if (!tweet?.likes?.includes(id)) {
       const updatedTweet = await Tweet.findByIdAndUpdate(id, {
         $inc: { likes: 1 },
@@ -271,18 +271,18 @@ export const likeTweet = async (req: Request, res: Response) => {
 };
 
 export const retweet = async (req: Request, res: Response) => {
-  const { id, tweetid } = req.body;
+  const { id, tweetId } = req.body;
 
   try {
     const user = await User.findById(id);
-    const tweet = await Tweet.findById(tweetid);
+    const tweet = await Tweet.findById(tweetId);
     if (!tweet?.retweetedUsers?.includes(id)) {
-      const updatedtweet = await Tweet.findByIdAndUpdate(tweetid, {
+      const updatedtweet = await Tweet.findByIdAndUpdate(tweetId, {
         $push: { retweetedUsers: id },
       });
       res.status(200).json({ message: "Retweeted tweet successfully" });
     } else {
-      const updatedTweet = await Tweet.findByIdAndUpdate(tweetid, {
+      const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
         $pull: { retweetedUsers: id },
       });
       res.status(200).json({ message: "Removed retweet successfully" });
@@ -293,18 +293,18 @@ export const retweet = async (req: Request, res: Response) => {
 };
 
 export const saveTweet = async (req: Request, res: Response) => {
-  const { id, tweetid } = req.body;
+  const { id, tweetId } = req.body;
 
   try {
     const user = await User.findById(id);
-    const tweet = await Tweet.findById(tweetid);
+    const tweet = await Tweet.findById(tweetId);
     if (!tweet?.savedBy?.includes(id)) {
-      const updatedTweet = await Tweet.findByIdAndUpdate(tweetid, {
+      const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
         $push: { savedBy: id },
       });
       res.status(200).json({ message: "Tweet saved successfully" });
     } else {
-      const updatedTweet = await Tweet.findByIdAndUpdate(tweetid, {
+      const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
         $pull: { savedBy: id },
       });
       res.status(200).json({ message: "Tweet unsaved succesfully" });
@@ -315,10 +315,10 @@ export const saveTweet = async (req: Request, res: Response) => {
 };
 
 export const deleteTweet = async (req: Request, res: Response) => {
-  const { id, tweetid } = req.body;
+  const { id, tweetId } = req.body;
 
   try {
-    const tweet = await Tweet.findById(tweetid);
+    const tweet = await Tweet.findById(tweetId);
     if (tweet?.creator.toString() === id) {
       if (tweet?.media) {
         for (var i = 0; i < tweet.media.length; i++) {
@@ -330,7 +330,7 @@ export const deleteTweet = async (req: Request, res: Response) => {
           );
         }
       }
-      const result = await Tweet.deleteOne({ _id: tweetid });
+      const result = await Tweet.deleteOne({ _id: tweetId });
       res.status(200).json({ message: "Tweet deleted successfully" });
     } else {
       res.status(403).json({ message: "You cannot delete this tweet" });

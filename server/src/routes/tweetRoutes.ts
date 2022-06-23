@@ -15,7 +15,7 @@ import { tweetMediaUpload as upload } from "../middleware/mediaUpload";
 
 router.get("/", requireAuth, fetchHomeTweets);
 
-router.get("/:tweetid", requireAuth, getTweet);
+router.get("/:tweetId", requireAuth, getTweet);
 
 router.post("/", requireAuth, upload.array("media", 4), createTweet);
 
