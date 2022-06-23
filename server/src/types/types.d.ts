@@ -33,6 +33,9 @@ interface ITweet {
   tweet: string;
   media?: string[];
   likes?: Schema.Types.ObjectId[];
+  retweetedUsers?: Schema.Types.ObjectId[];
+  shared: boolean;
+  savedBy?: Schema.Types.ObjectId[];
 }
 
 interface IComment {
