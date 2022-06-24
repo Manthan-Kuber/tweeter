@@ -10,7 +10,7 @@ import ProfileBox from "../Components/Common/ProfileBox";
 import CustomModal from "../Components/Common/CustomModal";
 import Tweet from "../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useUsersQuery } from "../app/services/api";
+import { useGetUsersQuery } from "../app/services/api";
 import FollowerModalContent from "../Components/Common/FollowerModalContent";
 
 const Profile = (props: any) => {
@@ -21,7 +21,7 @@ const Profile = (props: any) => {
   const userId = router.query.userId;
   const { replace } = router;
   const { width } = useWindowSize();
-  const { data } = useUsersQuery(userId as string);
+  const { data } = useGetUsersQuery(userId as string);
 
   useEffect(() => {
     if (!token) {

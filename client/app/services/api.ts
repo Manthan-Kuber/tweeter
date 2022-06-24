@@ -30,8 +30,7 @@ export const api = createApi({
     test: builder.query<{ message: string }, void>({
       query: () => "test",
     }),
-    users: builder.query<ProfileResponse, string>({
-      //Add Req resp types
+    getUsers: builder.query<ProfileResponse, string>({
       query: (userId) => `users/${userId}`,
     }),
   }),
@@ -42,5 +41,5 @@ export const {
   useLoginMutation,
   useTestQuery,
   useSignupMutation,
-  useUsersQuery,
+  useGetUsersQuery,
 } = api;

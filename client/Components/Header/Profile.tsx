@@ -5,13 +5,13 @@ import ProfileDropdown from "./ProfileDropdown";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useAppSelector } from "../../Hooks/store";
-import { useUsersQuery } from "../../app/services/api";
+import { useGetUsersQuery } from "../../app/services/api";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
   const name = useAppSelector((state) => state.auth.user?.name);
   const userId = useAppSelector((state) => state.auth.user?.id);
-  const { data } = useUsersQuery(userId!);
+  const { data } = useGetUsersQuery(userId!);
   return (
     <ProfileContainer>
       {data?.data[0].profilePic !== undefined && (

@@ -34,7 +34,7 @@ function Layout({ children }: { children: React.ReactElement }) {
     <>
       <Head>
         <title>
-        {router.pathname.split("/")[1] === "" ? "Home" : pathName === "[userId]" && `${username}` } / Tweeter
+        {router.pathname.split("/")[1] === "" ? "Home" : pathName === "[userId]" ? `${username}` : pathName } / Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
