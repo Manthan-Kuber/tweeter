@@ -56,9 +56,7 @@ function Register() {
 
   useEffect(() => {
     if (token) {
-      setTimeout(() => {
-        setIsLoading((prev) => !prev);
-      }, 500);
+      setIsLoading((prev) => !prev);
       replace("/");
     } else if (!token) {
       setIsLoading(false);
@@ -118,6 +116,8 @@ function Register() {
     setformValues: setformValues,
     errMessage: errMessage,
   };
+
+  
 
   return (
     <>
@@ -183,9 +183,7 @@ Register.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
       <Head>
-        <title>
-          Register / Tweeter
-        </title>
+        <title>Register / Tweeter</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       {page}

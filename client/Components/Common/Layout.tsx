@@ -4,10 +4,11 @@ import Head from "next/head";
 import { FaCompass } from "react-icons/fa";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../Hooks/store";
+import FullScreenLoader from "./FullScreenLoader";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -22,19 +23,39 @@ const NavList = [
 
 function Layout({ children }: { children: React.ReactElement }) {
   const router = useRouter();
-  const username = useAppSelector(state => state.auth.user?.username)
+  const username = useAppSelector((state) => state.auth.user?.username);
   const pathName =
     router.pathname.split("/")[1].toUpperCase()[0] +
     router.pathname.split("/")[1].substring(1);
   const [activeTab, setActiveTab] = useState(
     router.pathname.split("/")[1] === "" ? "Home" : pathName
   );
+  const [isLoading, setIsLoading] = useState(true);
+  const token = useAppSelector((state) => state.auth.token);
+
+  useEffect(() => {
+    if (!token) {
+     
+        setIsLoading((prev) => !prev);
+     
+      router.replace("/register");
+    } else if (token) {
+      setIsLoading(false);
+    }
+  }, [token]);
+
+  if (!token) return <FullScreenLoader />;
 
   return (
     <>
       <Head>
         <title>
-        {router.pathname.split("/")[1] === "" ? "Home" : pathName === "[userId]" ? `${username}` : pathName } / Tweeter
+          {router.pathname.split("/")[1] === ""
+            ? "Home"
+            : pathName === "[userId]"
+            ? `${username}`
+            : pathName}{" "}
+          / Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
