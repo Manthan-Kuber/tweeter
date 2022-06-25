@@ -1,5 +1,4 @@
-import { Suspense, useState } from "react";
-import FullScreenLoader from "../Components/Common/FullScreenLoader";
+import { useState } from "react";
 import styled from "styled-components";
 import FilterBox from "../Components/Common/FilterBox";
 import Image from "next/image";
@@ -8,7 +7,7 @@ import ProfileBox from "../Components/Common/ProfileBox";
 import CustomModal from "../Components/Common/CustomModal";
 import Tweet from "../Components/Common/Tweet";
 import { GetServerSideProps } from "next";
-import FollowerModalContent from "../Components/Common/FollowerModalContent";
+import FollowerInfo from "../Components/Common/FollowerInfo";
 import axiosApi from "../app/services/axiosApi";
 
 const Profile = ({ data }: { data: ProfileResponse }) => {
@@ -23,7 +22,7 @@ const Profile = ({ data }: { data: ProfileResponse }) => {
   };
 
   return (
-    <Suspense fallback={<FullScreenLoader />}>
+    <>
       {data?.data[0].coverPic !== undefined && (
         <Image
           src={data?.data[0].coverPic}
@@ -53,36 +52,24 @@ const Profile = ({ data }: { data: ProfileResponse }) => {
         following={data?.data[0].following as number}
         modalTitle={`${data?.data[0].name as string} is Following`}
       >
-        <FollowerModalContent />
+        <FollowerInfo />
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />
         <Tweet />
       </ContentContainer>
-    </Suspense>
+    </>
   );
 };
 
 export default Profile;
-
-// export const getStaticPaths: GetStaticPaths = async (ctx) => {
-//   return {
-//     paths: [],
-//     fallback: "blocking",
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   return {
-//     props: {},
-//   };
-// };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const token = ctx.req.cookies.jwt;
   const userId = ctx.params?.userId;
   try {
     const response = await axiosApi.get(`/users/${userId}`, {
+      //Add header only when cookie exists
       headers: {
         authorization: `Bearer ${token}`,
       },

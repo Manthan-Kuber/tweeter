@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
 import { BsFillPersonPlusFill } from "react-icons/bs";
-import { GrClose } from "react-icons/gr";
 import styled from "styled-components";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
 interface Props {}
-const FollowerModalContent = (props: Props) => {
+const FollowerInfo = (props: Props) => {
   return (
     <>
       {Array.from(Array(10).keys()).map((index, item) => (
@@ -34,7 +33,7 @@ const FollowerModalContent = (props: Props) => {
     </>
   );
 };
-export default FollowerModalContent;
+export default FollowerInfo;
 
 const ProfileElementWrapper = styled.div`
   margin-top: 1rem;

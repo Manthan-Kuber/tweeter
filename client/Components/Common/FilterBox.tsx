@@ -5,7 +5,7 @@ import { useState } from "react";
 const FilterBox = ({ filterList }: FilterBoxProps) => {
   const [tab, setTab] = useState(1);
   return (
-    <Container>
+    <AsideContainer>
       <Ul>
         {Object.entries(filterList).map(([key, value]) => (
           <Li
@@ -28,12 +28,12 @@ const FilterBox = ({ filterList }: FilterBoxProps) => {
           </Li>
         ))}
       </Ul>
-    </Container>
+    </AsideContainer>
   );
 };
 export default FilterBox;
 
-const Container = styled.aside`
+export const AsideContainer = styled.aside`
   background-color: white;
   padding-block: 2.5rem;
   font: 600 1.4rem var(--ff-poppins);

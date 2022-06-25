@@ -1,18 +1,24 @@
 import styled from "styled-components";
-import FilterBox from "../Components/Common/FilterBox";
+import SuggestedFollow from "../Components/Common/SuggestedFollow";
+import Trends from "../Components/Common/Trends";
 
 const Home = () => {
-  const filterList = {
-    1: "Tweets",
-    2: "Tweets & Replies",
-    3: "Media",
-    4: "Likes",
-  };
+  const trendList = [
+    { id: 0, tagName: "#programming", tweetCount: "213k Tweets" },
+    { id: 1, tagName: "#devchallenges", tweetCount: "123k Tweets" },
+    { id: 2, tagName: "#frontend", tweetCount: "69k Tweets" },
+    { id: 3, tagName: "#backend", tweetCount: "55k Tweets" },
+    { id: 4, tagName: "#69DaysOfCode", tweetCount: "25k Tweets" },
+    { id: 5, tagName: "#johhnydepp", tweetCount: "5k Tweets" },
+  ];
 
   return (
     <Container>
-      <FilterBox filterList={filterList} />
       <div>Main content goes here</div>
+      <aside>
+        <Trends trendList={trendList} />
+        <SuggestedFollow />
+      </aside>
     </Container>
   );
 };
@@ -23,12 +29,35 @@ const Container = styled.div`
   width: min(95%, 102.4rem);
   margin-inline: auto;
   padding-block: 2rem;
-  display: grid;
-  grid-template-columns: 1fr 3fr;
   gap: 2rem;
+  display: flex;
+  flex-direction: column-reverse;
+
+  @media screen and (min-width: 25em) {
+    aside {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  @media screen and (min-width: 40em) {
+    aside {
+      padding-inline: 5rem;
+    }
+  }
+
+  @media screen and (min-width: 55em) {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    aside {
+      padding-inline: revert;
+      display: revert;
+    }
+  }
 
   //delete later
-  & > div:last-child {
+  & > div:first-child {
     background-color: green;
   }
 `;

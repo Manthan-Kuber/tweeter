@@ -1,9 +1,14 @@
 import Image from "next/image";
+import React, { useRef, useState } from "react";
+import { MdOutlineImage } from "react-icons/md";
 import styled from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
 
 interface Props {}
 const TweetReply = (props: Props) => {
+  const [reply, setReply] = useState<string>("");
+  const [file, setFile] = useState<File>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   return (
     <ReplyContainer>
       <ReplyImageWrapper>
@@ -13,10 +18,20 @@ const TweetReply = (props: Props) => {
           height={45}
         />
       </ReplyImageWrapper>
-      <InputWrapper>
-          <ReplyInput placeholder="Tweet your reply" rows={1} />
-          <Icon $cursorPointer/>
-      </InputWrapper>
+      <InputFormWrapper>
+        <ReplyInput placeholder="Tweet your reply" rows={1} />
+        <input type="file" ref={fileInputRef} multiple />
+        <Icon
+          as={MdOutlineImage}
+          size={20}
+          color={"var(--clr-gray)"}
+          style={{ top: 8 }}
+          $cursorPointer
+          onClick={(e: React.SyntheticEvent) =>
+            fileInputRef.current && fileInputRef.current.click()
+          }
+        />
+      </InputFormWrapper>
     </ReplyContainer>
   );
 };
@@ -55,6 +70,7 @@ const ReplyImageWrapper = styled.div`
   align-self: flex-start;
 `;
 
-const InputWrapper = styled.div`
-    width: 100%;
-`
+const InputFormWrapper = styled.form`
+  width: 100%;
+  position: relative;
+`;

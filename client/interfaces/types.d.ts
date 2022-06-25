@@ -134,3 +134,6 @@ interface ProfileResponse {
     }
   ];
 }
+interface TrendProps {
+  trendList: { id: number; tagName: string; tweetCount: string }[];
+}
