@@ -2,7 +2,6 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { connect } from "mongoose";
 import authRoutes from "./routes/authRoutes";
-import privRoutes from "./routes/privateRoutes";
 import userRoutes from "./routes/userRoutes";
 import tweetRoutes from "./routes/tweetRoutes";
 import commentRoutes from "./routes/commentRoutes";
@@ -33,7 +32,6 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use(authRoutes);
-app.use(privRoutes);
 app.use("/users", userRoutes);
 app.use("/tweets", tweetRoutes);
 app.use("/comment", commentRoutes);
