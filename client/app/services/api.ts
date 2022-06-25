@@ -1,8 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
-
-
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:6969/",
@@ -11,6 +9,7 @@ export const api = createApi({
       if (token) headers.set("authorization", `Bearer ${token}`);
       return headers;
     },
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -30,16 +29,8 @@ export const api = createApi({
     test: builder.query<{ message: string }, void>({
       query: () => "test",
     }),
-    getUsers: builder.query<ProfileResponse, string>({
-      query: (userId) => `users/${userId}`,
-    }),
   }),
 });
 
 //Check lazyprofile query
-export const {
-  useLoginMutation,
-  useTestQuery,
-  useSignupMutation,
-  useGetUsersQuery,
-} = api;
+export const { useLoginMutation, useTestQuery, useSignupMutation } = api;

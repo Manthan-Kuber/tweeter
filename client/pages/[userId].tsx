@@ -1,5 +1,4 @@
-import { useRouter } from "next/router";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import styled from "styled-components";
 import FilterBox from "../Components/Common/FilterBox";
@@ -9,15 +8,12 @@ import ProfileBox from "../Components/Common/ProfileBox";
 import CustomModal from "../Components/Common/CustomModal";
 import Tweet from "../Components/Common/Tweet";
 import { GetServerSideProps } from "next";
-import { useGetUsersQuery } from "../app/services/api";
 import FollowerModalContent from "../Components/Common/FollowerModalContent";
+import axiosApi from "../app/services/axiosApi";
 
-const Profile = () => {
+const Profile = ({ data }: { data: ProfileResponse }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const router = useRouter();
-  const userId = router.query.userId;
   const { width } = useWindowSize();
-  const { data } = useGetUsersQuery(userId as string);
 
   const filterList = {
     1: "Tweets",
@@ -83,7 +79,22 @@ export default Profile;
 // };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  console.log(ctx.req);
+  const token = ctx.req.cookies.jwt;
+  const userId = ctx.params?.userId;
+  try {
+    const response = await axiosApi.get(`/users/${userId}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return {
+      props: {
+        data: response.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
   return {
     props: {},
   };

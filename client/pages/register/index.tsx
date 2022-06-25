@@ -93,9 +93,6 @@ function Register() {
         email,
         password,
       }).unwrap();
-      console.log(
-        `user info: ${user.user.id} ${user.user.name} ${user.user.email} and token is ${user.token}`
-      );
       dispatch(setCredentials(user));
       replace("/");
     } catch (err: any) {
@@ -116,8 +113,6 @@ function Register() {
     setformValues: setformValues,
     errMessage: errMessage,
   };
-
-  
 
   return (
     <>
