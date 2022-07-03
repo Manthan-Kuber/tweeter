@@ -20,11 +20,11 @@ function Explore() {
 export default Explore;
 
 const Container = styled.div`
-  width: min(95%, 102.4rem);
+  width: min(95%, 120rem);
   margin-inline: auto;
   padding-block: 2rem;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr 4fr;
   gap: 2rem;
 
   //delete later

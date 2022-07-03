@@ -31,7 +31,7 @@ export const StyledHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   padding-block: 1.2rem ;
-  width: min(95% ,102.4rem);
+  width: min(95% ,120rem);
   margin-inline: auto;
 `;
 

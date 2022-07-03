@@ -26,7 +26,7 @@ const Home = () => {
 export default Home;
 
 const Container = styled.div`
-  width: min(95%, 102.4rem);
+  width: min(95%, 120rem);
   margin-inline: auto;
   padding-block: 2rem;
   gap: 2rem;
