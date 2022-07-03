@@ -3,13 +3,12 @@ import User from "../models/users";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import { errHandler } from "../utils/errorHandler";
-import { userInfo } from "os";
 
 const createToken = (id: ObjectId) => {
   return jwt.sign({ id }, process.env.TOKEN_SECRET!);
 };
 
-export const signUpPost = async (
+export const handleSignUp = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -51,7 +50,7 @@ export const signUpPost = async (
   }
 };
 
-export const logInPost = async (
+export const handleLogin = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -77,10 +76,7 @@ export const logInPost = async (
   }
 };
 
-export const handleLogout = async(
-  req:Request,
-  res:Response
-) => {
-  console.log(req.cookies)
-  res.sendStatus(204)
-}
+export const handleCookieClear = async (req: Request, res: Response) => {
+  res.clearCookie("jwt");
+  res.sendStatus(204);
+};

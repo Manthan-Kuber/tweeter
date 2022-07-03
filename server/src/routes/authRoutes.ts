@@ -1,11 +1,15 @@
 import express from "express";
-import { handleLogout, logInPost, signUpPost } from "../controllers/authController";
+import {
+  handleCookieClear,
+  handleLogin,
+  handleSignUp,
+} from "../controllers/authController";
 const router = express.Router();
 
-router.post("/signup", signUpPost);
+router.post("/signup", handleSignUp);
 
-router.post("/login", logInPost);
+router.post("/login", handleLogin);
 
-router.get("/clearcookie",handleLogout)
+router.get("/clearcookie", handleCookieClear);
 
 export default router;
