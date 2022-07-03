@@ -76,3 +76,11 @@ export const logInPost = async (
     res.status(400).json({ errors });
   }
 };
+
+export const handleLogout = async(
+  req:Request,
+  res:Response
+) => {
+  console.log(req.cookies)
+  res.sendStatus(204)
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import FilterBox from "../Components/Common/FilterBox";
 import Image from "next/image";
@@ -9,10 +9,27 @@ import Tweet from "../Components/Common/Tweet";
 import { GetServerSideProps } from "next";
 import FollowerInfo from "../Components/Common/FollowerInfo";
 import axiosApi from "../app/services/axiosApi";
+import { AxiosError } from "axios";
+import { useAppDispatch } from "../Hooks/store";
+import { logOut } from "../features/auth/authSlice";
 
-const Profile = ({ data }: { data: ProfileResponse }) => {
+const Profile = ({
+  data,
+  isAuthenticated = true,
+}: {
+  data: ProfileResponse;
+  isAuthenticated: boolean;
+}) => {
+  const dispatch = useAppDispatch();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { width } = useWindowSize();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      async () => await axiosApi.get("clearcookie");
+      dispatch(logOut());
+    }
+  }, []);
 
   const filterList = {
     1: "Tweets",
@@ -68,8 +85,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const token = ctx.req.cookies.jwt;
   const userId = ctx.params?.userId;
   try {
-    const response = await axiosApi.get(`/users/${userId}`, {
-      //Add header only when cookie exists
+    const response = await axiosApi.get(`users/${userId}`, {
       headers: {
         authorization: `Bearer ${token}`,
       },
@@ -80,7 +96,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   } catch (error) {
-    console.log(error);
+    if ((error as AxiosError).response?.status === 401) {
+      return {
+        props: {
+          isAuthenticated: false,
+        },
+      };
+    }
   }
   return {
     props: {},

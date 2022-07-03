@@ -23,7 +23,6 @@ const Article = styled(AsideContainer)`
   padding: 1rem;
   margin-bottom: 2rem;
   color: #4f4f4f;
-  max-width: 30rem;
   hr {
     margin-block: 1rem 2.5rem;
     color: hsla(0, 0%, 88%, 1);

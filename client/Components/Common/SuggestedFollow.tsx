@@ -9,7 +9,6 @@ const SuggestedFollow = () => {
   return (
     <Article as="article">
       <h5>Whom to follow</h5>
-      {/* Map it */}
       {Array.from(Array(10).keys()).map((index) => (
         <FollowerContainer key={index}>
           <hr />
@@ -35,7 +34,6 @@ const Article = styled(AsideContainer)`
   padding: 1rem;
   color: #4f4f4f;
   max-height: 40rem;
-  max-width: 30rem;
   overflow-y: scroll;
   h5 {
     margin-bottom: 1rem;

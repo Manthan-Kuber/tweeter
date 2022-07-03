@@ -52,7 +52,7 @@ function Register() {
   const [login] = useLoginMutation();
   const [signup] = useSignupMutation();
   const token = useAppSelector((state) => state.auth.token);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (token) {
