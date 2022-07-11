@@ -7,8 +7,32 @@ import { Icon } from "../../styles/inputGroup.styles";
 interface Props {}
 const TweetReply = (props: Props) => {
   const [reply, setReply] = useState<string>("");
-  const [file, setFile] = useState<File>();
+  const [fileList, setFileList] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const tweetReply = document.getElementById("tweetReply");
+
+  const autoResize = () => {
+    if (tweetReply) {
+      tweetReply.style.height = "auto";
+      tweetReply.style.height = tweetReply.scrollHeight + "px";
+    }
+  };
+
+  tweetReply?.addEventListener("input", autoResize, false);
+
+  const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const tweetImgArray = Array.from(e.target.files).map((tweetImg) =>
+      URL.createObjectURL(tweetImg)
+    );
+    if (fileList.length + tweetImgArray.length < 5) {
+      setFileList((prev) => prev.concat(tweetImgArray));
+    } else {
+      alert("You can upload a maximum of 4 files");
+    }
+  };
+
   return (
     <ReplyContainer>
       <ReplyImageWrapper>
@@ -18,14 +42,34 @@ const TweetReply = (props: Props) => {
           height={45}
         />
       </ReplyImageWrapper>
-      <InputFormWrapper>
-        <ReplyInput placeholder="Tweet your reply" rows={1} />
-        <input type="file" ref={fileInputRef} multiple />
-        <Icon
+      <InputFormWrapper id="formWrapper">
+        <form>
+          <ReplyInput placeholder="Tweet your reply" id="tweetReply" rows={1} />
+          <input
+            type="file"
+            ref={fileInputRef}
+            hidden
+            multiple
+            accept="image/jpeg,image/jpg,image/png"
+            onChange={imageHandler}
+          />
+          {fileList.length > 0 &&
+            fileList.map((imgUrl) => (
+              <TweetImageWrapper key={imgUrl}>
+                <TweetImage
+                  src={imgUrl}
+                  width={100}
+                  height={100}
+                  layout="responsive"
+                />
+              </TweetImageWrapper>
+            ))}
+          <hr />
+        </form>
+        <MediaIcon
           as={MdOutlineImage}
-          size={20}
+          size={24}
           color={"var(--clr-gray)"}
-          style={{ top: 8 }}
           $cursorPointer
           onClick={(e: React.SyntheticEvent) =>
             fileInputRef.current && fileInputRef.current.click()
@@ -44,21 +88,18 @@ const ReplyContainer = styled.div`
 `;
 
 const ReplyInput = styled.textarea`
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  outline: 1.5px solid hsl(0, 0%, 74%, 1);
-  border: none;
-  accent-color: var(--clr-primary);
-  width: 100%;
-  background-color: hsl(0, 0%, 74%, 0.1);
+  padding-right: 1rem;
   font-family: var(--ff-poppins);
-  font-size: 1.2rem;
+  font-size: 1.6rem;
+  width: 100%;
+  background-color: #f8f8f8;
+  color: hsla(0, 0%, 31%, 1);
+  border: none;
   resize: none;
+  margin-bottom: 0.5rem;
 
   &:focus {
-    outline-color: var(--clr-primary);
-    outline-width: 2.5px;
-    background-color: white;
+    outline: none;
   }
 `;
 
@@ -70,7 +111,35 @@ const ReplyImageWrapper = styled.div`
   align-self: flex-start;
 `;
 
-const InputFormWrapper = styled.form`
+const InputFormWrapper = styled.div`
   width: 100%;
   position: relative;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  outline: 1.5px solid hsl(0, 0%, 74%, 1);
+  border: none;
+  accent-color: var(--clr-primary);
+  width: 100%;
+  background-color: hsl(0, 0%, 74%, 0.1);
+  font-family: var(--ff-poppins);
+  font-size: 1.2rem;
+  resize: none;
+
+  hr {
+    border: 0.5px solid rgb(130, 130, 130, 0.4);
+  }
+`;
+
+const TweetImage = styled(Image)`
+  border-radius: 16px;
+`;
+
+const TweetImageWrapper = styled.div`
+  margin-block: 0.5rem 1rem;
+`;
+
+const MediaIcon = styled(Icon)`
+  margin-top: 0.5rem;
+  margin-bottom: -1rem;
+  position: revert;
 `;

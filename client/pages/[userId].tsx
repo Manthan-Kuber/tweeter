@@ -12,13 +12,16 @@ import axiosApi from "../app/services/axiosApi";
 import { AxiosError } from "axios";
 import { useAppDispatch } from "../Hooks/store";
 import { logOut } from "../features/auth/authSlice";
+import FullScreenLoader from "../Components/Common/FullScreenLoader";
 
 const Profile = ({
   data,
   isAuthenticated = true,
+  isLoading = true,
 }: {
   data: ProfileResponse;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }) => {
   const dispatch = useAppDispatch();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -38,7 +41,9 @@ const Profile = ({
     4: "Likes",
   };
 
-  return (
+  return isLoading ? (
+    <FullScreenLoader />
+  ) : (
     <>
       {data?.data[0].coverPic !== undefined && (
         <Image
@@ -93,6 +98,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {
         data: response.data,
+        isLoading: false,
       },
     };
   } catch (error) {
