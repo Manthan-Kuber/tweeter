@@ -10,7 +10,7 @@ import {
 
 router.get("/tweets", requireAuth, tweetsAndRetweets);
 
-router.get("/tweetsandreplies", tweetsAndReplies);
+router.get("/tweetsandreplies", requireAuth, tweetsAndReplies);
 
 router.get("/media", requireAuth, media);
 

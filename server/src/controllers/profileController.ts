@@ -391,8 +391,10 @@ export const tweetsAndReplies = async (req: Request, res: Response) => {
           _id: {
             $nin: tweetIds,
           },
-          creator: new ObjectId(id),
-          retweetedUsers: new ObjectId(id),
+          $or: [
+            { creator: new ObjectId(id) },
+            { retweetedUsers: new ObjectId(id) },
+          ],
         },
       },
       {
