@@ -4,11 +4,14 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { MdOutlineImage } from "react-icons/md";
 import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
+import { nanoid } from "@reduxjs/toolkit";
 
 interface Props {}
 const TweetReply = (props: Props) => {
   const [reply, setReply] = useState<string>("");
-  const [fileList, setFileList] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
@@ -25,28 +28,33 @@ const TweetReply = (props: Props) => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const fileArray = fileList.map((item) => item.file);
+    console.log(fileArray);
+    console.log(reply);
+    setFileList([]);
+    setReply("");
     //Create Tweet Button and submit function
   };
 
-  const formData = new FormData();
+  // const formData = new FormData();
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    const tweetImgArray = Array.from(e.target.files).map((tweetImg) =>
-      URL.createObjectURL(tweetImg)
-    );
+    const tweetImgArray = Array.from(e.target.files);
     if (fileList.length + tweetImgArray.length < 5) {
-      setFileList((prev) => prev.concat(tweetImgArray));
+      tweetImgArray.forEach((value) => {
+        setFileList((prev) => [...prev, { id: nanoid(), file: value }]);
+      });
     }
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("image", fileList[i]);
-    }
-    console.log(formData);
+    // for (let i = 0; i < fileList.length; i++) {
+    //   formData.append("image", fileList[i]);
+    // }
+    // console.log(formData);
   };
 
   useEffect(() => {
     if (reply.length || fileList.length > 0) setIsDisabled(false);
-    else setIsDisabled(true)
+    else setIsDisabled(true);
   }, [reply, fileList]);
 
   return (
@@ -59,7 +67,7 @@ const TweetReply = (props: Props) => {
         />
       </ReplyImageWrapper>
       <InputFormWrapper id="formWrapper">
-        <form>
+        <form onSubmit={onSubmit}>
           <ReplyInput
             placeholder="Tweet your reply"
             id="tweetReply"
@@ -77,10 +85,10 @@ const TweetReply = (props: Props) => {
           />
           {fileList.length > 0 && (
             <TweetImageArrayWrapper numOfImages={fileList.length}>
-              {fileList.map((imgUrl) => (
-                <TweetImageWrapper key={imgUrl}>
+              {fileList.map((arrObject) => (
+                <TweetImageWrapper key={arrObject.id}>
                   <TweetImage
-                    src={imgUrl}
+                    src={URL.createObjectURL(arrObject.file)}
                     layout="responsive"
                     width="100%"
                     height="100%"
@@ -89,7 +97,9 @@ const TweetReply = (props: Props) => {
                     size={24}
                     onClick={() =>
                       setFileList((prev) =>
-                        prev.filter((img) => img !== imgUrl)
+                        prev.filter(
+                          (currentFile) => currentFile.id !== arrObject.id
+                        )
                       )
                     }
                   />
@@ -129,7 +139,7 @@ const TweetButton = styled.button`
   background-color: rgba(47, 128, 237, 1);
   cursor: pointer;
   color: white;
-  font: 500 1.4rem var(--ff-noto);
+  font: 600 1.4rem var(--ff-noto);
   border: none;
   &:hover {
     background-color: rgba(47, 128, 237, 0.9);
