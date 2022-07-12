@@ -5,7 +5,7 @@ import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
 export const getProfile = async (req: Request, res: Response) => {
-  const id = req.params.userid;
+  const id = req.params.userId;
 
   try {
     const user = await User.aggregate([
