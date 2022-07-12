@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
-import TweetReply from "./TweetReply";
+import CreateTweet from "./CreateTweet";
 
 interface Props {}
 const Tweet = (props: Props) => {
@@ -39,7 +39,7 @@ const Tweet = (props: Props) => {
         </TweetInfo>
         <TweetOptions />
         {/* To be Conditionally Rendered */}
-        <TweetReply />
+        <CreateTweet isReplyImageVisible={true} placeholder="Tweet your reply" btnText="Reply"/>
         {/* To be Conditionally Rendered and mapped */}
         {Array.from(Array(10).keys()).map((index) => (
           <div key={index}>

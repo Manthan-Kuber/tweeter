@@ -6,9 +6,8 @@ import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
 import { nanoid } from "@reduxjs/toolkit";
 
-interface Props {}
-const TweetReply = (props: Props) => {
-  const [reply, setReply] = useState<string>("");
+const CreateTweet = (props: CreateTweetProps) => {
+  const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
@@ -30,13 +29,20 @@ const TweetReply = (props: Props) => {
     e.preventDefault();
     const fileArray = fileList.map((item) => item.file);
     console.log(fileArray);
-    console.log(reply);
+    console.log(message);
     setFileList([]);
-    setReply("");
+    setMessage("");
     //Create Tweet Button and submit function
+    const formData = new FormData();
+    formData.append("reply", message);
+    // formData.append("id",)
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("image", fileArray[i]);
+    }
+    Array.from(formData.values()).forEach((element) => {
+      console.log(element);
+    });
   };
-
-  // const formData = new FormData();
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -46,34 +52,37 @@ const TweetReply = (props: Props) => {
         setFileList((prev) => [...prev, { id: nanoid(), file: value }]);
       });
     }
-    // for (let i = 0; i < fileList.length; i++) {
-    //   formData.append("image", fileList[i]);
-    // }
-    // console.log(formData);
   };
 
   useEffect(() => {
-    if (reply.length || fileList.length > 0) setIsDisabled(false);
+    if (message.length || fileList.length > 0) setIsDisabled(false);
     else setIsDisabled(true);
-  }, [reply, fileList]);
+  }, [message, fileList]);
 
   return (
     <ReplyContainer>
-      <ReplyImageWrapper>
-        <ReplyImage
-          src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
-          width={42}
-          height={45}
-        />
-      </ReplyImageWrapper>
-      <InputFormWrapper id="formWrapper">
+      {props.isReplyImageVisible && (
+        <ReplyImageWrapper>
+          <ReplyImage
+            src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
+            width={42}
+            height={45}
+          />
+        </ReplyImageWrapper>
+      )}
+      <InputFormWrapper id="formWrapper" variant={props.variant}>
+        {props.variant === "Home" && 
+        <HomeVariantContainer>
+          <h4>Tweet Something</h4>
+          <hr/>
+        </HomeVariantContainer>}
         <form onSubmit={onSubmit}>
           <ReplyInput
-            placeholder="Tweet your reply"
+            placeholder={props.placeholder}
             id="tweetReply"
             rows={1}
-            value={reply}
-            onChange={(e) => setReply((prev) => (prev = e.target.value))}
+            value={message}
+            onChange={(e) => setMessage((prev) => (prev = e.target.value))}
           />
           <input
             type="file"
@@ -107,29 +116,37 @@ const TweetReply = (props: Props) => {
               ))}
             </TweetImageArrayWrapper>
           )}
-          <hr />
+          {props.variant !== "Home" && <hr/>}
           <OptionsWrapper>
             <MediaIcon
               as={MdOutlineImage}
-              size={24}
-              color={"var(--clr-gray)"}
+              size={28}
+              color={"var(--clr-primary)"}
               $cursorPointer
               onClick={(e: React.SyntheticEvent) =>
                 fileInputRef.current && fileInputRef.current.click()
               }
             />
-            <TweetButton disabled={isDisabled}>Tweet Reply</TweetButton>
+            <TweetButton disabled={isDisabled}>{props.btnText}</TweetButton>
           </OptionsWrapper>
         </form>
       </InputFormWrapper>
     </ReplyContainer>
   );
 };
-export default TweetReply;
+export default CreateTweet;
+
+const HomeVariantContainer  = styled.div`
+  hr{
+    margin-block: 1rem;
+  }
+
+`
 
 const OptionsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
 `;
 
@@ -161,11 +178,11 @@ const ReplyInput = styled.textarea`
   font-family: var(--ff-poppins);
   font-size: 1.6rem;
   width: 100%;
-  background-color: #f8f8f8;
+  background-color: transparent;
   color: hsla(0, 0%, 31%, 1);
   border: none;
   resize: none;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   &:focus {
     outline: none;
   }
@@ -179,7 +196,7 @@ const ReplyImageWrapper = styled.div`
   align-self: flex-start;
 `;
 
-const InputFormWrapper = styled.div`
+const InputFormWrapper = styled.div<{ variant?: string }>`
   width: 100%;
   position: relative;
   padding: 1rem 2rem;
@@ -192,6 +209,14 @@ const InputFormWrapper = styled.div`
   font-family: var(--ff-poppins);
   font-size: 1.2rem;
   resize: none;
+  padding-top: 1.5rem;
+  ${({ variant }) =>
+    variant === "Home" &&
+    css`
+      background-color: white;
+      box-shadow: 0px 2px 4px 0px hsla(0, 0%, 0%, 0.05);
+      outline: none;
+    `}
 
   hr {
     border: 0.5px solid rgb(130, 130, 130, 0.4);
