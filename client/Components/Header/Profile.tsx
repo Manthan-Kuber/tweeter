@@ -22,7 +22,7 @@ const Profile = () => {
         />
       )}
       <h4>{name}</h4>
-      <DropDownIconWrapper onClick={() => setVisible(!visible)}>
+      <DropDownIconWrapper visible={visible} onClick={() => setVisible(!visible)}>
         <BsThreeDotsVertical className="dropdownIcon" size={20} />
       </DropDownIconWrapper>
       <AnimatePresence>
@@ -37,12 +37,13 @@ const ProfilePic = styled(Image)`
   border-radius: 6px;
 `;
 
-const DropDownIconWrapper = styled.div`
+const DropDownIconWrapper = styled.div<{visible:boolean}>`
   border-radius: 100%;
   cursor: pointer;
   padding: 8px;
   margin-left: -6px;
   transition: all 0.4s;
+  background-color: ${({visible}) => visible && 'rgba(130, 130, 130, 0.2)' };
   &:hover {
     background-color: rgba(130, 130, 130, 0.2);
   }
