@@ -5,6 +5,8 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import tweetRoutes from "./routes/tweetRoutes";
 import commentRoutes from "./routes/commentRoutes";
+import profileRoutes from "./routes/profileRoutes";
+import homeRoutes from "./routes/homeRoutes";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -35,6 +37,8 @@ app.use(authRoutes);
 app.use("/users", userRoutes);
 app.use("/tweets", tweetRoutes);
 app.use("/comment", commentRoutes);
+app.use("/profile", profileRoutes);
+app.use("/home", homeRoutes);
 // app.set("view engine",viewEngine_name)
 
 app.listen(port, async (): Promise<void> => {

@@ -14,7 +14,7 @@ import {
 } from "../controllers/userController";
 import { imageUpload as upload } from "../middleware/mediaUpload";
 
-router.get("/:userid", requireAuth, getProfile);
+router.get("/:userId", requireAuth, getProfile);
 
 router.put("/follow", requireAuth, followUser);
 

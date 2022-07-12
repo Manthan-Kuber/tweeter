@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Comment from "../models/comments";
+import Hashtag from "../models/hashtags";
 import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
-import comments from "../models/comments";
 
 export const fetchComments = async (req: Request, res: Response) => {
   var { skip, tweetId } = req.body;
@@ -27,7 +27,6 @@ export const fetchComments = async (req: Request, res: Response) => {
           as: "count",
         },
       },
-      { $addFields: { replyCount: "$count.count" } },
       {
         $lookup: {
           from: "users",
@@ -49,7 +48,7 @@ export const fetchComments = async (req: Request, res: Response) => {
             },
           },
           createdAt: 1,
-          replyCount: 1,
+          replyCount: "$count.count",
         },
       },
     ]);
@@ -94,7 +93,7 @@ export const fetchReplies = async (req: Request, res: Response) => {
 };
 
 export const createComment = async (req: Request, res: Response) => {
-  const { id, comment, tweetId } = req.body;
+  const { id, comment, tweetId, hashtags } = req.body;
   const file = req.file;
 
   try {
@@ -102,8 +101,24 @@ export const createComment = async (req: Request, res: Response) => {
     const newComment = await Comment.create({
       author: id,
       tweetId: tweetId,
-      comment: comment,
+      comment: comment ? comment : "",
+      hashtags: hashtags ? hashtags : [],
     });
+    if (hashtags) {
+      for (var hashtag in hashtags) {
+        await Hashtag.findOneAndUpdate(
+          { hashtag: hashtag.toLowerCase() },
+          {
+            $set: {
+              hashtag: hashtag.toLowerCase(),
+              lastUsed: new Date(Date.now()),
+            },
+            $inc: { tweets: 1 },
+          },
+          { upsert: true }
+        );
+      }
+    }
     if (file) {
       const upload_stream = cloudinary.uploader.upload_stream(
         {
@@ -138,7 +153,7 @@ export const createComment = async (req: Request, res: Response) => {
 };
 
 export const createReply = async (req: Request, res: Response) => {
-  const { id, comment, commentId } = req.body;
+  const { id, comment, commentId, hashtags } = req.body;
   const file = req.file;
 
   try {
@@ -147,7 +162,23 @@ export const createReply = async (req: Request, res: Response) => {
       author: id,
       commentId: commentId,
       comment: comment,
+      hashtags: hashtags ? hashtags : [],
     });
+    if (hashtags) {
+      for (var hashtag in hashtags) {
+        await Hashtag.findOneAndUpdate(
+          { hashtag: hashtag.toLowerCase() },
+          {
+            $set: {
+              hashtag: hashtag.toLowerCase(),
+              lastUsed: new Date(Date.now()),
+            },
+            $inc: { tweets: 1 },
+          },
+          { upsert: true }
+        );
+      }
+    }
     if (file) {
       const upload_stream = cloudinary.uploader.upload_stream(
         {

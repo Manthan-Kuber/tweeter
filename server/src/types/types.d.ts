@@ -36,6 +36,7 @@ interface ITweet {
   retweetedUsers?: Schema.Types.ObjectId[];
   shared: boolean;
   savedBy?: Schema.Types.ObjectId[];
+  hashtags?: string[];
 }
 
 interface IComment {
@@ -45,4 +46,11 @@ interface IComment {
   comment: string;
   likes?: Schema.Types.ObjectId[];
   media?: string;
+  hashtags?: string[];
+}
+
+interface IHashtag {
+  hashtag: string;
+  tweets: number;
+  lastUsed: Date;
 }
