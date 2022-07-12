@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getProfile = async (req: IRequest, res: Response) => {
   const id = req.params.userId;
 
   try {
@@ -43,9 +44,9 @@ export const getProfile = async (req: Request, res: Response) => {
   }
 };
 
-export const followUser = async (req: Request, res: Response) => {
-  const { id, targetid } = req.body;
-
+export const followUser = async (req: IRequest, res: Response) => {
+  const { targetid } = req.body;
+  const id = req.user?._id;
   try {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetid);
@@ -67,8 +68,9 @@ export const followUser = async (req: Request, res: Response) => {
   }
 };
 
-export const unfollowUser = async (req: Request, res: Response) => {
-  const { id, targetid } = req.body;
+export const unfollowUser = async (req: IRequest, res: Response) => {
+  const { targetid } = req.body;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -91,7 +93,7 @@ export const unfollowUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getFollowers = async (req: Request, res: Response) => {
+export const getFollowers = async (req: IRequest, res: Response) => {
   const { skip } = req.body;
   const id = req.params.userid;
 
@@ -108,7 +110,7 @@ export const getFollowers = async (req: Request, res: Response) => {
   }
 };
 
-export const getFollowing = async (req: Request, res: Response) => {
+export const getFollowing = async (req: IRequest, res: Response) => {
   const { skip } = req.body;
   const id = req.params.userid;
 
@@ -127,8 +129,8 @@ export const getFollowing = async (req: Request, res: Response) => {
   }
 };
 
-export const setProfilePic = async (req: Request, res: Response) => {
-  const { id } = req.body;
+export const setProfilePic = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
   const file = req.file;
   if (file) {
     try {
@@ -165,8 +167,8 @@ export const setProfilePic = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteProfilePic = async (req: Request, res: Response) => {
-  const { id } = req.body;
+export const deleteProfilePic = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -191,8 +193,8 @@ export const deleteProfilePic = async (req: Request, res: Response) => {
   }
 };
 
-export const setCoverPic = async (req: Request, res: Response) => {
-  const { id } = req.body;
+export const setCoverPic = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
   const file = req.file;
   if (file) {
     try {
@@ -229,8 +231,8 @@ export const setCoverPic = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCoverPic = async (req: Request, res: Response) => {
-  const { id } = req.body;
+export const deleteCoverPic = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);

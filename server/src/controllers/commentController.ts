@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Comment from "../models/comments";
@@ -6,7 +7,7 @@ import Hashtag from "../models/hashtags";
 import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
-export const fetchComments = async (req: Request, res: Response) => {
+export const fetchComments = async (req: IRequest, res: Response) => {
   var { skip, tweetId } = req.body;
   if (!skip) skip = 0;
   try {
@@ -58,7 +59,7 @@ export const fetchComments = async (req: Request, res: Response) => {
   }
 };
 
-export const fetchReplies = async (req: Request, res: Response) => {
+export const fetchReplies = async (req: IRequest, res: Response) => {
   var { skip, commentId } = req.body;
   if (!skip) skip = 0;
 
@@ -92,9 +93,10 @@ export const fetchReplies = async (req: Request, res: Response) => {
   }
 };
 
-export const createComment = async (req: Request, res: Response) => {
-  const { id, comment, tweetId, hashtags } = req.body;
+export const createComment = async (req: IRequest, res: Response) => {
+  const { comment, tweetId, hashtags } = req.body;
   const file = req.file;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -152,9 +154,10 @@ export const createComment = async (req: Request, res: Response) => {
   }
 };
 
-export const createReply = async (req: Request, res: Response) => {
-  const { id, comment, commentId, hashtags } = req.body;
+export const createReply = async (req: IRequest, res: Response) => {
+  const { comment, commentId, hashtags } = req.body;
   const file = req.file;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -211,8 +214,9 @@ export const createReply = async (req: Request, res: Response) => {
   }
 };
 
-export const likeComment = async (req: Request, res: Response) => {
-  const { id, commentId } = req.body;
+export const likeComment = async (req: IRequest, res: Response) => {
+  const { commentId } = req.body;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);

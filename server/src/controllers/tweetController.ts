@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Tweet from "../models/tweets";
@@ -6,8 +7,8 @@ import Hashtag from "../models/hashtags";
 import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
-export const getTweet = async (req: Request, res: Response) => {
-  const { id } = req.body;
+export const getTweet = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
   const tweetId = req.params.tweetId;
 
   try {
@@ -88,8 +89,9 @@ export const getTweet = async (req: Request, res: Response) => {
   }
 };
 
-export const createTweet = async (req: Request, res: Response) => {
-  const { id, tweet, shared, hashtags } = req.body;
+export const createTweet = async (req: IRequest, res: Response) => {
+  const { tweet, shared, hashtags } = req.body;
+  const id = req.user?._id;
   const files = req.files as Express.Multer.File[];
   try {
     const newTweet = await Tweet.create({
@@ -144,8 +146,9 @@ export const createTweet = async (req: Request, res: Response) => {
   }
 };
 
-export const likeTweet = async (req: Request, res: Response) => {
-  const { id, tweetId } = req.body;
+export const likeTweet = async (req: IRequest, res: Response) => {
+  const { tweetId } = req.body;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -166,8 +169,9 @@ export const likeTweet = async (req: Request, res: Response) => {
   }
 };
 
-export const retweet = async (req: Request, res: Response) => {
-  const { id, tweetId } = req.body;
+export const retweet = async (req: IRequest, res: Response) => {
+  const { tweetId } = req.body;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -188,8 +192,9 @@ export const retweet = async (req: Request, res: Response) => {
   }
 };
 
-export const saveTweet = async (req: Request, res: Response) => {
-  const { id, tweetId } = req.body;
+export const saveTweet = async (req: IRequest, res: Response) => {
+  const { tweetId } = req.body;
+  const id = req.user?._id;
 
   try {
     const user = await User.findById(id);
@@ -210,8 +215,9 @@ export const saveTweet = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteTweet = async (req: Request, res: Response) => {
-  const { id, tweetId } = req.body;
+export const deleteTweet = async (req: IRequest, res: Response) => {
+  const { tweetId } = req.body;
+  const id = req.user?._id;
 
   try {
     const tweet = await Tweet.findById(tweetId);

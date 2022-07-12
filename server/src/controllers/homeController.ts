@@ -1,10 +1,12 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Tweet from "../models/tweets";
 
-export const getHomeTweets = async (req: Request, res: Response) => {
-  var { id, skip } = req.body;
+export const getHomeTweets = async (req: IRequest, res: Response) => {
+  var { skip } = req.body;
+  const id = req.user?._id;
   if (!skip) skip = 0;
   try {
     const user = await User.findById(id);
@@ -92,8 +94,9 @@ export const getHomeTweets = async (req: Request, res: Response) => {
   }
 };
 
-export const getBoomarks = async (req: Request, res: Response) => {
-  var { id, skip } = req.body;
+export const getBoomarks = async (req: IRequest, res: Response) => {
+  var { skip } = req.body;
+  const id = req.user?._id;
   if (!skip) skip = 0;
 
   try {

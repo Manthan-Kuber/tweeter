@@ -1,11 +1,13 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Tweet from "../models/tweets";
 import Comment from "../models/comments";
 
-export const tweetsAndRetweets = async (req: Request, res: Response) => {
-  var { id, skip } = req.body;
+export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
+  var { skip } = req.body;
+  const id = req.user?._id;
   if (!skip) skip = 0;
 
   try {
@@ -94,8 +96,9 @@ export const tweetsAndRetweets = async (req: Request, res: Response) => {
   }
 };
 
-export const media = async (req: Request, res: Response) => {
-  var { id, skip } = req.body;
+export const media = async (req: IRequest, res: Response) => {
+  var { skip } = req.body;
+  const id = req.user?._id;
   if (!skip) skip = 0;
 
   try {
@@ -198,8 +201,9 @@ export const media = async (req: Request, res: Response) => {
   }
 };
 
-export const liked = async (req: Request, res: Response) => {
-  var { id, skip } = req.body;
+export const liked = async (req: IRequest, res: Response) => {
+  var { skip } = req.body;
+  const id = req.user?._id;
   if (!skip) skip = 0;
 
   try {
@@ -320,8 +324,9 @@ export const liked = async (req: Request, res: Response) => {
   }
 };
 
-export const tweetsAndReplies = async (req: Request, res: Response) => {
-  var { id, skip } = req.body;
+export const tweetsAndReplies = async (req: IRequest, res: Response) => {
+  var { skip } = req.body;
+  const id = req.user?._id;
   if (!skip) skip = 0;
 
   try {
