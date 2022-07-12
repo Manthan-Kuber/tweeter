@@ -27,7 +27,7 @@ export const requireAuth = async (
     ) as UserPayload;
     const user = await User.findById(decodedToken.id);
     if (!user) next(res.status(404).json("User with this id Not found"));
-    req.user = user;
+    req.body.id = user?._id;
     next();
   } catch (error) {
     return next(res.sendStatus(401));
