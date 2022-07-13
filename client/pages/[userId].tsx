@@ -18,14 +18,54 @@ const Profile = ({
   data,
   isAuthenticated = true,
   isLoading = true,
+  token,
 }: {
   data: ProfileResponse;
   isAuthenticated: boolean;
   isLoading: boolean;
+  token: string;
 }) => {
   const dispatch = useAppDispatch();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { width } = useWindowSize();
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+
+  const requestConfig = {
+    headers: {
+      // "Content-Type": "multipart/form-data",
+      authorization: `Bearer ${token}`,
+    },
+  };
+
+  const createComment = async (formData: FormData) => {
+    try {
+      const response = await axiosApi.post("/comment", formData, requestConfig);
+      console.log(response);
+    } catch (error) {
+      alert(`Error in creating tweet: \n ${error}`);
+    }
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const fileArray = fileList.map((item) => item.file);
+    console.log(fileArray);
+    console.log(message);
+    setFileList([]);
+    setMessage("");
+    const formData = new FormData();
+    formData.append("comment", message);
+    //Replace value with tweetId later
+    formData.append("tweetId", "62b6feba6c514dd62f3ac6d0");
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+      console.log(fileArray[i]);
+    }
+    createComment(formData);
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -78,7 +118,13 @@ const Profile = ({
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />
-        <Tweet />
+        <Tweet
+          message={message}
+          setMessage={setMessage}
+          fileList={fileList}
+          setFileList={setFileList}
+          onSubmit={onSubmit}
+        />
       </ContentContainer>
     </>
   );
@@ -99,6 +145,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: {
         data: response.data,
         isLoading: false,
+        token,
       },
     };
   } catch (error) {

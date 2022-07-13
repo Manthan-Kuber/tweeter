@@ -7,31 +7,9 @@ import { Icon } from "../../styles/inputGroup.styles";
 import { nanoid } from "@reduxjs/toolkit";
 
 const CreateTweet = (props: CreateTweetProps) => {
-  const [message, setMessage] = useState<string>("");
-  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
-    []
-  );
+  const { fileList, message, setMessage, setFileList, onSubmit } = props;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const fileArray = fileList.map((item) => item.file);
-    console.log(fileArray);
-    console.log(message);
-    setFileList([]);
-    setMessage("");
-    //Create Tweet Button and submit function
-    const formData = new FormData();
-    formData.append("reply", message);
-    // formData.append("id",)
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("image", fileArray[i]);
-    }
-    Array.from(formData.values()).forEach((element) => {
-      console.log(element);
-    });
-  };
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -56,10 +34,9 @@ const CreateTweet = (props: CreateTweetProps) => {
       tweetReply.style.height = tweetReply.scrollHeight + "px";
     }
   };
-  
+
   useEffect(() => {
     tweetReply?.addEventListener("input", autoResize, false);
-
     return () => {
       tweetReply?.removeEventListener("input", autoResize);
     };

@@ -6,8 +6,8 @@ import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
 import CreateTweet from "./CreateTweet";
 
-interface Props {}
-const Tweet = (props: Props) => {
+const Tweet = (props: TweetProps) => {
+  const { fileList, message, setMessage, setFileList, onSubmit } = props;
   return (
     <TweetWrapper>
       <RetweetWrapper>
@@ -39,7 +39,16 @@ const Tweet = (props: Props) => {
         </TweetInfo>
         <TweetOptions />
         {/* To be Conditionally Rendered */}
-        <CreateTweet isReplyImageVisible={true} placeholder="Tweet your reply" btnText="Reply"/>
+        <CreateTweet
+          isReplyImageVisible={true}
+          placeholder="Tweet your reply"
+          btnText="Reply"
+          message={message}
+          setMessage={setMessage}
+          fileList={fileList}
+          setFileList={setFileList}
+          onSubmit={onSubmit}
+        />
         {/* To be Conditionally Rendered and mapped */}
         {Array.from(Array(10).keys()).map((index) => (
           <div key={index}>

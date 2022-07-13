@@ -138,9 +138,29 @@ interface TrendProps {
   trendList: { id: number; tagName: string; tweetCount: string }[];
 }
 
-interface CreateTweetProps{
-  isReplyImageVisible:boolean;
-  placeholder:string;
-  btnText:string;
-  variant?:string;
+interface CreateTweetProps {
+  isReplyImageVisible: boolean;
+  placeholder: string;
+  btnText: string;
+  variant?: string;
+  message: string;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  fileList: {
+    id: string;
+    file: File;
+  }[];
+  setFileList: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: string;
+        file: File;
+      }[]
+    >
+  >;
+  onSubmit: (e: React.FormEvent) => void;
 }
+
+type TweetProps = Pick<
+  CreateTweetProps,
+  "fileList" | "message" | "setMessage" | "setFileList" | "onSubmit"
+>;
