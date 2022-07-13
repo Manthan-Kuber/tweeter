@@ -14,17 +14,6 @@ const CreateTweet = (props: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
-  const tweetReply = document.getElementById("tweetReply");
-
-  const autoResize = () => {
-    if (tweetReply) {
-      tweetReply.style.height = "auto";
-      tweetReply.style.height = tweetReply.scrollHeight + "px";
-    }
-  };
-
-  tweetReply?.addEventListener("input", autoResize, false);
-
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const fileArray = fileList.map((item) => item.file);
@@ -59,6 +48,23 @@ const CreateTweet = (props: CreateTweetProps) => {
     else setIsDisabled(true);
   }, [message, fileList]);
 
+  const tweetReply = document.getElementById("tweetReply");
+
+  const autoResize = () => {
+    if (tweetReply) {
+      tweetReply.style.height = "auto";
+      tweetReply.style.height = tweetReply.scrollHeight + "px";
+    }
+  };
+  
+  useEffect(() => {
+    tweetReply?.addEventListener("input", autoResize, false);
+
+    return () => {
+      tweetReply?.removeEventListener("input", autoResize);
+    };
+  }, []);
+
   return (
     <ReplyContainer>
       {props.isReplyImageVisible && (
@@ -71,11 +77,12 @@ const CreateTweet = (props: CreateTweetProps) => {
         </ReplyImageWrapper>
       )}
       <InputFormWrapper id="formWrapper" variant={props.variant}>
-        {props.variant === "Home" && 
-        <HomeVariantContainer>
-          <h4>Tweet Something</h4>
-          <hr/>
-        </HomeVariantContainer>}
+        {props.variant === "Home" && (
+          <HomeVariantContainer>
+            <h3>Tweet Something</h3>
+            <hr />
+          </HomeVariantContainer>
+        )}
         <form onSubmit={onSubmit}>
           <ReplyInput
             placeholder={props.placeholder}
@@ -116,7 +123,7 @@ const CreateTweet = (props: CreateTweetProps) => {
               ))}
             </TweetImageArrayWrapper>
           )}
-          {props.variant !== "Home" && <hr/>}
+          {props.variant !== "Home" && <hr />}
           <OptionsWrapper>
             <MediaIcon
               as={MdOutlineImage}
@@ -136,12 +143,11 @@ const CreateTweet = (props: CreateTweetProps) => {
 };
 export default CreateTweet;
 
-const HomeVariantContainer  = styled.div`
-  hr{
+const HomeVariantContainer = styled.div`
+  hr {
     margin-block: 1rem;
   }
-
-`
+`;
 
 const OptionsWrapper = styled.div`
   display: flex;
