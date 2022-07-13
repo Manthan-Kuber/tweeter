@@ -137,3 +137,10 @@ interface ProfileResponse {
 interface TrendProps {
   trendList: { id: number; tagName: string; tweetCount: string }[];
 }
+
+interface CreateTweetProps{
+  isReplyImageVisible:boolean;
+  placeholder:string;
+  btnText:string;
+  variant?:string;
+}

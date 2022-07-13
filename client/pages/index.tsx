@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import CreateTweet from "../Components/Common/CreateTweet";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
 
@@ -14,7 +15,9 @@ const Home = () => {
 
   return (
     <Container>
-      <div>Main content goes here</div>
+      <div>
+        <CreateTweet isReplyImageVisible={false} placeholder="Whats happening?" btnText="Tweet" variant="Home"/>
+      </div>
       <aside>
         <Trends trendList={trendList} />
         <SuggestedFollow />
@@ -54,10 +57,5 @@ const Container = styled.div`
       padding-inline: revert;
       display: revert;
     }
-  }
-
-  //delete later
-  & > div:first-child {
-    background-color: green;
   }
 `;
