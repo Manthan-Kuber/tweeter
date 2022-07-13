@@ -14,9 +14,9 @@ router.get("/", requireAuth, fetchComments);
 
 router.get("/replies", requireAuth, fetchReplies);
 
-router.post("/", requireAuth, upload.single("media"), createComment);
+router.post("/", requireAuth, upload.array("media", 4), createComment);
 
-router.post("/reply", requireAuth, upload.single("media"), createReply);
+router.post("/reply", requireAuth, upload.array("media", 4), createReply);
 
 router.put("/like", requireAuth, likeComment);
 
