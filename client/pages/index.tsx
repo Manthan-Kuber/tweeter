@@ -1,12 +1,15 @@
-import { GetServerSideProps } from "next";
+import { AxiosError } from "axios";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
+import { useAppSelector } from "../Hooks/store";
+import { ToastMessage } from "../styles/Toast.styles";
 
-const Home = ({ token }: { token: string }) => {
+const Home = () => {
   const trendList = [
     { id: 0, tagName: "#programming", tweetCount: "213k Tweets" },
     { id: 1, tagName: "#devchallenges", tweetCount: "123k Tweets" },
@@ -21,9 +24,10 @@ const Home = ({ token }: { token: string }) => {
     []
   );
 
+  const token = useAppSelector((state) => state.auth.token);
+
   const requestConfig = {
     headers: {
-      // "Content-Type": "multipart/form-data",
       authorization: `Bearer ${token}`,
     },
   };
@@ -32,9 +36,15 @@ const Home = ({ token }: { token: string }) => {
     try {
       const response = await axiosApi.post("/tweets", formData, requestConfig);
       console.log(response);
+      toast.success(() => (
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
+      ));
     } catch (error) {
-      //Replace with toastify or diff alert
-      alert(`Error in creating tweet: \n ${error}`);
+      toast.error(() => (
+        <ToastMessage>
+          Error in creating Tweet: <br /> {(error as AxiosError).message}
+        </ToastMessage>
+      ));
     }
   };
 
@@ -46,7 +56,7 @@ const Home = ({ token }: { token: string }) => {
     setFileList([]);
     setMessage("");
     const formData = new FormData();
-    formData.append("shared","true")
+    formData.append("shared", "true");
     formData.append("tweet", message);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("media", fileArray[i]);
@@ -55,9 +65,9 @@ const Home = ({ token }: { token: string }) => {
     createTweet(formData);
   };
 
-
   return (
     <Container>
+      <Toaster />
       <div>
         <CreateTweet
           isReplyImageVisible={false}
@@ -80,15 +90,6 @@ const Home = ({ token }: { token: string }) => {
 };
 
 export default Home;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const token = ctx.req.cookies.jwt;
-  return {
-    props: {
-      token,
-    },
-  };
-};
 
 const Container = styled.div`
   width: min(95%, 120rem);

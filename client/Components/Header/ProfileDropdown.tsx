@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+import { ToastMessage } from "../../styles/Toast.styles";
 
 const variant = {
   initial: {
@@ -69,6 +71,9 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
         setVisible((prev) => !prev);
         replace("/");
         dispatch(logOut());
+        toast.success(() => <ToastMessage>Logged Out Successfully</ToastMessage>,{
+          position: "bottom-center"
+        })
       },
     },
   ];

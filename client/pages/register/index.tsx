@@ -18,6 +18,8 @@ import {
   SignUpBox,
 } from "../../styles/registerPage.styles";
 import Head from "next/head";
+import toast, { Toaster } from "react-hot-toast";
+import { ToastMessage } from "../../styles/Toast.styles";
 
 const IconArray = [
   { id: 1, imgUrl: "/icons8-google.svg" },
@@ -69,8 +71,11 @@ function Register() {
     e.preventDefault();
     try {
       const user = await login({ email, password }).unwrap();
-      console.log(
-        `user info: ${user.user.id} ${user.user.name} ${user.user.email} and token is ${user.token}`
+      toast.success(
+        () => <ToastMessage>Signed In Successfully!</ToastMessage>,
+        {
+          position: "bottom-center",
+        }
       );
       dispatch(setCredentials(user));
       replace("/");
@@ -93,6 +98,12 @@ function Register() {
         email,
         password,
       }).unwrap();
+      toast.success(
+        () => <ToastMessage>Signed Up Successfully!</ToastMessage>,
+        {
+          position: "bottom-center",
+        }
+      );
       dispatch(setCredentials(user));
       replace("/");
     } catch (err: any) {
@@ -116,6 +127,7 @@ function Register() {
 
   return (
     <>
+      <Toaster />
       {isLoading ? (
         <FullScreenLoader />
       ) : (

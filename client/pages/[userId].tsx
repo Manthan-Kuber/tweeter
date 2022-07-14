@@ -13,6 +13,8 @@ import { AxiosError } from "axios";
 import { useAppDispatch } from "../Hooks/store";
 import { logOut } from "../features/auth/authSlice";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
+import toast, { Toaster } from "react-hot-toast";
+import { ToastMessage } from "../styles/Toast.styles";
 
 const Profile = ({
   data,
@@ -35,7 +37,6 @@ const Profile = ({
 
   const requestConfig = {
     headers: {
-      // "Content-Type": "multipart/form-data",
       authorization: `Bearer ${token}`,
     },
   };
@@ -44,8 +45,15 @@ const Profile = ({
     try {
       const response = await axiosApi.post("/comment", formData, requestConfig);
       console.log(response);
+      toast.success(() => (
+        <ToastMessage>Created Reply Successfully</ToastMessage>
+      ));
     } catch (error) {
-      alert(`Error in creating tweet: \n ${error}`);
+      toast.error(() => (
+        <ToastMessage>
+          Error in creating Reply: <br /> {(error as AxiosError).message}
+        </ToastMessage>
+      ));
     }
   };
 
@@ -85,6 +93,7 @@ const Profile = ({
     <FullScreenLoader />
   ) : (
     <>
+      <Toaster />
       {data?.data[0].coverPic !== undefined && (
         <Image
           src={data?.data[0].coverPic}
