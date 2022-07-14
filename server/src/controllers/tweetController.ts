@@ -97,7 +97,7 @@ export const createTweet = async (req: IRequest, res: Response) => {
     const newTweet = await Tweet.create({
       creator: id,
       tweet: tweet,
-      shared: shared,
+      shared: shared ? shared : true,
       hashtags: hashtags ? hashtags : [],
     });
     if (hashtags) {
@@ -139,7 +139,7 @@ export const createTweet = async (req: IRequest, res: Response) => {
     } else {
       res
         .status(200)
-        .json({ data: newTweet._id, message: "Tweet posted successfully" });
+        .json({ data: newTweet, message: "Tweet posted successfully" });
     }
   } catch (err) {
     res.status(400).json({ error: err });

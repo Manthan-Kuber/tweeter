@@ -93,9 +93,22 @@ export const fetchReplies = async (req: IRequest, res: Response) => {
   }
 };
 
+export const getCommentById = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
+  const commentId = req.params.commentId;
+
+  try {
+    const user = User.findById(id);
+    const comment = await Comment.findById(commentId);
+    res.status(200).json({ data: comment });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
 export const createComment = async (req: IRequest, res: Response) => {
   const { comment, tweetId, hashtags } = req.body;
-  const file = req.file;
+  const files = req.files as Express.Multer.File[];
   const id = req.user?._id;
 
   try {
@@ -121,28 +134,28 @@ export const createComment = async (req: IRequest, res: Response) => {
         );
       }
     }
-    if (file) {
-      const upload_stream = cloudinary.uploader.upload_stream(
-        {
-          folder: "commentMedia",
-          public_id: `${newComment._id}`,
-          overwrite: true,
-        },
-        async (err, result) => {
-          if (err) res.status(400).json({ error: err });
-          else if (result) {
-            const updatedComment = await Comment.findByIdAndUpdate(
-              newComment._id,
-              { $set: { media: result.secure_url } }
-            );
-            res.status(200).json({
-              data: updatedComment,
-              message: "Comment created sucessfully",
-            });
+    if (files) {
+      for (var i = 0; i < files.length; i++) {
+        let upload_stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "comments",
+            public_id: `${newComment._id}-${i}`,
+          },
+          async (err, result) => {
+            if (err) res.status(400).json({ error: err });
+            else if (result) {
+              await Comment.findByIdAndUpdate(newComment._id, {
+                $push: { media: result.secure_url },
+              });
+            }
           }
-        }
-      );
-      streamifier.createReadStream(file.buffer).pipe(upload_stream);
+        );
+        streamifier.createReadStream(files[i].buffer).pipe(upload_stream);
+      }
+      res.status(200).json({
+        data: newComment._id,
+        message: "Comment created successfully",
+      });
     } else {
       res.status(200).json({
         data: newComment,
@@ -156,7 +169,7 @@ export const createComment = async (req: IRequest, res: Response) => {
 
 export const createReply = async (req: IRequest, res: Response) => {
   const { comment, commentId, hashtags } = req.body;
-  const file = req.file;
+  const files = req.files as Express.Multer.File[];
   const id = req.user?._id;
 
   try {
@@ -182,27 +195,27 @@ export const createReply = async (req: IRequest, res: Response) => {
         );
       }
     }
-    if (file) {
-      const upload_stream = cloudinary.uploader.upload_stream(
-        {
-          folder: "commentMedia",
-          public_id: `${newReply._id}`,
-          overwrite: true,
-        },
-        async (err, result) => {
-          if (err) res.status(400).json({ error: err });
-          else if (result) {
-            const updatedReply = await Comment.findByIdAndUpdate(newReply._id, {
-              $set: { media: result.secure_url },
-            });
-            res.status(200).json({
-              data: updatedReply,
-              message: "Comment created sucessfully",
-            });
+    if (files) {
+      for (var i = 0; i < files.length; i++) {
+        let upload_stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "comments",
+            public_id: `${newReply._id}-${i}`,
+          },
+          async (err, result) => {
+            if (err) res.status(400).json({ error: err });
+            else if (result) {
+              await Comment.findByIdAndUpdate(newReply._id, {
+                $push: { media: result.secure_url },
+              });
+            }
           }
-        }
-      );
-      streamifier.createReadStream(file.buffer).pipe(upload_stream);
+        );
+        streamifier.createReadStream(files[i].buffer).pipe(upload_stream);
+      }
+      res
+        .status(200)
+        .json({ data: newReply._id, message: "Comment created successfully" });
     } else {
       res.status(200).json({
         data: newReply,

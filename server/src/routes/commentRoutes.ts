@@ -7,10 +7,13 @@ import {
   likeComment,
   fetchReplies,
   createReply,
+  getCommentById,
 } from "../controllers/commentController";
 import { imageUpload as upload } from "../middleware/mediaUpload";
 
 router.get("/", requireAuth, fetchComments);
+
+router.get("/:commentId", requireAuth, getCommentById);
 
 router.get("/replies", requireAuth, fetchReplies);
 
