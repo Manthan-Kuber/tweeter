@@ -50,7 +50,6 @@ const Home = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // const isHashtagPresent = /^#[^ !@#$%^&*(),.?":{}|<>]*$/gi;
     const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
     console.log(fileArray);

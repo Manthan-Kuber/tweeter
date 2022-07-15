@@ -104,14 +104,21 @@ interface ProfileDropDownProps {
 interface ModalProps {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   modalIsOpen: boolean;
-  name: string;
-  username: string;
+  name?: string;
+  username?: string;
   bio?: string;
   profilePic?: string;
-  following: number;
-  followers: number;
+  following?: number;
+  followers?: number;
   children?: React.ReactNode;
   modalTitle?: string;
+}
+
+interface ProfileBoxProps extends Omit<ModalProps,'setModalIsOpen' | 'modalIsOpen'> {
+  followerModalIsOpen: boolean;
+  setFollowerModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  editProfileModalIsOpen: boolean;
+  setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //Remove Optional Later

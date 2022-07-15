@@ -1,10 +1,6 @@
 import Modal from "react-modal";
 import styled from "styled-components";
 import { GrClose } from "react-icons/gr";
-import { FollowButton } from "./ProfileBox";
-import { BsFillPersonPlusFill } from "react-icons/bs";
-import { motion } from "framer-motion";
-import ProfileInfo from "./ProfileInfo";
 
 Modal.setAppElement("#__next");
 

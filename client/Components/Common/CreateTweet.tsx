@@ -6,10 +6,17 @@ import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
 import { nanoid } from "@reduxjs/toolkit";
 
-const CreateTweet = (props: CreateTweetProps) => {
-  const { fileList, message, setMessage, setFileList, onSubmit } = props;
+const CreateTweet = ({
+  fileList,
+  message,
+  setMessage,
+  setFileList,
+  onSubmit,
+  ...props
+}: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const tweetInputRef = useRef<HTMLTextAreaElement>(null);
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -26,21 +33,17 @@ const CreateTweet = (props: CreateTweetProps) => {
     else setIsDisabled(true);
   }, [message, fileList]);
 
-  const tweetReply = document.getElementById("tweetReply");
-
   const autoResize = () => {
-    if (tweetReply) {
-      tweetReply.style.height = "auto";
-      tweetReply.style.height = tweetReply.scrollHeight + "px";
+    if (tweetInputRef.current) {
+      tweetInputRef.current.style.height = "auto";
+      tweetInputRef.current.style.height =
+        tweetInputRef.current.scrollHeight + "px";
     }
   };
 
   useEffect(() => {
-    tweetReply?.addEventListener("input", autoResize, false);
-    return () => {
-      tweetReply?.removeEventListener("input", autoResize);
-    };
-  }, []);
+    autoResize();
+  }, [message]);
 
   return (
     <ReplyContainer>
@@ -62,6 +65,7 @@ const CreateTweet = (props: CreateTweetProps) => {
         )}
         <form onSubmit={onSubmit}>
           <ReplyInput
+            ref={tweetInputRef}
             placeholder={props.placeholder}
             id="tweetReply"
             rows={1}

@@ -28,7 +28,8 @@ const Profile = ({
   token: string;
 }) => {
   const dispatch = useAppDispatch();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
+  const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const { width } = useWindowSize();
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
@@ -105,8 +106,10 @@ const Profile = ({
         />
       )}
       <ProfileBox
-        setModalIsOpen={setModalIsOpen}
-        modalIsOpen={modalIsOpen}
+        setFollowerModalIsOpen={setFollowerModalIsOpen}
+        followerModalIsOpen={followerModalIsOpen}
+        setEditProfileModalIsOpen={setEditProfileModalIsOpen}
+        editProfileModalIsOpen={editProfileModalIsOpen}
         name={data?.data[0].name as string}
         profilePic={data?.data[0].profilePic}
         username={data?.data[0].username as string}
@@ -115,8 +118,8 @@ const Profile = ({
         bio={data?.data[0].bio as string}
       />
       <CustomModal
-        setModalIsOpen={setModalIsOpen}
-        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setFollowerModalIsOpen}
+        modalIsOpen={followerModalIsOpen}
         name={data?.data[0].name as string}
         username={data?.data[0].username as string}
         followers={data?.data[0].followers as number}
@@ -124,6 +127,13 @@ const Profile = ({
         modalTitle={`${data?.data[0].name as string} is Following`}
       >
         <FollowerInfo />
+      </CustomModal>
+      <CustomModal
+        setModalIsOpen={setEditProfileModalIsOpen}
+        modalIsOpen={editProfileModalIsOpen}
+        modalTitle={"Edit Profile"}
+      >
+        <p>Edit Karlo Vai Profile</p>
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />
