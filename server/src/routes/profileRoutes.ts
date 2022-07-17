@@ -6,7 +6,10 @@ import {
   liked,
   tweetsAndRetweets,
   tweetsAndReplies,
+  editProfile
 } from "../controllers/profileController";
+
+router.put("/edit", requireAuth, editProfile);
 
 router.get("/tweets", requireAuth, tweetsAndRetweets);
 

@@ -179,7 +179,10 @@ export const deleteProfilePic = async (req: IRequest, res: Response) => {
           if (err) res.status(400).json({ error: err });
           else {
             const updatedUser = await User.findByIdAndUpdate(id, {
-              $unset: { profilePic: "" },
+              $set: {
+                profilePic:
+                  "https://res.cloudinary.com/dpp7elupy/image/upload/v1655131058/profilePictures/default-profile-pic_dzma8t.jpg",
+              },
             });
             res
               .status(200)
@@ -243,7 +246,10 @@ export const deleteCoverPic = async (req: IRequest, res: Response) => {
           if (err) res.status(400).json({ error: err });
           else {
             const updatedUser = await User.findByIdAndUpdate(id, {
-              $unset: { coverPic: "" },
+              $set: {
+                coverPic:
+                  "https://res.cloudinary.com/dpp7elupy/image/upload/v1655195992/coverPictures/default-cover_xokejy.png",
+              },
             });
             res
               .status(200)
