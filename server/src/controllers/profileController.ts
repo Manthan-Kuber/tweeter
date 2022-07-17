@@ -5,6 +5,29 @@ import User from "../models/users";
 import Tweet from "../models/tweets";
 import Comment from "../models/comments";
 
+export const editProfile = async (req: IRequest, res: Response) => {
+  const id = req.user?._id;
+  const { name, email, username, password, mobile, dob, bio } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    const updatedUser = await User.findByIdAndUpdate(id, {
+      $set: {
+        name: name,
+        email: email,
+        username: username,
+        password: password,
+        mobile: mobile,
+        dob: dob,
+        bio: bio,
+      },
+    });
+    res.status(200).json({ message: "User info updated successfully" });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
 export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
   var { skip } = req.body;
   const id = req.user?._id;
