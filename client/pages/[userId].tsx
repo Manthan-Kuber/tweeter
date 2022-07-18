@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FilterBox from "../Components/Common/FilterBox";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import { logOut } from "../features/auth/authSlice";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import { ToastMessage } from "../styles/Toast.styles";
+import EditProfile from "../Components/Common/EditProfile";
 
 const Profile = ({
   data,
@@ -133,7 +134,10 @@ const Profile = ({
         modalIsOpen={editProfileModalIsOpen}
         modalTitle={"Edit Profile"}
       >
-        <p>Edit Karlo Vai Profile</p>
+        <EditProfile
+          coverPic={data?.data[0].coverPic}
+          profilePic={data?.data[0].profilePic}
+        />
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />

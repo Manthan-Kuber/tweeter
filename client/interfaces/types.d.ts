@@ -171,3 +171,8 @@ type TweetProps = Pick<
   CreateTweetProps,
   "fileList" | "message" | "setMessage" | "setFileList" | "onSubmit"
 >;
+
+interface EditProfileProps{
+  coverPic:string;
+  profilePic:string;
+}
