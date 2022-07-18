@@ -7,18 +7,15 @@ import Comment from "../models/comments";
 
 export const editProfile = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
-  const { name, email, username, password, mobile, dob, bio } = req.body;
+  const { name, username, password, bio } = req.body;
 
   try {
     const user = await User.findById(id);
     const updatedUser = await User.findByIdAndUpdate(id, {
       $set: {
         name: name,
-        email: email,
         username: username,
         password: password,
-        mobile: mobile,
-        dob: dob,
         bio: bio,
       },
     });
