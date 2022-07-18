@@ -3,11 +3,52 @@ import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Tweet from "../models/tweets";
+import Hashtag from "../models/hashtags";
+
+export const getPopularTags = async (req: IRequest, res: Response) => {
+  const skip = parseInt(req.params.skip);
+  const limit = parseInt(req.params.limit);
+  const id = req.user?._id;
+
+  try {
+    const user = await User.findById(id);
+    const popularTags = await Hashtag.find()
+      .sort({ tweets: -1 })
+      .skip(skip)
+      .limit(limit);
+    res.status(200).json(popularTags);
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
+export const getPeopleSuggestions = async (req: IRequest, res: Response) => {
+  const skip = parseInt(req.params.skip);
+  const limit = parseInt(req.params.limit);
+  const id = req.user?._id;
+
+  try {
+    const user = await User.findById(id);
+    const peopleSuggestions = await User.aggregate([
+      {
+        $match: {
+          _id: { $nin: user?.following },
+        },
+      },
+      { $addFields: { followerCount: { $size: "$followers" } } },
+      { $sort: { followerCount: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+    ]);
+    res.status(200).json(peopleSuggestions);
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
 
 export const getHomeTweets = async (req: IRequest, res: Response) => {
-  var { skip } = req.body;
+  const skip = parseInt(req.params.skip);
   const id = req.user?._id;
-  if (!skip) skip = 0;
   try {
     const user = await User.findById(id);
     const tweets = await Tweet.aggregate([
@@ -95,9 +136,8 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
 };
 
 export const getBoomarks = async (req: IRequest, res: Response) => {
-  var { skip } = req.body;
+  const skip = parseInt(req.params.skip);
   const id = req.user?._id;
-  if (!skip) skip = 0;
 
   try {
     const user = await User.findById(id);
