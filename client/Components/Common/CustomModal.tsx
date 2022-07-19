@@ -4,12 +4,18 @@ import { GrClose } from "react-icons/gr";
 
 Modal.setAppElement("#__next");
 
-const CustomModal = ({ setModalIsOpen, modalIsOpen, children,...props }: ModalProps) => {
+const CustomModal = ({
+  setModalIsOpen,
+  modalIsOpen,
+  children,
+  ...props
+}: ModalProps) => {
   return (
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={() => setModalIsOpen(false)}
       contentLabel="Followers & Following Modal"
+      shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick ? true : false}
       style={{
         overlay: {
           position: "fixed",
@@ -18,7 +24,7 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen, children,...props }: ModalPr
           right: 0,
           bottom: 0,
           backgroundColor: "rgba(0, 0, 0, 0.75)",
-          zIndex:2,
+          zIndex: 2,
         },
         content: {
           top: "20%",
@@ -32,7 +38,7 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen, children,...props }: ModalPr
           borderRadius: "8px",
           outline: "none",
           maxHeight: "90vh",
-          height:"650px",
+          height: "650px",
           padding: "2rem",
         },
       }}
@@ -40,7 +46,13 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen, children,...props }: ModalPr
       <MainWrapper>
         <CloseIconDivWrapper>
           <span>{props.modalTitle}</span>
-          <CloseIcon onClick={() => setModalIsOpen(false)} />
+          <CloseIcon
+            onClick={
+              props.closeIconOnClick
+                ? props.closeIconOnClick
+                : () => setModalIsOpen(false)
+            }
+          />
         </CloseIconDivWrapper>
         <hr />
         {children}

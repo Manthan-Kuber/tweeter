@@ -112,6 +112,8 @@ interface ModalProps {
   followers?: number;
   children?: React.ReactNode;
   modalTitle?: string;
+  shouldCloseOnOverlayClick?:boolean;
+  closeIconOnClick?:MouseEventHandler<SVGElement>;
 }
 
 interface ProfileBoxProps extends Omit<ModalProps,'setModalIsOpen' | 'modalIsOpen'> {

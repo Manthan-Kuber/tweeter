@@ -16,6 +16,7 @@ import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import { ToastMessage } from "../styles/Toast.styles";
 import EditProfile from "../Components/Common/EditProfile";
+import { TweetButton } from "../Components/Common/CreateTweet";
 
 const Profile = ({
   data,
@@ -104,7 +105,7 @@ const Profile = ({
     <FullScreenLoader />
   ) : (
     <>
-      <Toaster />
+      {!editProfileModalIsOpen && <Toaster />}
       {data?.data[0].coverPic !== undefined && (
         <Image
           src={data?.data[0].coverPic}
@@ -142,7 +143,27 @@ const Profile = ({
         setModalIsOpen={setEditProfileModalIsOpen}
         modalIsOpen={editProfileModalIsOpen}
         modalTitle={"Edit Profile"}
+        shouldCloseOnOverlayClick={false}
+        closeIconOnClick={() =>
+          toast((t) => (
+            <span>
+              <ToastMessage>Discard Changes?</ToastMessage>
+              <DiscardButton
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  setEditProfileModalIsOpen(false);
+                }}
+              >
+                Discard
+              </DiscardButton>
+            </span>
+          ),{
+            duration:Infinity,
+            position:"top-right"
+          })
+        }
       >
+        <Toaster />
         <EditProfile
           coverPic={data?.data[0].coverPic}
           profilePic={data?.data[0].profilePic}
@@ -193,6 +214,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {},
   };
 };
+
+const DiscardButton = styled(TweetButton)`
+  background-color: rgba(255, 0, 0, 1);
+  margin-top: 1rem;
+  border-radius:8px;
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+  }
+`;
 
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);
