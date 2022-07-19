@@ -31,7 +31,8 @@ const CustomModal = ({ setModalIsOpen, modalIsOpen, children,...props }: ModalPr
           WebkitOverflowScrolling: "touch",
           borderRadius: "8px",
           outline: "none",
-          maxHeight: "64rem",
+          maxHeight: "90vh",
+          height:"650px",
           padding: "2rem",
         },
       }}

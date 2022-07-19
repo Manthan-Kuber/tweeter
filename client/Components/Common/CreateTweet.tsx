@@ -137,7 +137,7 @@ const OptionsWrapper = styled.div`
   margin-top: 1rem;
 `;
 
-const TweetButton = styled.button`
+export const TweetButton = styled.button`
   padding: 1rem 2rem;
   border-radius: 16px;
   background-color: rgba(47, 128, 237, 1);

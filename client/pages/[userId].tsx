@@ -30,6 +30,7 @@ const Profile = ({
 }) => {
   const dispatch = useAppDispatch();
   const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
+  const [followingModalIsOpen, setFollowingModalIsOpen] = useState(false);
   const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const { width } = useWindowSize();
   const [message, setMessage] = useState<string>("");
@@ -83,6 +84,14 @@ const Profile = ({
       dispatch(logOut());
     }
   }, []);
+
+  useEffect(() => {
+    if (followerModalIsOpen || editProfileModalIsOpen || followingModalIsOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [followerModalIsOpen, editProfileModalIsOpen, followingModalIsOpen]);
 
   const filterList = {
     1: "Tweets",
