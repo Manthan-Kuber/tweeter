@@ -112,11 +112,12 @@ interface ModalProps {
   followers?: number;
   children?: React.ReactNode;
   modalTitle?: string;
-  shouldCloseOnOverlayClick?:boolean;
-  closeIconOnClick?:MouseEventHandler<SVGElement>;
+  shouldCloseOnOverlayClick?: boolean;
+  closeIconOnClick?: MouseEventHandler<SVGElement>;
 }
 
-interface ProfileBoxProps extends Omit<ModalProps,'setModalIsOpen' | 'modalIsOpen'> {
+interface ProfileBoxProps
+  extends Omit<ModalProps, "setModalIsOpen" | "modalIsOpen"> {
   followerModalIsOpen: boolean;
   setFollowerModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editProfileModalIsOpen: boolean;
@@ -174,7 +175,10 @@ type TweetProps = Pick<
   "fileList" | "message" | "setMessage" | "setFileList" | "onSubmit"
 >;
 
-interface EditProfileProps{
-  coverPic:string;
-  profilePic:string;
+interface EditProfileProps {
+  coverPic: string;
+  profilePic: string;
+  name: string;
+  username: string;
+  bio: string;
 }

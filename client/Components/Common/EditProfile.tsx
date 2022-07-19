@@ -12,16 +12,15 @@ import {
 } from "../../styles/inputGroup.styles";
 import { TweetButton } from "./CreateTweet";
 
-const InitialState = {
-  fname: "", //change default values to current info
-  lname: "",
-  username: "",
-  password: "",
-  cpassword: "",
-  bio: "",
-};
-
 const EditProfile = (props: EditProfileProps) => {
+  const InitialState = {
+    name: props.name,
+    username: props.username,
+    password: "",
+    cpassword: "",
+    bio: props.bio,
+  };
+
   const bannerRef = useRef<HTMLInputElement>(null);
   const profileRef = useRef<HTMLInputElement>(null);
   const [coverPictureDisplay, setcoverPictureDisplay] = useState(
@@ -44,18 +43,11 @@ const EditProfile = (props: EditProfileProps) => {
 
   const inputFieldList = [
     {
-      id: 0,
-      name: "fname",
-      type: "text",
-      value: formValues.fname,
-      placeholder: "First Name",
-    },
-    {
       id: 1,
-      name: "lname",
+      name: "name",
       type: "text",
-      value: formValues.lname,
-      placeholder: "Last Name",
+      value: formValues.name,
+      placeholder: "Name",
     },
     {
       id: 2,
@@ -245,7 +237,7 @@ const ProfileImage = styled(Image)`
 const SubmitButton = styled(TweetButton)`
   margin-top: 2rem;
   border-radius: 8px;
-`
+`;
 
 const EditProfileContentContainer = styled.div``;
 

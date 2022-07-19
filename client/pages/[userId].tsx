@@ -145,28 +145,34 @@ const Profile = ({
         modalTitle={"Edit Profile"}
         shouldCloseOnOverlayClick={false}
         closeIconOnClick={() =>
-          toast((t) => (
-            <span>
-              <ToastMessage>Discard Changes?</ToastMessage>
-              <DiscardButton
-                onClick={() => {
-                  toast.dismiss(t.id);
-                  setEditProfileModalIsOpen(false);
-                }}
-              >
-                Discard
-              </DiscardButton>
-            </span>
-          ),{
-            duration:Infinity,
-            position:"top-right"
-          })
+          toast(
+            (t) => (
+              <span>
+                <ToastMessage>Discard Changes if any?</ToastMessage>
+                <DiscardButton
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    setEditProfileModalIsOpen(false);
+                  }}
+                >
+                  Discard
+                </DiscardButton>
+              </span>
+            ),
+            {
+              duration: Infinity,
+              position: "top-right",
+            }
+          )
         }
       >
         <Toaster />
         <EditProfile
           coverPic={data?.data[0].coverPic}
           profilePic={data?.data[0].profilePic}
+          name={data?.data[0].name as string}
+          username={data?.data[0].username as string}
+          bio={data?.data[0].bio as string}
         />
       </CustomModal>
       <ContentContainer>
@@ -218,7 +224,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const DiscardButton = styled(TweetButton)`
   background-color: rgba(255, 0, 0, 1);
   margin-top: 1rem;
-  border-radius:8px;
+  border-radius: 8px;
   &:hover {
     background-color: rgba(255, 0, 0, 0.7);
   }
