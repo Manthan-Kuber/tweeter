@@ -21,8 +21,6 @@ const EditProfile = (props: EditProfileProps) => {
     bio: props.bio,
   };
 
-  const bannerRef = useRef<HTMLInputElement>(null);
-  const profileRef = useRef<HTMLInputElement>(null);
   const [coverPictureDisplay, setcoverPictureDisplay] = useState(
     props.coverPic
   );
@@ -32,13 +30,20 @@ const EditProfile = (props: EditProfileProps) => {
   const [coverPictureFile, setCoverPictureFile] = useState<File>();
   const [profilePictureFile, setProfilePictureFile] = useState<File>();
   const [formValues, setFormValues] = useState(InitialState);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(true);
+    useState(false);
+  const [isFormInvalid, setIsFormInvalid] = useState(false);
+  const [errMess, setErrMess] = useState("");
+  const bannerRef = useRef<HTMLInputElement>(null);
+  const profileRef = useRef<HTMLInputElement>(null);
   const passwordIconRef = useRef<HTMLInputElement>(null);
+  const cpasswordIconRef = useRef<HTMLInputElement>(null);
 
   const handleEditProfile = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formValues);
+    console.log(coverPictureFile,profilePictureFile);
   };
 
   const inputFieldList = [
@@ -48,6 +53,7 @@ const EditProfile = (props: EditProfileProps) => {
       type: "text",
       value: formValues.name,
       placeholder: "Name",
+      required: true,
     },
     {
       id: 2,
@@ -55,6 +61,7 @@ const EditProfile = (props: EditProfileProps) => {
       type: "text",
       value: formValues.username,
       placeholder: "Username",
+      required: true,
     },
     {
       id: 3,
@@ -71,6 +78,22 @@ const EditProfile = (props: EditProfileProps) => {
       placeholder: "Confirm Passsword",
     },
   ];
+
+  useEffect(() => {
+    if (
+      formValues.name === "" ||
+      formValues.username === "" ||
+      formValues.bio === ""
+    )
+      setIsFormInvalid(true);
+    if (!(formValues.password === formValues.cpassword)) {
+      setIsFormInvalid(true);
+      setErrMess("Passwords don't match");
+    } else {
+      setIsFormInvalid(false);
+      setErrMess("");
+    }
+  }, [formValues]);
 
   return (
     <EditProfileContentContainer>
@@ -108,7 +131,7 @@ const EditProfile = (props: EditProfileProps) => {
           <MdOutlineAddPhotoAlternate size={22} />
         </EditPhotoIconWrapper>
       </ProfileImageContainer>
-      <form>
+      <form onSubmit={handleEditProfile}>
         <input
           type="file"
           ref={bannerRef}
@@ -137,66 +160,86 @@ const EditProfile = (props: EditProfileProps) => {
         />
 
         {inputFieldList.map((item) => (
-          <Wrapper key={item.id}>
-            <StyledInput
-              type={
-                item.name === "password" && isPasswordVisible
-                  ? "text"
-                  : item.name === "cpassword" && isConfirmPasswordVisible
-                  ? "text"
-                  : item.type
-              }
-              name={item.name}
-              value={item.value}
-              onChange={(e) =>
-                setFormValues((prev) => ({
-                  ...prev,
-                  [item.name]: e.target.value,
-                }))
-              }
-              ref={item.name === "password" ? passwordIconRef : null}
-            />
-            <PlaceholderText className="placeholder-text">
-              <Text className="text">{item.placeholder}</Text>
-            </PlaceholderText>
-            {item.name === "password" ? (
-              isPasswordVisible ? (
-                <Icon
-                  as={AiFillEye}
-                  size={20}
-                  $cursorPointer
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                />
-              ) : (
-                <Icon
-                  as={AiFillEyeInvisible}
-                  size={20}
-                  $cursorPointer
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                />
-              )
-            ) : item.name === "cpassword" ? (
-              isConfirmPasswordVisible ? (
-                <Icon
-                  as={AiFillEye}
-                  size={20}
-                  $cursorPointer
-                  onClick={() =>
-                    setIsConfirmPasswordVisible((prev) => (prev = !prev))
-                  }
-                />
-              ) : (
-                <Icon
-                  as={AiFillEyeInvisible}
-                  size={20}
-                  $cursorPointer
-                  onClick={() =>
-                    setIsConfirmPasswordVisible((prev) => (prev = !prev))
-                  }
-                />
-              )
-            ) : null}
-          </Wrapper>
+          <div key={item.id}>
+            <Wrapper>
+              <StyledInput
+                type={
+                  item.name === "password" && isPasswordVisible
+                    ? "text"
+                    : item.name === "cpassword" && isConfirmPasswordVisible
+                    ? "text"
+                    : item.type
+                }
+                name={item.name}
+                value={item.value}
+                onChange={(e) =>
+                  setFormValues((prev) => ({
+                    ...prev,
+                    [item.name]: e.target.value,
+                  }))
+                }
+                required={item.required ? true : false}
+                ref={
+                  item.name === "password"
+                    ? passwordIconRef
+                    : item.name === "cpassword" //buggy
+                    ? cpasswordIconRef
+                    : null
+                }
+              />
+              <PlaceholderText className="placeholder-text">
+                <Text className="text">{item.placeholder}</Text>
+              </PlaceholderText>
+              {item.name === "password" ? (
+                isPasswordVisible ? (
+                  <Icon
+                    as={AiFillEye}
+                    size={20}
+                    $cursorPointer
+                    onClick={() => {
+                      setIsPasswordVisible(!isPasswordVisible);
+                      passwordIconRef.current?.focus();
+                    }}
+                  />
+                ) : (
+                  <Icon
+                    as={AiFillEyeInvisible}
+                    size={20}
+                    $cursorPointer
+                    onClick={() => {
+                      setIsPasswordVisible(!isPasswordVisible);
+                      passwordIconRef.current?.focus();
+                    }}
+                  />
+                )
+              ) : item.name === "cpassword" ? (
+                isConfirmPasswordVisible ? (
+                  <Icon
+                    as={AiFillEye}
+                    size={20}
+                    $cursorPointer
+                    onClick={() => {
+                      setIsConfirmPasswordVisible((prev) => (prev = !prev));
+                      cpasswordIconRef.current?.focus;
+                    }}
+                  />
+                ) : (
+                  <Icon
+                    as={AiFillEyeInvisible}
+                    size={20}
+                    $cursorPointer
+                    onClick={() => {
+                      setIsConfirmPasswordVisible((prev) => (prev = !prev));
+                      cpasswordIconRef.current?.focus;
+                    }}
+                  />
+                )
+              ) : null}
+            </Wrapper>
+            {item.name === "cpassword" && errMess && (
+              <ErrorMessage>{errMess}</ErrorMessage>
+            )}
+          </div>
         ))}
         <Wrapper>
           <StyledInput
@@ -205,6 +248,7 @@ const EditProfile = (props: EditProfileProps) => {
             style={{ resize: "none" }}
             value={formValues.bio}
             name="bio"
+            required={true}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               setFormValues((prev) => ({ ...prev, bio: e.target.value }))
             }
@@ -213,11 +257,17 @@ const EditProfile = (props: EditProfileProps) => {
             <Text className="text">Bio</Text>
           </PlaceholderText>
         </Wrapper>
-        <SubmitButton>Save Changes</SubmitButton>
+        <SubmitButton disabled={isFormInvalid}>Save Changes</SubmitButton>
       </form>
     </EditProfileContentContainer>
   );
 };
+
+const ErrorMessage = styled.small`
+  color: red;
+  font: 600 1.2rem var(--ff-noto);
+  margin-left: 2rem;
+`;
 
 const ProfileImageContainer = styled.div`
   position: relative;
