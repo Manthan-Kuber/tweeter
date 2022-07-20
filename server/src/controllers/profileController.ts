@@ -11,14 +11,20 @@ export const editProfile = async (req: IRequest, res: Response) => {
 
   try {
     const user = await User.findById(id);
-    const updatedUser = await User.findByIdAndUpdate(id, {
+    let updatedUser = await User.findByIdAndUpdate(id, {
       $set: {
         name: name,
         username: username,
-        password: password,
         bio: bio,
       },
     });
+    if (password) {
+      updatedUser = await User.findByIdAndUpdate(id, {
+        $set: {
+          password: password,
+        },
+      });
+    }
     res.status(200).json({ message: "User info updated successfully" });
   } catch (err) {
     res.status(400).json({ error: err });
