@@ -50,26 +50,21 @@ const Home = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // const isHashtagPresent = /^#[^ !@#$%^&*(),.?":{}|<>]*$/gi;
     const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
-    console.log(fileArray);
-    console.log(message);
     setFileList([]);
     setMessage("");
     const formData = new FormData();
     formData.append("shared", "true");
     formData.append("tweet", message);
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+    }
     if (isHashtagPresent.test(message)) {
       const hashtagArray = message.match(isHashtagPresent);
-      console.log(hashtagArray);
       for (let i = 0; i < hashtagArray!.length; i++) {
         formData.append("hashtags", hashtagArray![i]);
       }
-    }
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("media", fileArray[i]);
-      console.log(fileArray[i]);
     }
     createTweet(formData);
   };
@@ -99,6 +94,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 const Container = styled.div`
   width: min(95%, 120rem);

@@ -6,16 +6,19 @@ import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import { useAppSelector } from "../../Hooks/store";
 import { useRouter } from "next/router";
+import { MdEdit } from "react-icons/md";
 
 const ProfileBox = ({
-  setModalIsOpen,
-  modalIsOpen,
+  setFollowerModalIsOpen,
+  setEditProfileModalIsOpen,
+  editProfileModalIsOpen,
+  followerModalIsOpen,
   name,
   username,
   bio,
   profilePic,
   ...props
-}: ModalProps) => {
+}: ProfileBoxProps) => {
   const { width } = useWindowSize();
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const router = useRouter();
@@ -37,10 +40,11 @@ const ProfileBox = ({
           <InfoWrapper>
             <h3>{name}</h3>
             <FollowerContainer>
-              <span onClick={() => setModalIsOpen(true)}>
+              {/* Replace With Following Modal */}
+              <span onClick={() => setFollowerModalIsOpen(true)}>
                 <span>{props.following}</span> Following
               </span>
-              <span onClick={() => setModalIsOpen(true)}>
+              <span onClick={() => setFollowerModalIsOpen(true)}>
                 <span>{props.followers}</span> Followers
               </span>
             </FollowerContainer>
@@ -48,7 +52,16 @@ const ProfileBox = ({
           <h4>{`@ ${username}`}</h4>
           <p>{`My bio: ${bio}`}</p>
         </ProfileWrapper>
-        {userId === currentUserId ? null : ( // <>Edit Profile Button to be added here</>
+        {userId === currentUserId ? (
+          <EditProfileButton
+            as={motion.button}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setEditProfileModalIsOpen(true)}
+          >
+            <MdEdit />
+            Edit Profile
+          </EditProfileButton>
+        ) : (
           <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
             <BsFillPersonPlusFill />
             Follow
@@ -59,6 +72,32 @@ const ProfileBox = ({
   );
 };
 export default ProfileBox;
+
+const EditProfileButton = styled(Button)`
+  width: revert;
+  padding: 0.75rem 1.5rem;
+  margin-top: revert;
+  height: fit-content;
+  color: var(--clr-primary);
+  border: 1px solid var(--clr-primary);
+  background-color: white;
+  margin-top: 2rem;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: fit-content;
+
+  &:hover {
+    background-color: var(--clr-primary);
+    color: white;
+  }
+
+  @media screen and (min-width: 55em) {
+    margin: revert;
+    height: fit-content;
+  }
+`;
 
 const ProfileContainer = styled.div`
   width: min(95%, 102.4rem);

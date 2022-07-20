@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FilterBox from "../Components/Common/FilterBox";
 import Image from "next/image";
@@ -15,6 +15,8 @@ import { logOut } from "../features/auth/authSlice";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import { ToastMessage } from "../styles/Toast.styles";
+import EditProfile from "../Components/Common/EditProfile";
+import { TweetButton } from "../Components/Common/CreateTweet";
 
 const Profile = ({
   data,
@@ -28,7 +30,9 @@ const Profile = ({
   token: string;
 }) => {
   const dispatch = useAppDispatch();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
+  const [followingModalIsOpen, setFollowingModalIsOpen] = useState(false);
+  const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const { width } = useWindowSize();
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
@@ -82,6 +86,14 @@ const Profile = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (followerModalIsOpen || editProfileModalIsOpen || followingModalIsOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [followerModalIsOpen, editProfileModalIsOpen, followingModalIsOpen]);
+
   const filterList = {
     1: "Tweets",
     2: "Tweets & Replies",
@@ -93,7 +105,7 @@ const Profile = ({
     <FullScreenLoader />
   ) : (
     <>
-      <Toaster />
+      {!editProfileModalIsOpen && <Toaster />}
       {data?.data[0].coverPic !== undefined && (
         <Image
           src={data?.data[0].coverPic}
@@ -105,8 +117,10 @@ const Profile = ({
         />
       )}
       <ProfileBox
-        setModalIsOpen={setModalIsOpen}
-        modalIsOpen={modalIsOpen}
+        setFollowerModalIsOpen={setFollowerModalIsOpen}
+        followerModalIsOpen={followerModalIsOpen}
+        setEditProfileModalIsOpen={setEditProfileModalIsOpen}
+        editProfileModalIsOpen={editProfileModalIsOpen}
         name={data?.data[0].name as string}
         profilePic={data?.data[0].profilePic}
         username={data?.data[0].username as string}
@@ -115,8 +129,8 @@ const Profile = ({
         bio={data?.data[0].bio as string}
       />
       <CustomModal
-        setModalIsOpen={setModalIsOpen}
-        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setFollowerModalIsOpen}
+        modalIsOpen={followerModalIsOpen}
         name={data?.data[0].name as string}
         username={data?.data[0].username as string}
         followers={data?.data[0].followers as number}
@@ -124,6 +138,42 @@ const Profile = ({
         modalTitle={`${data?.data[0].name as string} is Following`}
       >
         <FollowerInfo />
+      </CustomModal>
+      <CustomModal
+        setModalIsOpen={setEditProfileModalIsOpen}
+        modalIsOpen={editProfileModalIsOpen}
+        modalTitle={"Edit Profile"}
+        shouldCloseOnOverlayClick={false}
+        closeIconOnClick={() =>
+          toast(
+            (t) => (
+              <span>
+                <ToastMessage>Discard Changes if any?</ToastMessage>
+                <DiscardButton
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    setEditProfileModalIsOpen(false);
+                  }}
+                >
+                  Discard
+                </DiscardButton>
+              </span>
+            ),
+            {
+              duration: Infinity,
+              position: "top-right",
+            }
+          )
+        }
+      >
+        <Toaster />
+        <EditProfile
+          coverPic={data?.data[0].coverPic}
+          profilePic={data?.data[0].profilePic}
+          name={data?.data[0].name as string}
+          username={data?.data[0].username as string}
+          bio={data?.data[0].bio as string}
+        />
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />
@@ -170,6 +220,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {},
   };
 };
+
+const DiscardButton = styled(TweetButton)`
+  background-color: rgba(255, 0, 0, 1);
+  margin-top: 1rem;
+  border-radius: 8px;
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+  }
+`;
 
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);
