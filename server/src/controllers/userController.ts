@@ -129,44 +129,6 @@ export const getFollowing = async (req: IRequest, res: Response) => {
   }
 };
 
-export const setProfilePic = async (req: IRequest, res: Response) => {
-  const id = req.user?._id;
-  const file = req.file;
-  if (file) {
-    try {
-      const user = await User.findById(id);
-      if (user) {
-        const upload_stream = cloudinary.uploader.upload_stream(
-          {
-            transformation: { width: 500, height: 500, crop: "fill" },
-            folder: "profilePictures",
-            public_id: `${id}-profile`,
-            overwrite: true,
-          },
-          async (err, result) => {
-            if (err) res.status(400).json({ error: err });
-            else if (result) {
-              const user = await User.findByIdAndUpdate(id, {
-                $set: { profilePic: result.secure_url },
-              });
-              const updatedUser = await User.findById(id);
-              res.status(200).json({
-                data: updatedUser?.profilePic,
-                message: "Profile picture set sucessfully",
-              });
-            }
-          }
-        );
-        streamifier.createReadStream(file.buffer).pipe(upload_stream);
-      }
-    } catch (err) {
-      res.status(400).json({ error: err });
-    }
-  } else {
-    res.status(400).json({ error: "Please upload a valid image file" });
-  }
-};
-
 export const deleteProfilePic = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
 
@@ -193,44 +155,6 @@ export const deleteProfilePic = async (req: IRequest, res: Response) => {
     }
   } catch (err) {
     res.status(400).json({ error: err });
-  }
-};
-
-export const setCoverPic = async (req: IRequest, res: Response) => {
-  const id = req.user?._id;
-  const file = req.file;
-  if (file) {
-    try {
-      const user = await User.findById(id);
-      if (user) {
-        const upload_stream = cloudinary.uploader.upload_stream(
-          {
-            transformation: { width: 900, height: 350, crop: "fill" },
-            folder: "coverPictures",
-            public_id: `${id}-cover`,
-            overwrite: true,
-          },
-          async (err, result) => {
-            if (err) res.status(400).json({ error: err });
-            else if (result) {
-              const user = await User.findByIdAndUpdate(id, {
-                $set: { coverPic: result.secure_url },
-              });
-              const updatedUser = await User.findById(id);
-              res.status(200).json({
-                data: updatedUser?.coverPic,
-                message: "Cover picture set sucessfully",
-              });
-            }
-          }
-        );
-        streamifier.createReadStream(file.buffer).pipe(upload_stream);
-      }
-    } catch (err) {
-      res.status(400).json({ error: err });
-    }
-  } else {
-    res.status(400).json({ error: "Please upload a valid image file" });
   }
 };
 

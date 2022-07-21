@@ -1,24 +1,73 @@
 import { Response } from "express";
-import { IRequest } from "../types/types";
+import { Files, IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
 import Tweet from "../models/tweets";
 import Comment from "../models/comments";
+import streamifier from "streamifier";
+import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
 export const editProfile = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
   const { name, username, password, bio } = req.body;
+  const files = req.files as Files;
 
   try {
-    const user = await User.findById(id);
-    const updatedUser = await User.findByIdAndUpdate(id, {
+    if (files) {
+      let upload_stream = cloudinary.uploader.upload_stream(
+        {
+          transformation: { width: 500, height: 500, crop: "fill" },
+          folder: "profilePictures",
+          public_id: `${id}-profile`,
+          overwrite: true,
+        },
+        async (err, result) => {
+          if (err) res.status(400).json({ error: err });
+          else if (result) {
+            const user = await User.findByIdAndUpdate(id, {
+              $set: { profilePic: result.secure_url },
+            });
+          }
+        }
+      );
+      streamifier
+        .createReadStream(files.profilePic[0].buffer)
+        .pipe(upload_stream);
+
+      upload_stream = cloudinary.uploader.upload_stream(
+        {
+          transformation: { width: 900, height: 350, crop: "fill" },
+          folder: "coverPictures",
+          public_id: `${id}-cover`,
+          overwrite: true,
+        },
+        async (err, result) => {
+          if (err) res.status(400).json({ error: err });
+          else if (result) {
+            const user = await User.findByIdAndUpdate(id, {
+              $set: { coverPic: result.secure_url },
+            });
+          }
+        }
+      );
+      streamifier
+        .createReadStream(files.coverPic[0].buffer)
+        .pipe(upload_stream);
+    }
+    let updatedUser = await User.findByIdAndUpdate(id, {
       $set: {
         name: name,
         username: username,
-        password: password,
         bio: bio,
       },
     });
+    if (password) {
+      updatedUser = await User.findByIdAndUpdate(id, {
+        $set: {
+          password: password,
+        },
+      });
+    }
     res.status(200).json({ message: "User info updated successfully" });
   } catch (err) {
     res.status(400).json({ error: err });

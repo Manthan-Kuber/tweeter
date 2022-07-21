@@ -6,10 +6,19 @@ import {
   liked,
   tweetsAndRetweets,
   tweetsAndReplies,
-  editProfile
+  editProfile,
 } from "../controllers/profileController";
+import { imageUpload as upload } from "../middleware/mediaUpload";
 
-router.put("/edit", requireAuth, editProfile);
+router.put(
+  "/edit",
+  upload.fields([
+    { name: "profilePic", maxCount: 1 },
+    { name: "coverPic", maxCount: 1 },
+  ]),
+  requireAuth,
+  editProfile
+);
 
 router.get("/tweets", requireAuth, tweetsAndRetweets);
 
