@@ -89,8 +89,7 @@ const EditProfileButton = styled(Button)`
   width: fit-content;
 
   &:hover {
-    background-color: var(--clr-primary);
-    color: white;
+    background-color: rgba(0,0,0,0.03);
   }
 
   @media screen and (min-width: 55em) {

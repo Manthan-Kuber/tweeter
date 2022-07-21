@@ -181,4 +181,5 @@ interface EditProfileProps {
   name: string;
   username: string;
   bio: string;
+  setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

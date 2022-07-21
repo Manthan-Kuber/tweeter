@@ -148,15 +148,21 @@ const Profile = ({
           toast(
             (t) => (
               <span>
-                <ToastMessage>Discard Changes if any?</ToastMessage>
-                <DiscardButton
-                  onClick={() => {
-                    toast.dismiss(t.id);
-                    setEditProfileModalIsOpen(false);
-                  }}
-                >
-                  Discard
-                </DiscardButton>
+                <ToastMessage>Discard changes?</ToastMessage>
+                <SubToastMessage>
+                  This can’t be undone and you’ll lose your changes.
+                </SubToastMessage>
+                  <DiscardButton
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      setEditProfileModalIsOpen(false);
+                    }}
+                  >
+                    Discard
+                  </DiscardButton>
+                  <CancelButton onClick={() => toast.dismiss(t.id)}>
+                    Cancel
+                  </CancelButton>
               </span>
             ),
             {
@@ -173,6 +179,7 @@ const Profile = ({
           name={data?.data[0].name as string}
           username={data?.data[0].username as string}
           bio={data?.data[0].bio as string}
+          setEditProfileModalIsOpen={setEditProfileModalIsOpen}
         />
       </CustomModal>
       <ContentContainer>
@@ -221,6 +228,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
+const SubToastMessage = styled(ToastMessage)`
+  color: hsla(0, 0%, 31%, 0.7);
+`;
+
 const DiscardButton = styled(TweetButton)`
   background-color: rgba(255, 0, 0, 1);
   margin-top: 1rem;
@@ -229,6 +240,16 @@ const DiscardButton = styled(TweetButton)`
     background-color: rgba(255, 0, 0, 0.7);
   }
 `;
+const CancelButton = styled(DiscardButton)`
+  background-color: white;
+  border: 1px solid black;
+  margin-left:1rem;
+  color: black;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+`;
+
 
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);
