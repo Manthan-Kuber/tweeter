@@ -26,11 +26,8 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    test: builder.query<{ message: string }, void>({
-      query: () => "test",
-    }),
   }),
 });
 
 //Check lazyprofile query
-export const { useLoginMutation, useTestQuery, useSignupMutation } = api;
+export const { useLoginMutation, useSignupMutation } = api;
