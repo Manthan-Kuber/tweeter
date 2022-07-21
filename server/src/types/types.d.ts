@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { Model, Schema } from "mongoose";
+import { setProfilePic } from "../controllers/userController";
 
 interface IRequest extends Request {
   user?: IUser | null;
@@ -7,6 +8,11 @@ interface IRequest extends Request {
 
 interface UserPayload extends JwtPayload {
   id: string;
+}
+
+interface Files extends Array<Express.Multer.File> {
+  profilePic: Array;
+  coverPic: Array;
 }
 
 interface IUser {
