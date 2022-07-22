@@ -22,8 +22,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
           overwrite: true,
         },
         async (err, result) => {
-          if (err) res.status(400).json({ error: err });
-          else if (result) {
+          if (result) {
             const user = await User.findByIdAndUpdate(id, {
               $set: { profilePic: result.secure_url },
             });
@@ -42,8 +41,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
           overwrite: true,
         },
         async (err, result) => {
-          if (err) res.status(400).json({ error: err });
-          else if (result) {
+          if (result) {
             const user = await User.findByIdAndUpdate(id, {
               $set: { coverPic: result.secure_url },
             });
@@ -54,7 +52,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
         .createReadStream(files.coverPic[0].buffer)
         .pipe(upload_stream);
     }
-    let updatedUser = await User.findByIdAndUpdate(id, {
+    await User.findByIdAndUpdate(id, {
       $set: {
         name: name,
         username: username,
@@ -62,7 +60,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
       },
     });
     if (password) {
-      updatedUser = await User.findByIdAndUpdate(id, {
+      await User.findByIdAndUpdate(id, {
         $set: {
           password: password,
         },
