@@ -14,57 +14,72 @@ export const editProfile = async (req: IRequest, res: Response) => {
 
   try {
     if (files) {
-      let upload_stream = cloudinary.uploader.upload_stream(
-        {
-          transformation: { width: 500, height: 500, crop: "fill" },
-          folder: "profilePictures",
-          public_id: `${id}-profile`,
-          overwrite: true,
-        },
-        async (err, result) => {
-          if (result) {
-            const user = await User.findByIdAndUpdate(id, {
-              $set: { profilePic: result.secure_url },
-            });
+      if (files.profilePic[0]) {
+        let upload_stream = cloudinary.uploader.upload_stream(
+          {
+            transformation: { width: 500, height: 500, crop: "fill" },
+            folder: "profilePictures",
+            public_id: `${id}-profile`,
+            overwrite: true,
+          },
+          async (err, result) => {
+            if (result) {
+              await User.updateOne(
+                { _id: id },
+                {
+                  $set: { profilePic: result.secure_url },
+                }
+              );
+            }
           }
-        }
-      );
-      streamifier
-        .createReadStream(files.profilePic[0].buffer)
-        .pipe(upload_stream);
-
-      upload_stream = cloudinary.uploader.upload_stream(
-        {
-          transformation: { width: 900, height: 350, crop: "fill" },
-          folder: "coverPictures",
-          public_id: `${id}-cover`,
-          overwrite: true,
-        },
-        async (err, result) => {
-          if (result) {
-            const user = await User.findByIdAndUpdate(id, {
-              $set: { coverPic: result.secure_url },
-            });
+        );
+        streamifier
+          .createReadStream(files.profilePic[0].buffer)
+          .pipe(upload_stream);
+      }
+      if (files.coverPic[0]) {
+        let upload_stream = cloudinary.uploader.upload_stream(
+          {
+            transformation: { width: 900, height: 350, crop: "fill" },
+            folder: "coverPictures",
+            public_id: `${id}-cover`,
+            overwrite: true,
+          },
+          async (err, result) => {
+            if (result) {
+              await User.updateOne(
+                { _id: id },
+                {
+                  $set: { coverPic: result.secure_url },
+                }
+              );
+            }
           }
-        }
-      );
-      streamifier
-        .createReadStream(files.coverPic[0].buffer)
-        .pipe(upload_stream);
+        );
+        streamifier
+          .createReadStream(files.coverPic[0].buffer)
+          .pipe(upload_stream);
+      }
     }
-    await User.findByIdAndUpdate(id, {
-      $set: {
-        name: name,
-        username: username,
-        bio: bio,
-      },
-    });
-    if (password) {
-      await User.findByIdAndUpdate(id, {
+    await User.updateOne(
+      { _id: id },
+      {
         $set: {
-          password: password,
+          name: name,
+          username: username,
+          bio: bio,
         },
-      });
+      }
+    );
+    if (password) {
+      await User.updateOne(
+        { _id: id },
+        {
+          $set: {
+            password: password,
+          },
+        }
+      );
     }
     res.status(200).json({ message: "User info updated successfully" });
   } catch (err) {
