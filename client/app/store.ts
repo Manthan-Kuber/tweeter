@@ -12,7 +12,7 @@ import {
 import storage from "./sync_storage";
 import { api } from "./services/api";
 import authReducer from "../features/auth/authSlice";
-import { encryptTransform } from "redux-persist-transform-encrypt";
+import { encryptTransform } from "redux-persist-transform-encrypt"; //Uninstall if no encrypt
 
 const persistConfig = {
   key: "root",

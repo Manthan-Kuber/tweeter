@@ -146,7 +146,13 @@ interface ProfileResponse {
   ];
 }
 interface TrendProps {
-  trendList: { id: number; tagName: string; tweetCount: string }[];
+  trendList: {
+    id: string;
+    tagName: string;
+    tweetCount: string;
+  }[];
+  getHashtags: () => Promise<void>;
+  hasMore: boolean;
 }
 
 interface CreateTweetProps {
@@ -196,8 +202,8 @@ interface EditProfileProps {
   >;
 }
 
-interface ComponentLoaderProps{
-  width:number;
-  height:number;
-  borderRadius:number;
+interface ComponentLoaderProps {
+  width: number;
+  height: number;
+  borderRadius: number;
 }

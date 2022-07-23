@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { GetStaticProps } from "next";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import axiosApi from "../app/services/axiosApi";
@@ -9,20 +10,24 @@ import Trends from "../Components/Common/Trends";
 import { useAppSelector } from "../Hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
-const Home = () => {
-  const trendList = [
-    { id: 0, tagName: "#programming", tweetCount: "213k Tweets" },
-    { id: 1, tagName: "#devchallenges", tweetCount: "123k Tweets" },
-    { id: 2, tagName: "#frontend", tweetCount: "69k Tweets" },
-    { id: 3, tagName: "#backend", tweetCount: "55k Tweets" },
-    { id: 4, tagName: "#69DaysOfCode", tweetCount: "25k Tweets" },
-    { id: 5, tagName: "#johhnydepp", tweetCount: "5k Tweets" },
-  ];
-
+const Home = ({ initialTrendData }: { initialTrendData: any }) => {
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
+  let [skip, setSkip] = useState<number>(1);
+
+  const [hashtagArray, setHashtagArray] = useState<
+    Array<{ id: string; tagName: string; tweetCount: string }>
+  >(
+    initialTrendData.map((item: typeof initialTrendData) => ({
+      id: item._id,
+      tagName: item.hashtag,
+      tweetCount: `${100 * Math.random()}`,
+    }))
+  );
+
+  const [hasMore, setHasMore] = useState(true);
 
   const token = useAppSelector((state) => state.auth.token);
 
@@ -30,6 +35,26 @@ const Home = () => {
     headers: {
       authorization: `Bearer ${token}`,
     },
+  };
+
+  const getHashtags = async () => {
+    try {
+      const response = await axiosApi.get(`home/hashtags/${6 * skip}/6`);
+      setSkip(skip++);
+      if (hashtagArray.length > 12) setHasMore(false);
+      response.data.map((item: typeof response.data) =>
+        setHashtagArray((prev) => [
+          ...prev,
+          {
+            id: item._id,
+            tagName: item.hashtag,
+            tweetCount: `${100 * Math.random()}`,
+          },
+        ])
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const createTweet = async (formData: FormData) => {
@@ -86,7 +111,11 @@ const Home = () => {
         />
       </div>
       <aside>
-        <Trends trendList={trendList} />
+        <Trends
+          trendList={hashtagArray}
+          getHashtags={getHashtags}
+          hasMore={hasMore}
+        />
         <SuggestedFollow />
       </aside>
     </Container>
@@ -95,6 +124,15 @@ const Home = () => {
 
 export default Home;
 
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await axiosApi.get(`home/hashtags/0/6`);
+  console.log(response.data);
+  return {
+    props: {
+      initialTrendData: response.data,
+    },
+  };
+};
 
 const Container = styled.div`
   width: min(95%, 120rem);
