@@ -11,7 +11,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
   const { name, username, password, bio } = req.body;
   const files = req.files as Files;
-
+  let data: string[] = [];
   try {
     if (files) {
       if (files.profilePic[0]) {
@@ -30,6 +30,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
                   $set: { profilePic: result.secure_url },
                 }
               );
+              data.push(result.secure_url);
             }
           }
         );
@@ -53,6 +54,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
                   $set: { coverPic: result.secure_url },
                 }
               );
+              data.push(result.secure_url);
             }
           }
         );
@@ -81,7 +83,13 @@ export const editProfile = async (req: IRequest, res: Response) => {
         }
       );
     }
-    res.status(200).json({ message: "User info updated successfully" });
+    if (data.length == 0) {
+      res.status(200).json({ message: "User info updated successfully" });
+    } else {
+      res
+        .status(200)
+        .json({ data: data, message: "User info updated successfully" });
+    }
   } catch (err) {
     res.status(400).json({ error: err });
   }
