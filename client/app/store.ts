@@ -18,12 +18,12 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  transforms: [
-    encryptTransform({
-      secretKey: "9546cc17dc3e30ed451e8534b7121d7e63f35dee4656175ed1392e6d3d0222f6a1f2b0138dc8418b19c784ff377bbc87b3f1eb4c57e01b35f3404d83cf346782",
-      onError: (error) => console.log(error),
-    }),
-  ],
+  // transforms: [
+  //   encryptTransform({
+  //     secretKey: "9546cc17dc3e30ed451e8534b7121d7e63f35dee4656175ed1392e6d3d0222f6a1f2b0138dc8418b19c784ff377bbc87b3f1eb4c57e01b35f3404d83cf346782",
+  //     onError: (error) => console.log(error),
+  //   }),
+  // ],
   blacklist: [api.reducerPath],
 };
 

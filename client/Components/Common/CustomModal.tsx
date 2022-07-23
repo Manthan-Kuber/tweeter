@@ -27,7 +27,7 @@ const CustomModal = ({
           zIndex: 2,
         },
         content: {
-          top: "20%",
+          top: "10%",
           left: "50%",
           transform: "translateX(-50%)",
           width: "min(95% , 60rem)",
@@ -37,7 +37,7 @@ const CustomModal = ({
           WebkitOverflowScrolling: "touch",
           borderRadius: "8px",
           outline: "none",
-          maxHeight: "90vh",
+          maxHeight: "80vh",
           height: "650px",
           padding: "2rem",
         },

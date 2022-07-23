@@ -7,6 +7,8 @@ import useWindowSize from "../../Hooks/useWindowDimensions";
 import { useAppSelector } from "../../Hooks/store";
 import { useRouter } from "next/router";
 import { MdEdit } from "react-icons/md";
+import { useState } from "react";
+import ProfileLoader from "./ComponentLoader";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
@@ -23,16 +25,27 @@ const ProfileBox = ({
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const router = useRouter();
   const { userId } = router.query;
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <ProfileContainer>
       <ProfileImageWrapper>
-        {profilePic !== undefined && (
-          <ProfileImage
-            src={profilePic}
-            alt="profilePic"
-            width={width! > 880 ? 160 : 120}
-            height={width! > 880 ? 160 : 120}
+        {isLoading ? (
+          <ProfileLoader
+            width={width! > 880 ? 133 : 120}
+            height={width! > 880 ? 133 : 120}
+            borderRadius={8}
           />
+        ) : (
+          <>
+            {profilePic !== undefined && (
+              <ProfileImage
+                src={profilePic}
+                alt="profilePic"
+                width={width! > 880 ? 160 : 120}
+                height={width! > 880 ? 160 : 120}
+              />
+            )}
+          </>
         )}
       </ProfileImageWrapper>
       <ContentWrapper>
@@ -50,7 +63,7 @@ const ProfileBox = ({
             </FollowerContainer>
           </InfoWrapper>
           <h4>{`@ ${username}`}</h4>
-          <p>{`My bio: ${bio}`}</p>
+          <p>{`${bio}`}</p>
         </ProfileWrapper>
         {userId === currentUserId ? (
           <EditProfileButton
@@ -89,7 +102,7 @@ const EditProfileButton = styled(Button)`
   width: fit-content;
 
   &:hover {
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(0, 0, 0, 0.03);
   }
 
   @media screen and (min-width: 55em) {

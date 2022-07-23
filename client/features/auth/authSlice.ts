@@ -14,11 +14,13 @@ const authSlice = createSlice({
     logOut: (state) => {
       state.user = null;
       state.token = null;
-    }
+    },
+    setProfilePic: (state, { payload }: PayloadAction<string>) => {
+      if (state.user) state.user.profilePic = payload;
+    },
   },
 });
 
-export const { setCredentials,logOut } = authSlice.actions;
+export const { setCredentials, logOut, setProfilePic } = authSlice.actions;
 
 export default authSlice.reducer;
-

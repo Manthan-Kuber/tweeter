@@ -3,6 +3,9 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import styled from "styled-components";
+import axiosApi from "../../app/services/axiosApi";
+import { setProfilePic } from "../../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import {
   Icon,
   PlaceholderText,
@@ -39,11 +42,60 @@ const EditProfile = (props: EditProfileProps) => {
   const profileRef = useRef<HTMLInputElement>(null);
   const passwordIconRef = useRef<HTMLInputElement>(null);
   const cpasswordIconRef = useRef<HTMLInputElement>(null);
+  const token = useAppSelector((state) => state.auth.token);
+  const dispatch = useAppDispatch();
 
-  const handleEditProfile = (e: React.FormEvent) => {
+  const requestConfig = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+
+  const handleEditProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formValues);
-    console.log(coverPictureFile,profilePictureFile);
+
+    props.setEditProfileModalIsOpen(false);
+
+    const profileFormData = new FormData();
+
+    profileFormData.append("name", formValues.name);
+    profileFormData.append("username", formValues.username);
+    profileFormData.append("bio", formValues.bio);
+
+    if (formValues.password !== "" && formValues.cpassword !== "")
+      profileFormData.append("password", formValues.password);
+
+    coverPictureFile !== undefined &&
+      profileFormData.append("coverPic", coverPictureFile as File);
+
+    profilePictureFile !== undefined &&
+      profileFormData.append("profilePic", profilePictureFile as File);
+
+    try {
+      const response = await axiosApi.put(
+        "/profile/edit",
+        profileFormData,
+        requestConfig
+      );
+      console.log(response);
+      const { name, username, bio } = formValues;
+      const pfp = profilePictureFile as Blob
+      const coverpic = coverPictureFile as Blob
+      dispatch(setProfilePic(URL.createObjectURL(pfp))) //set with response's url
+      props.setProfileData((prev) => ({ ...prev, name, username, bio }));
+      coverPictureFile !== undefined &&
+        props.setProfileData((prev) => ({
+          ...prev,
+          profilePic: URL.createObjectURL(pfp), //set with response's url
+        }));
+      profilePictureFile !== undefined &&
+        props.setProfileData((prev) => ({
+          ...prev,
+          coverPic: URL.createObjectURL(coverpic), //set with response's url
+        }));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const inputFieldList = [
@@ -80,6 +132,8 @@ const EditProfile = (props: EditProfileProps) => {
   ];
 
   useEffect(() => {
+    setIsFormInvalid(false);
+    setErrMess("");
     if (
       formValues.name === "" ||
       formValues.username === "" ||
@@ -89,9 +143,6 @@ const EditProfile = (props: EditProfileProps) => {
     if (!(formValues.password === formValues.cpassword)) {
       setIsFormInvalid(true);
       setErrMess("Passwords don't match");
-    } else {
-      setIsFormInvalid(false);
-      setErrMess("");
     }
   }, [formValues]);
 

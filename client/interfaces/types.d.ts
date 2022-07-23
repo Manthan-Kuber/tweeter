@@ -3,6 +3,7 @@ interface User {
   name: string;
   username: string;
   email: string;
+  profilePic: string;
 }
 
 interface authState {
@@ -182,4 +183,21 @@ interface EditProfileProps {
   username: string;
   bio: string;
   setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setProfileData: React.Dispatch<
+    React.SetStateAction<{
+      name: string;
+      profilePic: string;
+      coverPic: string;
+      username: string;
+      followers: number;
+      following: number;
+      bio: string;
+    }>
+  >;
+}
+
+interface ComponentLoaderProps{
+  width:number;
+  height:number;
+  borderRadius:number;
 }

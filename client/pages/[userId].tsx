@@ -10,7 +10,7 @@ import { GetServerSideProps } from "next";
 import FollowerInfo from "../Components/Common/FollowerInfo";
 import axiosApi from "../app/services/axiosApi";
 import { AxiosError } from "axios";
-import { useAppDispatch } from "../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { logOut } from "../features/auth/authSlice";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
@@ -18,17 +18,7 @@ import { ToastMessage } from "../styles/Toast.styles";
 import EditProfile from "../Components/Common/EditProfile";
 import { TweetButton } from "../Components/Common/CreateTweet";
 
-const Profile = ({
-  data,
-  isAuthenticated = true,
-  isLoading = true,
-  token,
-}: {
-  data: ProfileResponse;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  token: string;
-}) => {
+const Profile = () => {
   const dispatch = useAppDispatch();
   const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
   const [followingModalIsOpen, setFollowingModalIsOpen] = useState(false);
@@ -38,6 +28,44 @@ const Profile = ({
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
+  const userId = useAppSelector((state) => state.auth.user?.id);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+  const [profileData, setProfileData] = useState({
+    name: "",
+    profilePic: "",
+    coverPic: "",
+    username: "",
+    followers: 0,
+    following: 0,
+    bio: "",
+  });
+
+  const { name, profilePic, coverPic, username, followers, following, bio } =
+    profileData;
+
+  const getProfile = async () => {
+    try {
+      const response = await axiosApi.get(`users/${userId}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      const profData = response.data.data[0];
+      setProfileData(profData);
+      setIsLoading(false);
+    } catch (err) {
+      if ((err as AxiosError).response?.status === 401)
+        setIsAuthenticated(false);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const token = useAppSelector((state) => state.auth.token);
 
   const requestConfig = {
     headers: {
@@ -106,36 +134,38 @@ const Profile = ({
   ) : (
     <>
       {!editProfileModalIsOpen && <Toaster />}
-      {data?.data[0].coverPic !== undefined && (
-        <Image
-          src={data?.data[0].coverPic}
-          className="banner-image"
-          alt="banner"
-          layout="responsive"
-          width={100}
-          height={width! > 880 ? 15 : 45}
-        />
+      {coverPic !== undefined && (
+        // <BannerWrapper>
+          <Image
+            src={coverPic}
+            className="banner-image"
+            alt="banner"
+            layout="responsive"
+            width={100}
+            height={width! > 880 ? 15 : 45}
+          />
+        /* </BannerWrapper> */
       )}
       <ProfileBox
         setFollowerModalIsOpen={setFollowerModalIsOpen}
         followerModalIsOpen={followerModalIsOpen}
         setEditProfileModalIsOpen={setEditProfileModalIsOpen}
         editProfileModalIsOpen={editProfileModalIsOpen}
-        name={data?.data[0].name as string}
-        profilePic={data?.data[0].profilePic}
-        username={data?.data[0].username as string}
-        followers={data?.data[0].followers as number}
-        following={data?.data[0].following as number}
-        bio={data?.data[0].bio as string}
+        name={name}
+        profilePic={profilePic}
+        username={username}
+        followers={followers}
+        following={following}
+        bio={bio}
       />
       <CustomModal
         setModalIsOpen={setFollowerModalIsOpen}
         modalIsOpen={followerModalIsOpen}
-        name={data?.data[0].name as string}
-        username={data?.data[0].username as string}
-        followers={data?.data[0].followers as number}
-        following={data?.data[0].following as number}
-        modalTitle={`${data?.data[0].name as string} is Following`}
+        name={name}
+        username={username}
+        followers={followers}
+        following={following}
+        modalTitle={`${name} is Following`}
       >
         <FollowerInfo />
       </CustomModal>
@@ -152,17 +182,17 @@ const Profile = ({
                 <SubToastMessage>
                   This can’t be undone and you’ll lose your changes.
                 </SubToastMessage>
-                  <DiscardButton
-                    onClick={() => {
-                      toast.dismiss(t.id);
-                      setEditProfileModalIsOpen(false);
-                    }}
-                  >
-                    Discard
-                  </DiscardButton>
-                  <CancelButton onClick={() => toast.dismiss(t.id)}>
-                    Cancel
-                  </CancelButton>
+                <DiscardButton
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    setEditProfileModalIsOpen(false);
+                  }}
+                >
+                  Discard
+                </DiscardButton>
+                <CancelButton onClick={() => toast.dismiss(t.id)}>
+                  Cancel
+                </CancelButton>
               </span>
             ),
             {
@@ -174,12 +204,13 @@ const Profile = ({
       >
         <Toaster />
         <EditProfile
-          coverPic={data?.data[0].coverPic}
-          profilePic={data?.data[0].profilePic}
-          name={data?.data[0].name as string}
-          username={data?.data[0].username as string}
-          bio={data?.data[0].bio as string}
+          coverPic={coverPic}
+          profilePic={profilePic}
+          name={name}
+          username={username}
+          bio={bio}
           setEditProfileModalIsOpen={setEditProfileModalIsOpen}
+          setProfileData={setProfileData}
         />
       </CustomModal>
       <ContentContainer>
@@ -198,35 +229,40 @@ const Profile = ({
 
 export default Profile;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const token = ctx.req.cookies.jwt;
-  const userId = ctx.params?.userId;
-  try {
-    const response = await axiosApi.get(`users/${userId}`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    return {
-      props: {
-        data: response.data,
-        isLoading: false,
-        token,
-      },
-    };
-  } catch (error) {
-    if ((error as AxiosError).response?.status === 401) {
-      return {
-        props: {
-          isAuthenticated: false,
-        },
-      };
-    }
-  }
-  return {
-    props: {},
-  };
-};
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const token = ctx.req.cookies.jwt;
+//   const userId = ctx.params?.userId;
+//   try {
+//     const response = await axiosApi.get(`users/${userId}`, {
+//       headers: {
+//         authorization: `Bearer ${token}`,
+//       },
+//     });
+//     return {
+//       props: {
+//         data: response.data,
+//         isLoading: false,
+//         token,
+//       },
+//     };
+//   } catch (error) {
+//     if ((error as AxiosError).response?.status === 401) {
+//       return {
+//         props: {
+//           isAuthenticated: false,
+//         },
+//       };
+//     }
+//   }
+//   return {
+//     props: {},
+//   };
+// };
+
+const BannerWrapper = styled.div`
+  max-width: 120rem;
+  margin-inline: auto;
+`;
 
 const SubToastMessage = styled(ToastMessage)`
   color: hsla(0, 0%, 31%, 0.7);
@@ -243,13 +279,12 @@ const DiscardButton = styled(TweetButton)`
 const CancelButton = styled(DiscardButton)`
   background-color: white;
   border: 1px solid black;
-  margin-left:1rem;
+  margin-left: 1rem;
   color: black;
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
 `;
-
 
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);

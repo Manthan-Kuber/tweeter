@@ -16,7 +16,7 @@ const FilterBox = ({ filterList }: FilterBoxProps) => {
             {parseInt(key) === tab && (
               <SideDiv
                 as={motion.div}
-                layoutId="sidediv"
+                layoutId="sideDiv"
                 animate={{
                   transition: {
                     duration: 0.25,
