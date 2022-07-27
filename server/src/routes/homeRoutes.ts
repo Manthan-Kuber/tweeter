@@ -10,7 +10,7 @@ import {
 
 router.get("/hashtags/:skip/:limit", getPopularTags);
 
-router.get("/poeple/:skip/:limit", getPeopleSuggestions);
+router.get("/people/:skip/:limit", getPeopleSuggestions);
 
 router.get("/tweets/:skip", requireAuth, getHomeTweets);
 
