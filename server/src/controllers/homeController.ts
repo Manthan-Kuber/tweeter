@@ -29,10 +29,11 @@ export const getPeopleSuggestions = async (req: IRequest, res: Response) => {
 
   try {
     const user = await User.findById(id);
+    const following = user?.following?user.following:[];
     const peopleSuggestions = await User.aggregate([
       {
         $match: {
-          _id: { $nin: user?.following },
+          _id: { $nin: following },
         },
       },
       { $addFields: { followerCount: { $size: "$followers" } } },
