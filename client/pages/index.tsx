@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { GetStaticProps } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import axiosApi from "../app/services/axiosApi";
@@ -83,7 +83,7 @@ const Home = ({
     try {
       setSuggestedFollowerSkip((prev) => ++prev);
       const response = await axiosApi.get(
-        `home/people/${3 * suggestedFollowerSkip }/2`
+        `home/people/${4 * suggestedFollowerSkip}/4`
       );
       if (suggestedFollowersArray.length > 4) setHasMoreSuggestions(false);
       response.data.map((item: typeof response.data) =>
@@ -189,7 +189,7 @@ const Home = ({
 export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const endPoints = ["home/hashtags/0/6", "home/people/0/3"];
+  const endPoints = ["home/hashtags/0/6", "home/people/0/4"];
   try {
     const requests = endPoints.map((endP) => axiosApi.get(endP));
     const responses = await Promise.all(requests);
@@ -216,6 +216,11 @@ const Container = styled.div`
   flex-direction: column-reverse;
 
   @media screen and (min-width: 25em) {
+    width: min(60%, 120rem);
+  }
+
+  @media screen and (min-width: 40em) {
+    width: min(85%, 120rem);
     aside {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -223,17 +228,10 @@ const Container = styled.div`
     }
   }
 
-  @media screen and (min-width: 40em) {
-    aside {
-      padding-inline: 5rem;
-    }
-  }
-
   @media screen and (min-width: 55em) {
     display: grid;
     grid-template-columns: 3fr 1fr;
     aside {
-      padding-inline: revert;
       display: revert;
     }
   }
