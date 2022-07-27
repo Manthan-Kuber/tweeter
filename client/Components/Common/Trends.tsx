@@ -1,11 +1,10 @@
-import { useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { AsideContainer } from "./FilterBox";
 
 const Trends = ({ trendList, ...props }: TrendProps) => {
   return (
-    <Article as="article" id="scrollableDiv">
+    <Article as="article" id="trendScroll">
       <h5>Trends for you</h5>
       <hr />
       <ul>
@@ -13,13 +12,14 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
           dataLength={trendList.length}
           next={props.getHashtags}
           hasMore={props.hasMore}
-          loader={<p>Loading...</p>}
-          scrollableTarget="scrollableDiv"
-          endMessage={<p>You've reached the end</p>}
+          loader={<p>Loading...</p>} //Change Later
+          scrollableTarget="trendScroll"
+          endMessage={<p>You've reached the end</p>} //Change Later
         >
           {trendList.map((item, index) => (
-            <li key={`${item.id}${index}`}>
-              <h3>{item.tagName}</h3>
+            // Add onclick function later
+            <li key={`${item.id}${index}`}> 
+              <h3>#{item.tagName}</h3>
               <span>{item.tweetCount}</span>
               <p>count {index + 1}</p>
             </li>

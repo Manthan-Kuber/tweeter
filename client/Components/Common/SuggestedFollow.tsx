@@ -1,30 +1,47 @@
 import { motion } from "framer-motion";
 import { BsFillPersonPlusFill } from "react-icons/bs";
+import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { AsideContainer } from "./FilterBox";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
-const SuggestedFollow = () => {
+const SuggestedFollow = ({
+  suggestedFollowList,
+  ...props
+}: SuggestedFollowProps) => {
   return (
-    <Article as="article">
+    <Article as="article" id="suggestedFollowerScroll">
       <h5>Whom to follow</h5>
-      {Array.from(Array(10).keys()).map((index) => (
-        <FollowerContainer key={index}>
-          <hr />
-          <ProfileInfoWrapper>
-            <ProfileInfo />
-            <MoreStyledFollowButton
-              as={motion.button}
-              whileTap={{ scale: 0.9 }}
-            >
-              <BsFillPersonPlusFill />
-              Follow
-            </MoreStyledFollowButton>
-          </ProfileInfoWrapper>
-          <p>Photographer & Filmmaker based in Copenhagen, Denmark ✵ 🇩🇰</p>
-        </FollowerContainer>
-      ))}
+      <InfiniteScroll
+        dataLength={suggestedFollowList.length}
+        next={props.getSuggestedFollowers}
+        hasMore={props.hasMore}
+        loader={<p>Loading...</p>} //Change Later
+        scrollableTarget="suggestedFollowerScroll"
+        endMessage={<p>You've reached the end</p>} //Change Later
+      >
+        {suggestedFollowList.map((item) => (
+          <FollowerContainer key={item._id}>
+            <hr />
+            <ProfileInfoWrapper>
+              <ProfileInfo
+                name={item.name}
+                profilePic={item.profilePic}
+                followerCount={item.followerCount}
+              />
+              <MoreStyledFollowButton
+                as={motion.button}
+                whileTap={{ scale: 0.9 }}
+              >
+                <BsFillPersonPlusFill />
+                Follow
+              </MoreStyledFollowButton>
+            </ProfileInfoWrapper>
+            <p>{item.bio}</p>
+          </FollowerContainer>
+        ))}
+      </InfiniteScroll>
     </Article>
   );
 };

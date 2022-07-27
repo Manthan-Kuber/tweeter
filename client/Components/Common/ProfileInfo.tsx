@@ -1,17 +1,17 @@
 import Image from "next/image";
 import styled from "styled-components";
 
-const ProfileInfo = (props: ProfileInfoProps) => {
+const ProfileInfo = ({name,profilePic,followerCount,...props}: ProfileInfoProps) => {
   return (
     <ProfileInfoWrapper>
       <ProfilePic
-        src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
+        src={profilePic || "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"} //Remove after integration
         width={42}
         height={37}
       />
       <div>
-        <span>Austin Neil</span>
-        <span>12k Followers</span>
+        <span>{name}</span>
+        <span>{followerCount} Followers</span>
       </div>
     </ProfileInfoWrapper>
   );
