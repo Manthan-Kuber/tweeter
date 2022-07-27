@@ -216,9 +216,13 @@ const Container = styled.div`
   flex-direction: column-reverse;
 
   @media screen and (min-width: 25em) {
-    width: min(60%, 120rem);
+    width: min(75%,295px);
   }
 
+  @media screen and (min-width: 30em){
+   width:80%;
+  }
+  
   @media screen and (min-width: 40em) {
     width: min(85%, 120rem);
     aside {
@@ -228,7 +232,8 @@ const Container = styled.div`
     }
   }
 
-  @media screen and (min-width: 55em) {
+  @media screen and (min-width: 60em) {
+    width: min(95%, 120rem);
     display: grid;
     grid-template-columns: 3fr 1fr;
     aside {
