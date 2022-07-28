@@ -21,8 +21,9 @@ const SuggestedFollow = ({
         scrollableTarget="suggestedFollowerScroll"
         endMessage={<p>You've reached the end</p>} //Change Later
       >
-        {suggestedFollowList.map((item) => (
-          <FollowerContainer key={item._id}>
+        {suggestedFollowList.map((item,index) => (
+          // Key might be error prone
+          <FollowerContainer key={`${item._id} ${index}`}> 
             <hr />
             <ProfileInfoWrapper>
               <ProfileInfo

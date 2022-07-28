@@ -6,7 +6,8 @@ import { AnimatePresence } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axiosApi from "../../app/services/axiosApi";
-import { setCredentials, setProfilePic } from "../../features/auth/authSlice";
+import { setProfilePic } from "../../features/auth/authSlice";
+import useWindowSize from "../../Hooks/useWindowDimensions";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
@@ -15,7 +16,8 @@ const Profile = () => {
   const token = useAppSelector((state) => state.auth.token);
   const userId = useAppSelector((state) => state.auth.user?.id);
   const dispatch = useAppDispatch();
- 
+  const { width: WindowWidth } = useWindowSize();
+
   const getProfile = async () => {
     try {
       const response = await axiosApi.get(`users/${userId}`, {
@@ -30,7 +32,7 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {  
+  useEffect(() => {
     getProfile();
   }, []);
 
@@ -44,7 +46,7 @@ const Profile = () => {
           height={37}
         />
       )}
-      <h4>{name}</h4>
+      {WindowWidth! > 880 && <h4>{name}</h4>}
       <DropDownIconWrapper
         visible={visible}
         onClick={() => setVisible(!visible)}

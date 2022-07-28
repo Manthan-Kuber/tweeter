@@ -6,7 +6,7 @@ import BottomNav from "./Navbar/BottomNav";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
 const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {
-  const { width } = useWindowSize();
+  const { width:WindowWidth } = useWindowSize();
   const PassedNavProps = {
     NavList: NavList,
     activeTab: activeTab,
@@ -16,11 +16,11 @@ const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {
     <>
       <StyledHeader>
         <Image src="/tweeter.svg" width={"100%"} height={30} alt="tweeter" />
-        {width! > 880 && <Navbar {...PassedNavProps} />}
+        {WindowWidth! > 880 && <Navbar {...PassedNavProps} />}
         <Profile />
       </StyledHeader>
       <Hr/>
-      {width! < 880 && <BottomNav {...PassedNavProps} />}
+      {WindowWidth! < 880 && <BottomNav {...PassedNavProps} />}
     </>
   );
 };
