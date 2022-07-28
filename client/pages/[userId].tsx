@@ -215,22 +215,24 @@ const Profile = () => {
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />
-       {TweetDataArray?.map((tweet,index) => (
-         <Tweet
-         key={`${tweet.creator[0].username} ${index}`}
-         message={message}
-         setMessage={setMessage}
-         fileList={fileList}
-         setFileList={setFileList}
-         onSubmit={onSubmit}
-         authorName={tweet.creator[0].name}
-         authorUserName={tweet.creator[0].username}
-         authorFollowers={6969}
-         authorProfilePic={tweet.creator[0].profilePic}
-         mediaList={tweet.media}
-         authorTweet={tweet.tweet}
-       />
-       ))}
+       <div>
+         {TweetDataArray?.map((tweet,index) => (
+           <Tweet
+           key={`${tweet.creator[0].username} ${index}`}
+           message={message}
+           setMessage={setMessage}
+           fileList={fileList}
+           setFileList={setFileList}
+           onSubmit={onSubmit}
+           authorName={tweet.creator[0].name}
+           authorUserName={tweet.creator[0].username}
+           authorFollowers={6969}
+           authorProfilePic={tweet.creator[0].profilePic}
+           mediaList={tweet.media}
+           authorTweet={tweet.tweet}
+         />
+         ))}
+       </div>
       </ContentContainer>
     </>
   );
@@ -272,7 +274,7 @@ const ContentContainer = styled.div`
 
   @media screen and (min-width: 40em) {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 25rem auto;
     gap: 2rem;
   }
 `;

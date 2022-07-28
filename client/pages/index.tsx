@@ -3,6 +3,7 @@ import { GetStaticProps } from "next";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
+import { useCreateTweetMutation } from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
@@ -44,7 +45,7 @@ const Home = ({
       profilePic: item.profilePic,
     }))
   );
-
+  const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(true);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(true);
 
@@ -103,33 +104,7 @@ const Home = ({
     }
   };
 
-  // const getTweets = async () => {
-  //   try {
-  //     const response = await axiosApi.get(`home/tweets/0`, requestConfig);
-  //     console.log(response.data);
-  //     //set state and set loading to false
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  const createTweet = async (formData: FormData) => {
-    try {
-      const response = await axiosApi.post("/tweets", formData, requestConfig);
-      console.log(response);
-      toast.success(() => (
-        <ToastMessage>Created Tweet Successfully</ToastMessage>
-      ));
-    } catch (error) {
-      toast.error(() => (
-        <ToastMessage>
-          Error in creating Tweet: <br /> {(error as AxiosError).message}
-        </ToastMessage>
-      ));
-    }
-  };
-
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
@@ -147,12 +122,19 @@ const Home = ({
         formData.append("hashtags", hashtagArray![i]);
       }
     }
-    createTweet(formData);
+    try {
+      await createTweet(formData).unwrap();
+      toast.success(() => (
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      toast.error(() => (
+        <ToastMessage>
+          Error in creating Tweet: <br /> {(error as AxiosError).message}
+        </ToastMessage>
+      ));
+    }
   };
-
-  // useEffect(() => {
-  //   getTweets()
-  // },[] )
 
   return (
     <Container>
@@ -216,13 +198,13 @@ const Container = styled.div`
   flex-direction: column-reverse;
 
   @media screen and (min-width: 25em) {
-    width: min(75%,295px);
+    width: min(75%, 295px);
   }
 
-  @media screen and (min-width: 30em){
-   width:80%;
+  @media screen and (min-width: 30em) {
+    width: 80%;
   }
-  
+
   @media screen and (min-width: 40em) {
     width: min(85%, 120rem);
     aside {

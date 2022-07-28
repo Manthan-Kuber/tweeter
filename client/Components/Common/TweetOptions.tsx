@@ -20,7 +20,7 @@ const optionsList = [
   },
   {
     id: 3,
-    name: "Likes",
+    name: "Like",
     icon: <AiOutlineHeart />,
     activeColor: "hsla(0, 79%, 63%, 1)",
   },

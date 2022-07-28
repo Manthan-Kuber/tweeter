@@ -229,7 +229,7 @@ const CloseIcon = styled(AiOutlineCloseCircle)`
   cursor: pointer;
 `;
 
-const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
+export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
   margin-block: 1rem;
   ${(props) =>
     props.numOfImages >= 2 &&

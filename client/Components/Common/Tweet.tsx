@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
-import CreateTweet from "./CreateTweet";
+import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
 import { useState } from "react";
 
 const Tweet = (props: TweetProps) => {
@@ -15,24 +15,25 @@ const Tweet = (props: TweetProps) => {
       <RetweetWrapper>
         <AiOutlineRetweet size={14} />
         {/* To be Conditionally Rendered */}
-        <span>RasPutin Retweeted</span>
+        <span>{props.authorName} Retweeted</span>
       </RetweetWrapper>
       <TweetBox>
-        <ProfileInfo name={props.authorName} followerCount={props.authorFollowers} profilePic={props.authorProfilePic}/>
-        <TweetText>
-          {props.authorTweet}
-        </TweetText>
-        <ImageWrapper>
-          {props.mediaList.map(mediaItemUrl => (
+        <ProfileInfo
+          name={props.authorName}
+          followerCount={props.authorFollowers}
+          profilePic={props.authorProfilePic}
+        />
+        <TweetText>{props.authorTweet}</TweetText>
+        <ImageWrapper numOfImages={props.mediaList.length}>
+          {props.mediaList.map((mediaItemUrl, index) => (
             <TweetImage
-            key={mediaItemUrl}
-            src={mediaItemUrl}
-            layout="responsive"
-            width={100}
-            height={30}
-          />
+              key={`${mediaItemUrl} ${index}`}
+              src={mediaItemUrl}
+              layout="responsive"
+              width={100}
+              height={30}
+            />
           ))}
-
         </ImageWrapper>
         <TweetInfo>
           <span>449 Comments</span>
@@ -52,11 +53,12 @@ const Tweet = (props: TweetProps) => {
           onSubmit={onSubmit}
         />
         {/* Fetch data after comment clicked */}
-        {isCommentVisible && Array.from(Array(10).keys()).map((index) => (
-          <div key={index}>
-            <TweetReplies />
-          </div>
-        ))}
+        {isCommentVisible &&
+          Array.from(Array(10).keys()).map((index) => (
+            <div key={index}>
+              <TweetReplies />
+            </div>
+          ))}
       </TweetBox>
     </TweetWrapper>
   );
@@ -64,7 +66,7 @@ const Tweet = (props: TweetProps) => {
 export default Tweet;
 
 const TweetWrapper = styled.div`
-  margin-top: 2rem;
+  margin-block: 2rem;
   @media screen and (min-width: 40em) {
     margin-top: revert;
   }
@@ -107,8 +109,9 @@ const TweetInfo = styled.span`
   }
 `;
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled(TweetImageArrayWrapper)`
   width: 100%;
+  margin-top:revert;
 `;
 
 const TweetImage = styled(Image)`
