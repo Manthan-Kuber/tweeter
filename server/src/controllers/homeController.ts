@@ -29,7 +29,8 @@ export const getPeopleSuggestions = async (req: IRequest, res: Response) => {
 
   try {
     const user = await User.findById(id);
-    const following = user?.following?user.following:[];
+    let following = user?.following ? user.following : [];
+    following.push(id);
     const peopleSuggestions = await User.aggregate([
       {
         $match: {
@@ -111,7 +112,7 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
       {
         $project: {
           _id: 0,
-          "creator.name" :1,
+          "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
           tweet: 1,
@@ -190,7 +191,7 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
       {
         $project: {
           _id: 0,
-          "creator.name" :1,
+          "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
           tweet: 1,
