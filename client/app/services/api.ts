@@ -11,6 +11,7 @@ export const api = createApi({
     },
     credentials: "include",
   }),
+  // tagTypes:["GetComments"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
       query: (credentials) => ({
@@ -26,8 +27,18 @@ export const api = createApi({
         body: credentials,
       }),
     }),
+    getTweets:builder.query<GetTweetsResponse,void>({
+      query:() => "/profile/tweets"
+    })
+    // getComments: builder.query(
+    //   //Needs tweetid and skip
+    //   {
+    //     query: () => "/comment",
+    //     invalidatesTags:["GetComments"]
+    //   }
+    // ),
   }),
 });
 
 //Check lazyprofile query
-export const { useLoginMutation, useSignupMutation } = api;
+export const { useLoginMutation, useSignupMutation,useGetTweetsQuery } = api;

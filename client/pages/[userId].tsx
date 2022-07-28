@@ -6,7 +6,6 @@ import useWindowSize from "../Hooks/useWindowDimensions";
 import ProfileBox from "../Components/Common/ProfileBox";
 import CustomModal from "../Components/Common/CustomModal";
 import Tweet from "../Components/Common/Tweet";
-import { GetServerSideProps } from "next";
 import FollowerInfo from "../Components/Common/FollowerInfo";
 import axiosApi from "../app/services/axiosApi";
 import { AxiosError } from "axios";
@@ -17,6 +16,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { ToastMessage } from "../styles/Toast.styles";
 import EditProfile from "../Components/Common/EditProfile";
 import { TweetButton } from "../Components/Common/CreateTweet";
+import { useGetTweetsQuery } from "../app/services/api";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +31,6 @@ const Profile = () => {
   const userId = useAppSelector((state) => state.auth.user?.id);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-
   const [profileData, setProfileData] = useState({
     name: "",
     profilePic: "",
@@ -41,7 +40,8 @@ const Profile = () => {
     following: 0,
     bio: "",
   });
-
+  const { data: RawData, isSuccess } = useGetTweetsQuery();
+  const TweetDataArray = RawData?.data;
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
 
@@ -136,14 +136,14 @@ const Profile = () => {
       {!editProfileModalIsOpen && <Toaster />}
       {coverPic !== undefined && (
         // <BannerWrapper>
-          <Image
-            src={coverPic}
-            className="banner-image"
-            alt="banner"
-            layout="responsive"
-            width={100}
-            height={width! > 880 ? 15 : 45}
-          />
+        <Image
+          src={coverPic}
+          className="banner-image"
+          alt="banner"
+          layout="responsive"
+          width={100}
+          height={width! > 880 ? 15 : 45}
+        />
         /* </BannerWrapper> */
       )}
       <ProfileBox
@@ -215,49 +215,28 @@ const Profile = () => {
       </CustomModal>
       <ContentContainer>
         <FilterBox filterList={filterList} />
-        <Tweet
-          message={message}
-          setMessage={setMessage}
-          fileList={fileList}
-          setFileList={setFileList}
-          onSubmit={onSubmit}
-        />
+       {TweetDataArray?.map((tweet,index) => (
+         <Tweet
+         key={`${tweet.creator[0].username} ${index}`}
+         message={message}
+         setMessage={setMessage}
+         fileList={fileList}
+         setFileList={setFileList}
+         onSubmit={onSubmit}
+         authorName={tweet.creator[0].name}
+         authorUserName={tweet.creator[0].username}
+         authorFollowers={6969}
+         authorProfilePic={tweet.creator[0].profilePic}
+         mediaList={tweet.media}
+         authorTweet={tweet.tweet}
+       />
+       ))}
       </ContentContainer>
     </>
   );
 };
 
 export default Profile;
-
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//   const token = ctx.req.cookies.jwt;
-//   const userId = ctx.params?.userId;
-//   try {
-//     const response = await axiosApi.get(`users/${userId}`, {
-//       headers: {
-//         authorization: `Bearer ${token}`,
-//       },
-//     });
-//     return {
-//       props: {
-//         data: response.data,
-//         isLoading: false,
-//         token,
-//       },
-//     };
-//   } catch (error) {
-//     if ((error as AxiosError).response?.status === 401) {
-//       return {
-//         props: {
-//           isAuthenticated: false,
-//         },
-//       };
-//     }
-//   }
-//   return {
-//     props: {},
-//   };
-// };
 
 const BannerWrapper = styled.div`
   max-width: 120rem;

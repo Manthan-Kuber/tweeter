@@ -5,9 +5,11 @@ import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
 import CreateTweet from "./CreateTweet";
+import { useState } from "react";
 
 const Tweet = (props: TweetProps) => {
   const { fileList, message, setMessage, setFileList, onSubmit } = props;
+  const [isCommentVisible, setIsCommentVisible] = useState(false);
   return (
     <TweetWrapper>
       <RetweetWrapper>
@@ -16,28 +18,28 @@ const Tweet = (props: TweetProps) => {
         <span>RasPutin Retweeted</span>
       </RetweetWrapper>
       <TweetBox>
-        <ProfileInfo />
+        <ProfileInfo name={props.authorName} followerCount={props.authorFollowers} profilePic={props.authorProfilePic}/>
         <TweetText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras non mi
-          et ante posuere cursus. Nunc tempor blandit ante, eget lacinia ex
-          ullamcorper vel. Integer nec quam at nunc cursus bibendum. Cras
-          dapibus rhoncus odio facilisis fermentum. Pellentesque a metus quis
-          elit portti12
+          {props.authorTweet}
         </TweetText>
         <ImageWrapper>
-          <TweetImage
-            src={"https://loremflickr.com/640/480/food"}
+          {props.mediaList.map(mediaItemUrl => (
+            <TweetImage
+            key={mediaItemUrl}
+            src={mediaItemUrl}
             layout="responsive"
             width={100}
             height={30}
           />
+          ))}
+
         </ImageWrapper>
         <TweetInfo>
           <span>449 Comments</span>
           <span>59K Retweets</span>
           <span>234 Saved</span>
         </TweetInfo>
-        <TweetOptions />
+        <TweetOptions setIsCommentVisible={setIsCommentVisible} />
         {/* To be Conditionally Rendered */}
         <CreateTweet
           isReplyImageVisible={true}
@@ -49,8 +51,8 @@ const Tweet = (props: TweetProps) => {
           setFileList={setFileList}
           onSubmit={onSubmit}
         />
-        {/* To be Conditionally Rendered and mapped */}
-        {Array.from(Array(10).keys()).map((index) => (
+        {/* Fetch data after comment clicked */}
+        {isCommentVisible && Array.from(Array(10).keys()).map((index) => (
           <div key={index}>
             <TweetReplies />
           </div>

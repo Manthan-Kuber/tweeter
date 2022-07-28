@@ -32,8 +32,7 @@ const optionsList = [
   },
 ];
 
-interface Props {}
-const TweetOptions = (props: Props) => {
+const TweetOptions = (props: TweetOptionsProps) => {
   const { width } = useWindowSize();
   const [isActive, setIsActive] = useState({
     Retweet: false,
