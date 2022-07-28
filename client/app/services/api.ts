@@ -43,7 +43,6 @@ export const api = createApi({
     //   //Needs tweetid and skip
     //   {
     //     query: () => "/comment",
-    //     invalidatesTags:["Comments"]
     //   }
     // ),
   }),

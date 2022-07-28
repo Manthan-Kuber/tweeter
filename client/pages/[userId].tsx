@@ -40,7 +40,7 @@ const Profile = () => {
     following: 0,
     bio: "",
   });
-  const { data: RawData, isSuccess } = useGetTweetsQuery();
+  const { data: RawData } = useGetTweetsQuery();
   const TweetDataArray = RawData?.data;
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;

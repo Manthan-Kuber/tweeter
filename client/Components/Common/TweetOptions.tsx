@@ -8,7 +8,7 @@ import useWindowSize from "../../Hooks/useWindowDimensions";
 const optionsList = [
   {
     id: 1,
-    name: "Comment",
+    name: "Comments",
     icon: <MdOutlineModeComment />,
     activeColor: "black",
   },

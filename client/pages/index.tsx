@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
-import { GetStaticProps } from "next";
-import { useState } from "react";
+import { GetServerSideProps } from "next";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import { useCreateTweetMutation } from "../app/services/api";
@@ -8,22 +8,32 @@ import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
-import { useAppSelector } from "../Hooks/store";
+import { logOut } from "../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
+
+var hashtagLimit = 6;
+var suggestedFollowerLimit = 4;
 
 const Home = ({
   initialTrendData,
   initialSuggestedFollowersData,
+  isAuthenticated = true,
 }: {
   initialTrendData: any;
   initialSuggestedFollowersData: any;
+  isAuthenticated: boolean;
 }) => {
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
-  const [trendSkip, setTrendSkip] = useState<number>(1);
-  const [suggestedFollowerSkip, setSuggestedFollowerSkip] = useState<number>(1);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      async () => await axiosApi.get("clearcookie");
+      dispatch(logOut());
+    }
+  }, []);
 
   const [hashtagArray, setHashtagArray] = useState<
     Array<{ id: string; tagName: string; tweetCount: string }>
@@ -48,7 +58,7 @@ const Home = ({
   const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(true);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(true);
-
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
 
   const requestConfig = {
@@ -59,11 +69,11 @@ const Home = ({
 
   const getHashtags = async () => {
     try {
-      setTrendSkip((prev) => ++prev);
       const response = await axiosApi.get(
-        `home/hashtags/${6 * trendSkip + 1}/6`
+        `home/hashtags/${hashtagArray.length}/${hashtagLimit}`,
+        requestConfig
       );
-      if (hashtagArray.length > 12) setHasMoreTrends(false);
+      //set hasMore false after all results are fecthed
       response.data.map((item: typeof response.data) =>
         setHashtagArray((prev) => [
           ...prev,
@@ -82,11 +92,11 @@ const Home = ({
 
   const getSuggestedFollowers = async () => {
     try {
-      setSuggestedFollowerSkip((prev) => ++prev);
       const response = await axiosApi.get(
-        `home/people/${4 * suggestedFollowerSkip}/4`
+        `home/people/${suggestedFollowersArray.length}/${suggestedFollowerLimit}`,
+        requestConfig
       );
-      if (suggestedFollowersArray.length > 4) setHasMoreSuggestions(false);
+      //set hasMore false after all results are fecthed
       response.data.map((item: typeof response.data) =>
         setSuggestedFollowersArray((prev: typeof response.data) => [
           ...prev,
@@ -170,10 +180,20 @@ const Home = ({
 
 export default Home;
 
-export const getStaticProps: GetStaticProps = async () => {
-  const endPoints = ["home/hashtags/0/6", "home/people/0/4"];
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const endPoints = [
+    `home/hashtags/0/${hashtagLimit}`,
+    `home/people/0/${suggestedFollowerLimit}`,
+  ];
+  const token = ctx.req.cookies.jwt;
   try {
-    const requests = endPoints.map((endP) => axiosApi.get(endP));
+    const requests = endPoints.map((endP) =>
+      axiosApi.get(endP, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
+    );
     const responses = await Promise.all(requests);
     return {
       props: {
@@ -182,7 +202,14 @@ export const getStaticProps: GetStaticProps = async () => {
       },
     };
   } catch (err) {
-    console.log(err);
+    console.log((err as AxiosError).response?.status);
+    if ((err as AxiosError).response?.status === 401) {
+      return {
+        props: {
+          isAuthenticated: false,
+        },
+      };
+    }
   }
   return {
     props: {},
