@@ -8,9 +8,9 @@ import {
   getPeopleSuggestions
 } from "../controllers/homeController";
 
-router.get("/hashtags/:skip/:limit", getPopularTags);
+router.get("/hashtags/:skip/:limit", requireAuth, getPopularTags);
 
-router.get("/people/:skip/:limit", getPeopleSuggestions);
+router.get("/people/:skip/:limit", requireAuth, getPeopleSuggestions);
 
 router.get("/tweets/:skip", requireAuth, getHomeTweets);
 
