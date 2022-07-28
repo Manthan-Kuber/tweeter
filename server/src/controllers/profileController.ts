@@ -11,7 +11,6 @@ export const editProfile = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
   const { name, username, password, bio } = req.body;
   const files = req.files as Files;
-  let data: string[] = [];
   try {
     if (files) {
       if (files.profilePic[0]) {
@@ -30,7 +29,6 @@ export const editProfile = async (req: IRequest, res: Response) => {
                   $set: { profilePic: result.secure_url },
                 }
               );
-              data.push(result.secure_url);
             }
           }
         );
@@ -54,7 +52,6 @@ export const editProfile = async (req: IRequest, res: Response) => {
                   $set: { coverPic: result.secure_url },
                 }
               );
-              data.push(result.secure_url);
             }
           }
         );
@@ -83,13 +80,14 @@ export const editProfile = async (req: IRequest, res: Response) => {
         }
       );
     }
-    if (data.length == 0) {
-      res.status(200).json({ message: "User info updated successfully" });
-    } else {
-      res
-        .status(200)
-        .json({ data: data, message: "User info updated successfully" });
-    }
+    const user = await User.findById(id, {
+      _id: 0,
+      profilePic: 1,
+      coverPic: 1,
+    });
+    res
+      .status(200)
+      .json({ data: user, message: "User info updated successfully" });
   } catch (err) {
     res.status(400).json({ error: err });
   }
@@ -161,6 +159,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
       {
         $project: {
           _id: 0,
+          "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
           tweet: 1,
@@ -385,8 +384,10 @@ export const liked = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
+          "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
+          "author.name": 1,
           "author.username": 1,
           "author.profilePic": 1,
           tweet: 1,
@@ -537,6 +538,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       {
         $project: {
           _id: 0,
+          "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
           tweet: 1,
