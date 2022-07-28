@@ -127,9 +127,9 @@ interface ProfileBoxProps
 
 //Remove Optional Later
 interface ProfileInfoProps {
-  name?: string;
-  followers?: string;
-  profilepic?: string;
+  name: string;
+  followerCount: number;
+  profilePic: string;
 }
 
 interface ProfileResponse {
@@ -206,4 +206,22 @@ interface ComponentLoaderProps {
   width: number;
   height: number;
   borderRadius: number;
+}
+
+interface SuggestedFollowerResponse {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  username: string;
+  profilePic: string;
+  coverPic: string;
+  bio: string;
+  followerCount: number;
+}
+
+interface SuggestedFollowProps {
+  suggestedFollowList: Array<SuggestedFollowerResponse>;
+  getSuggestedFollowers: () => Promise<void>;
+  hasMore: boolean;
 }
