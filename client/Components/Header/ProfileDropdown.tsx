@@ -8,6 +8,7 @@ import { logOut } from "../../features/auth/authSlice";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { ToastMessage } from "../../styles/Toast.styles";
+import { api } from "../../app/services/api";
 
 const variant = {
   initial: {
@@ -70,6 +71,7 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
       onClick: () => {
         setVisible((prev) => !prev);
         replace("/");
+        dispatch(api.util.resetApiState()) //Clear Cached data
         dispatch(logOut());
         toast.success(() => <ToastMessage>Logged Out Successfully</ToastMessage>,{
           position: "bottom-center"
