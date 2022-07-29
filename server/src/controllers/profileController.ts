@@ -158,7 +158,6 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
-          _id: 0,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
@@ -537,7 +536,6 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
-          _id: 0,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,

@@ -111,7 +111,6 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
-          _id: 0,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
@@ -190,7 +189,6 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
-          _id: 0,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
