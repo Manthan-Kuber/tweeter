@@ -94,7 +94,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
 };
 
 export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
-  var { skip } = req.body;
+  let skip = parseInt(req.params.skip);
   const id = req.user?._id;
   if (!skip) skip = 0;
 
@@ -185,7 +185,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
 };
 
 export const media = async (req: IRequest, res: Response) => {
-  var { skip } = req.body;
+  let skip = parseInt(req.params.skip);
   const id = req.user?._id;
   if (!skip) skip = 0;
 
@@ -290,7 +290,7 @@ export const media = async (req: IRequest, res: Response) => {
 };
 
 export const liked = async (req: IRequest, res: Response) => {
-  var { skip } = req.body;
+  let skip = parseInt(req.params.skip);
   const id = req.user?._id;
   if (!skip) skip = 0;
 
@@ -415,7 +415,7 @@ export const liked = async (req: IRequest, res: Response) => {
 };
 
 export const tweetsAndReplies = async (req: IRequest, res: Response) => {
-  var { skip } = req.body;
+  let skip = parseInt(req.params.skip);
   const id = req.user?._id;
   if (!skip) skip = 0;
 

@@ -8,7 +8,8 @@ import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
 export const fetchComments = async (req: IRequest, res: Response) => {
-  var { skip, tweetId } = req.body;
+  let skip = parseInt(req.params.skip);
+  const tweetId = req.params.tweetId;
   if (!skip) skip = 0;
   try {
     const comments = await Comment.aggregate([
@@ -60,7 +61,8 @@ export const fetchComments = async (req: IRequest, res: Response) => {
 };
 
 export const fetchReplies = async (req: IRequest, res: Response) => {
-  var { skip, commentId } = req.body;
+  let skip = parseInt(req.params.skip);
+  const commentId = req.params.commentId;
   if (!skip) skip = 0;
 
   try {
