@@ -11,11 +11,11 @@ import {
 } from "../controllers/commentController";
 import { imageUpload as upload } from "../middleware/mediaUpload";
 
-router.get("/", requireAuth, fetchComments);
+router.get("/:tweetId/:skip", requireAuth, fetchComments);
 
 router.get("/:commentId", requireAuth, getCommentById);
 
-router.get("/replies", requireAuth, fetchReplies);
+router.get("/replies/:commentId/:skip", requireAuth, fetchReplies);
 
 router.post("/", requireAuth, upload.array("media", 4), createComment);
 
