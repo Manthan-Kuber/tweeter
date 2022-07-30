@@ -20,12 +20,12 @@ router.put(
   editProfile
 );
 
-router.get("/tweets", requireAuth, tweetsAndRetweets);
+router.get("/tweets/:skip", requireAuth, tweetsAndRetweets);
 
-router.get("/tweetsandreplies", requireAuth, tweetsAndReplies);
+router.get("/tweetsandreplies/:skip", requireAuth, tweetsAndReplies);
 
-router.get("/media", requireAuth, media);
+router.get("/media/:skip", requireAuth, media);
 
-router.get("/likes", requireAuth, liked);
+router.get("/likes/:skip", requireAuth, liked);
 
 export default router;
