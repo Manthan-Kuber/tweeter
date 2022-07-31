@@ -39,6 +39,7 @@ export const fetchComments = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
+          "author.name": 1,
           "author.username": 1,
           "author.profilePic": 1,
           comment: 1,
@@ -69,7 +70,6 @@ export const fetchReplies = async (req: IRequest, res: Response) => {
     const replies = await Comment.find(
       { commentId: commentId },
       {
-        _id: 0,
         author: 1,
         comment: 1,
         likes: {
@@ -87,7 +87,7 @@ export const fetchReplies = async (req: IRequest, res: Response) => {
       .limit(10)
       .populate({
         path: "author",
-        select: { _id: 0, username: 1, profilePic: 1 },
+        select: { name: 1, username: 1, profilePic: 1 },
       });
     res.status(200).json({ data: replies });
   } catch (err) {
@@ -101,7 +101,10 @@ export const getCommentById = async (req: IRequest, res: Response) => {
 
   try {
     const user = User.findById(id);
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findById(commentId).populate({
+      path: "author",
+      select: { name: 1, username: 1, profilePic: 1 },
+    });
     res.status(200).json({ data: comment });
   } catch (err) {
     res.status(400).json({ error: err });

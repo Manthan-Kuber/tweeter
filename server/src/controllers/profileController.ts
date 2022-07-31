@@ -13,7 +13,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
   const files = req.files as Files;
   try {
     if (files) {
-      if (files.profilePic[0]) {
+      if (files.profilePic) {
         let upload_stream = cloudinary.uploader.upload_stream(
           {
             transformation: { width: 500, height: 500, crop: "fill" },
@@ -36,7 +36,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
           .createReadStream(files.profilePic[0].buffer)
           .pipe(upload_stream);
       }
-      if (files.coverPic[0]) {
+      if (files.coverPic) {
         let upload_stream = cloudinary.uploader.upload_stream(
           {
             transformation: { width: 900, height: 350, crop: "fill" },
@@ -89,6 +89,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
       .status(200)
       .json({ data: user, message: "User info updated successfully" });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err });
   }
 };

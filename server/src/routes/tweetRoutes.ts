@@ -21,6 +21,6 @@ router.put("/retweet", requireAuth, retweet);
 
 router.put("/save", requireAuth, saveTweet);
 
-router.delete("/", requireAuth, deleteTweet);
+router.delete("/:tweetId", requireAuth, deleteTweet);
 
 export default router;
