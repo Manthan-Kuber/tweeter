@@ -29,6 +29,7 @@ const Tweet = (props: TweetProps) => {
   const [createComment] = useCreateCommentMutation();
   const [commentFetchTrigger, { data: commentsData }] =
     useLazyGetCommentsQuery();
+  const tweetCreationDate = new Date(props.tweetCreationDate);
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
@@ -105,6 +106,8 @@ const Tweet = (props: TweetProps) => {
         <ProfileInfoWrapper>
           <ProfileInfo
             name={props.authorName}
+            username={props.authorUserName}
+            tweetCreationDate={tweetCreationDate.toDateString()}
             followerCount={props.authorFollowers}
             profilePic={props.authorProfilePic}
           />
@@ -150,6 +153,7 @@ const Tweet = (props: TweetProps) => {
         {isCommentButtonClicked &&
           commentsData?.data.comments.map((comment) => (
             <TweetReplies
+              key={comment._id}
               commentText={comment.comment}
               likesCount={comment.likes}
               authorName={comment.author[0].name}

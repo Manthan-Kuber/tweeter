@@ -127,6 +127,8 @@ interface ProfileBoxProps
 
 interface ProfileInfoProps {
   name: string;
+  username:string;
+  tweetCreationDate:string;
   followerCount: number;
   profilePic: string;
 }
@@ -185,6 +187,7 @@ interface TweetProps {
   authorTweet: string;
   mediaList: string[];
   tweetId: string;
+  tweetCreationDate:Date;
 }
 
 interface EditProfileProps {
@@ -244,6 +247,7 @@ interface GetTweetsResponseElement {
   likes: number;
   retweetedUsers: number;
   _id: string;
+  createdAt:Date;
   // commentCount:[]
   // retweeted:[];
   // save:[];

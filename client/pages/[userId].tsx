@@ -67,7 +67,6 @@ const Profile = () => {
     }
   };
 
-
   useEffect(() => {
     if (!isAuthenticated) {
       async () => await axiosApi.get("clearcookie");
@@ -200,6 +199,7 @@ const Profile = () => {
                   mediaList={tweet.media}
                   authorTweet={tweet.tweet}
                   tweetId={tweet._id}
+                  tweetCreationDate={tweet.createdAt}
                 />
               )
             )
