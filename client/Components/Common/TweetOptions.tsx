@@ -1,9 +1,12 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
 import { BsBookmark } from "react-icons/bs";
 import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
+import { useLazyGetCommentsQuery } from "../../app/services/api";
 import useWindowSize from "../../Hooks/useWindowDimensions";
+import { ToastMessage } from "../../styles/Toast.styles";
 
 const TweetOptions = (props: TweetOptionsProps) => {
   const { width } = useWindowSize();
@@ -20,9 +23,18 @@ const TweetOptions = (props: TweetOptionsProps) => {
       name: "Comments",
       icon: <MdOutlineModeComment />,
       activeColor: "black",
-      onClick: () => {
-        setIsActive({ ...isActive, Comments: !isActive.Comments });
+      onClick: async () => {
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
+        if (isActive.Comments === false) {
+          try{
+            await props.commentFetchTrigger(props.tweetId).unwrap();
+          } catch (error) {
+            toast.error(() => (
+              <ToastMessage>Error in Creating Comment</ToastMessage>
+              ));
+            }
+          }
+          setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
       },
     },
     {

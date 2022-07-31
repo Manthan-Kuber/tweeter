@@ -3,29 +3,23 @@ import { useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import styled from "styled-components";
 
-interface Props {}
-const TweetReplies = (props: Props) => {
+const TweetReplies = (props: TweetRepliesProps) => {
   const [isLiked, setIsLiked] = useState(false);
+  const commentCreationDate = new Date(props.commentCreationDate);
   return (
     <RepliesContainer>
       <ReplyContainer>
         <RepliesImageWrapper>
-          <RepliesImage
-            src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
-            width={42}
-            height={37}
-          />
+          <RepliesImage src={props.authorProfilePic} width={42} height={37} />
         </RepliesImageWrapper>
         <ReplyWrapper>
           <AnotherReplyWrapper>
             <AuthorWrapper>
-              <span>Waquar Zakar</span>
-              <span>24 August 1969</span>
+              <span>{props.authorName}</span>
+              <span>{commentCreationDate.toDateString()}</span>
             </AuthorWrapper>
-            <TweetText>
-              I’ve seen awe-inspiring things that I thought I’d never be able to
-              explain to another person.
-            </TweetText>
+            <UserName>@ {props.authorUserName}</UserName>
+            <TweetText>{props.commentText}</TweetText>
           </AnotherReplyWrapper>
           <LikesWrapper>
             <LikesContainer
@@ -35,7 +29,7 @@ const TweetReplies = (props: Props) => {
               <AiOutlineHeart size={14} />
               <span>Like</span>
             </LikesContainer>
-            <span>1.4k Likes</span>
+            <span>{props.likesCount} Likes</span>
           </LikesWrapper>
         </ReplyWrapper>
       </ReplyContainer>
@@ -58,6 +52,11 @@ const ReplyContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+`;
+
+const UserName = styled.span`
+  font: 500 1.2rem var(--ff-noto);
+  color: hsla(0, 0%, 74%, 1);
 `;
 
 const ReplyWrapper = styled.div``;

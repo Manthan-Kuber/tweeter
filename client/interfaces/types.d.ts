@@ -125,7 +125,6 @@ interface ProfileBoxProps
   setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-//Remove Optional Later
 interface ProfileInfoProps {
   name: string;
   followerCount: number;
@@ -234,6 +233,8 @@ interface SuggestedFollowProps {
 
 interface TweetOptionsProps {
   setIsCommentButtonClicked: Dispatch<SetStateAction<boolean>>;
+  tweetId: string;
+  commentFetchTrigger: LazyQueryTrigger<QueryDefinition<string, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, "Tweets" | "Comments", GetCommentsResponse, "api">>
 }
 
 interface GetTweetsResponseElement {
@@ -250,4 +251,29 @@ interface GetTweetsResponseElement {
 
 interface GetTweetsResponse {
   data: GetTweetsResponseElement[];
+}
+
+interface GetCommentsArrayElement {
+  _id: string;
+  author: { username: string; profilePic: string; name: string }[];
+  createdAt: Date;
+  comment: string;
+  likes: number;
+  replyCount: [];
+}
+
+interface GetCommentsResponse {
+  data: {
+    comments: GetCommentsArrayElement[];
+  };
+}
+
+interface TweetRepliesProps
+  extends Pick<
+    TweetProps,
+    "authorName" | "authorUserName" | "authorProfilePic"
+  > {
+  commentText: string;
+  likesCount: number;
+  commentCreationDate:Date;
 }

@@ -48,10 +48,10 @@ export const api = createApi({
       invalidatesTags: ["Tweets"],
     }),
     //Needs tweetid and skip
-    // getComments: builder.query({
-    //   query: () => "/comment",
-    //   providesTags: ["Comments"],
-    // }),
+    getComments: builder.query<GetCommentsResponse,string>({ //change to object later for skip
+      query: (tweetId:string) => `comment/${tweetId}/0`,
+      providesTags: ["Comments"],
+    }),
     createComment: builder.mutation({
       query: (body) => ({
         url: "comment",
@@ -63,7 +63,6 @@ export const api = createApi({
   }),
 });
 
-//Check lazyprofile query
 export const {
   useLoginMutation,
   useSignupMutation,
@@ -71,4 +70,6 @@ export const {
   useCreateTweetMutation,
   useDeleteTweetMutation,
   useCreateCommentMutation,
+  useLazyGetCommentsQuery,
+  useGetCommentsQuery
 } = api;

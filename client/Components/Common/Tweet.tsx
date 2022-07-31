@@ -5,7 +5,7 @@ import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   CancelButton,
   DiscardButton,
@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import {
   useCreateCommentMutation,
   useDeleteTweetMutation,
+  useLazyGetCommentsQuery,
 } from "../../app/services/api";
 
 const Tweet = (props: TweetProps) => {
@@ -26,6 +27,8 @@ const Tweet = (props: TweetProps) => {
   const [isCommentButtonClicked, setIsCommentButtonClicked] = useState(false);
   const [deleteTweet] = useDeleteTweetMutation();
   const [createComment] = useCreateCommentMutation();
+  const [commentFetchTrigger, { data: commentsData }] =
+    useLazyGetCommentsQuery();
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
@@ -55,7 +58,7 @@ const Tweet = (props: TweetProps) => {
         <span>
           <ToastMessage>Delete Tweet?</ToastMessage>
           <SubToastMessage>
-            This can’t be undone and it will be removed from your profile, the
+            This cannot be undone and it will be removed from your profile, the
             timeline of any accounts that follow you.
           </SubToastMessage>
           <DiscardButton
@@ -126,7 +129,11 @@ const Tweet = (props: TweetProps) => {
           <span>59K Retweets</span>
           <span>234 Saved</span>
         </TweetInfo>
-        <TweetOptions setIsCommentButtonClicked={setIsCommentButtonClicked} />
+        <TweetOptions
+          setIsCommentButtonClicked={setIsCommentButtonClicked}
+          tweetId={props.tweetId}
+          commentFetchTrigger={commentFetchTrigger}
+        />
         {isCommentButtonClicked && (
           <CreateTweet
             isReplyImageVisible={true}
@@ -140,12 +147,16 @@ const Tweet = (props: TweetProps) => {
             replyImageUrl={props.authorProfilePic}
           />
         )}
-        {/* Fetch data after comment clicked */}
         {isCommentButtonClicked &&
-          Array.from(Array(10).keys()).map((index) => (
-            <div key={index}>
-              <TweetReplies />
-            </div>
+          commentsData?.data.comments.map((comment) => (
+            <TweetReplies
+              commentText={comment.comment}
+              likesCount={comment.likes}
+              authorName={comment.author[0].name}
+              authorUserName={comment.author[0].username}
+              authorProfilePic={comment.author[0].profilePic}
+              commentCreationDate={comment.createdAt}
+            />
           ))}
       </TweetBox>
     </TweetWrapper>
