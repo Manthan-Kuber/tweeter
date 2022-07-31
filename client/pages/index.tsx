@@ -73,7 +73,7 @@ const Home = ({
         `home/hashtags/${hashtagArray.length}/${hashtagLimit}`,
         requestConfig
       );
-      //set hasMore false after all results are fecthed
+      if(response.data.length < hashtagLimit) setHasMoreTrends(false)
       response.data.map((item: typeof response.data) =>
         setHashtagArray((prev) => [
           ...prev,
@@ -96,7 +96,7 @@ const Home = ({
         `home/people/${suggestedFollowersArray.length}/${suggestedFollowerLimit}`,
         requestConfig
       );
-      //set hasMore false after all results are fecthed
+      if(response.data.length < suggestedFollowerLimit) setHasMoreSuggestions(false)
       response.data.map((item: typeof response.data) =>
         setSuggestedFollowersArray((prev: typeof response.data) => [
           ...prev,

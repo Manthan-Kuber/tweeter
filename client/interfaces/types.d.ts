@@ -128,7 +128,7 @@ interface ProfileBoxProps
 interface ProfileInfoProps {
   name: string;
   username:string;
-  tweetCreationDate:string;
+  tweetCreationDate?:string;
   followerCount: number;
   profilePic: string;
 }
