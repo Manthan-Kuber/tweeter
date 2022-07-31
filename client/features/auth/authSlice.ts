@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { api } from "../../app/services/api";
 
 const authSlice = createSlice({
   name: "auth",
@@ -14,6 +15,7 @@ const authSlice = createSlice({
     logOut: (state) => {
       state.user = null;
       state.token = null;
+      api.util.resetApiState();
     },
     setProfilePic: (state, { payload }: PayloadAction<string>) => {
       if (state.user) state.user.profilePic = payload;

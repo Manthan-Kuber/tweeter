@@ -16,8 +16,8 @@ var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
 
 const Home = ({
-  initialTrendData,
-  initialSuggestedFollowersData,
+  initialTrendData=[],
+  initialSuggestedFollowersData=[],
   isAuthenticated = true,
 }: {
   initialTrendData: any;
