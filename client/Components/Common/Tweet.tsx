@@ -1,15 +1,96 @@
 import Image from "next/image";
-import { AiOutlineRetweet } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineRetweet } from "react-icons/ai";
 import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
 import { useState } from "react";
+import {
+  CancelButton,
+  DiscardButton,
+  SubToastMessage,
+  ToastMessage,
+} from "../../styles/Toast.styles";
+import toast from "react-hot-toast";
+import {
+  useCreateCommentMutation,
+  useDeleteTweetMutation,
+} from "../../app/services/api";
 
 const Tweet = (props: TweetProps) => {
-  const { fileList, message, setMessage, setFileList, onSubmit } = props;
-  const [isCommentVisible, setIsCommentVisible] = useState(false);
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+  const [isCommentButtonClicked, setIsCommentButtonClicked] = useState(false);
+  const [deleteTweet] = useDeleteTweetMutation();
+  const [createComment] = useCreateCommentMutation();
+
+  const onSubmit = async (e: React.FormEvent, tweetId: string) => {
+    e.preventDefault();
+    const fileArray = fileList.map((item) => item.file);
+    setFileList([]);
+    setMessage("");
+    const formData = new FormData();
+    formData.append("comment", message);
+    formData.append("tweetId", tweetId);
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+    }
+    try {
+      await createComment(formData).unwrap();
+      toast.success(() => (
+        <ToastMessage>Created Comment Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      toast.error(() => <ToastMessage>Error in Creating Comment</ToastMessage>);
+    }
+  };
+
+  const onDeleteButtonClick = (tweetId: string) => {
+    toast.dismiss();
+    toast(
+      (t) => (
+        <span>
+          <ToastMessage>Delete Tweet?</ToastMessage>
+          <SubToastMessage>
+            This can’t be undone and it will be removed from your profile, the
+            timeline of any accounts that follow you.
+          </SubToastMessage>
+          <DiscardButton
+            onClick={async () => {
+              try {
+                await deleteTweet(tweetId).unwrap();
+                toast.success(() => (
+                  <ToastMessage>Deleted Tweet Successfully</ToastMessage>
+                ));
+              } catch (error) {
+                toast.error(() => (
+                  <ToastMessage>Error in Deleting Tweet</ToastMessage>
+                ));
+              }
+              toast.dismiss(t.id);
+            }}
+          >
+            Delete
+          </DiscardButton>
+          <CancelButton
+            onClick={() => {
+              toast.dismiss(t.id);
+            }}
+          >
+            Cancel
+          </CancelButton>
+        </span>
+      ),
+      {
+        duration: Infinity,
+        position: "top-center",
+      }
+    );
+  };
+
   return (
     <TweetWrapper>
       <RetweetWrapper>
@@ -18,11 +99,16 @@ const Tweet = (props: TweetProps) => {
         <span>{props.authorName} Retweeted</span>
       </RetweetWrapper>
       <TweetBox>
-        <ProfileInfo
-          name={props.authorName}
-          followerCount={props.authorFollowers}
-          profilePic={props.authorProfilePic}
-        />
+        <ProfileInfoWrapper>
+          <ProfileInfo
+            name={props.authorName}
+            followerCount={props.authorFollowers}
+            profilePic={props.authorProfilePic}
+          />
+          <DeleteIconWrapper onClick={() => onDeleteButtonClick(props.tweetId)}>
+            <DeleteIcon size={24} />
+          </DeleteIconWrapper>
+        </ProfileInfoWrapper>
         <TweetText>{props.authorTweet}</TweetText>
         <ImageWrapper numOfImages={props.mediaList.length}>
           {props.mediaList.map((mediaItemUrl, index) => (
@@ -40,20 +126,22 @@ const Tweet = (props: TweetProps) => {
           <span>59K Retweets</span>
           <span>234 Saved</span>
         </TweetInfo>
-        <TweetOptions setIsCommentVisible={setIsCommentVisible} />
-        {/* To be Conditionally Rendered */}
-        <CreateTweet
-          isReplyImageVisible={true}
-          placeholder="Tweet your reply"
-          btnText="Reply"
-          message={message}
-          setMessage={setMessage}
-          fileList={fileList}
-          setFileList={setFileList}
-          onSubmit={onSubmit}
-        />
+        <TweetOptions setIsCommentButtonClicked={setIsCommentButtonClicked} />
+        {isCommentButtonClicked && (
+          <CreateTweet
+            isReplyImageVisible={true}
+            placeholder="Tweet your reply"
+            btnText="Reply"
+            message={message}
+            setMessage={setMessage}
+            fileList={fileList}
+            setFileList={setFileList}
+            onSubmit={(e) => onSubmit(e, props.tweetId)}
+            replyImageUrl={props.authorProfilePic}
+          />
+        )}
         {/* Fetch data after comment clicked */}
-        {isCommentVisible &&
+        {isCommentButtonClicked &&
           Array.from(Array(10).keys()).map((index) => (
             <div key={index}>
               <TweetReplies />
@@ -65,7 +153,32 @@ const Tweet = (props: TweetProps) => {
 };
 export default Tweet;
 
-const TweetWrapper = styled.div`
+const ProfileInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const DeleteIconWrapper = styled.div`
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.4s;
+  &:hover {
+    background-color: rgba(130, 130, 130, 0.2);
+  }
+  &:active {
+    background-color: rgba(130, 130, 130, 0.7);
+  }
+  align-self: flex-start;
+`;
+
+const DeleteIcon = styled(AiOutlineDelete)`
+  color: red;
+`;
+
+export const TweetWrapper = styled.div`
   margin-block: 2rem;
   @media screen and (min-width: 40em) {
     margin-top: revert;
@@ -82,7 +195,7 @@ const RetweetWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const TweetBox = styled.div`
+export const TweetBox = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
   font-family: var(--ff-noto);
@@ -111,7 +224,7 @@ const TweetInfo = styled.span`
 
 const ImageWrapper = styled(TweetImageArrayWrapper)`
   width: 100%;
-  margin-top:revert;
+  margin-top: revert;
 `;
 
 const TweetImage = styled(Image)`

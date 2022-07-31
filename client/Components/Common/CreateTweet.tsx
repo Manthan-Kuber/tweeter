@@ -50,7 +50,7 @@ const CreateTweet = ({
       {props.isReplyImageVisible && (
         <ReplyImageWrapper>
           <ReplyImage
-            src="https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/170.jpg"
+            src={props.replyImageUrl!}
             width={42}
             height={45}
           />

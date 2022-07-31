@@ -11,7 +11,7 @@ export const api = createApi({
     },
     credentials: "include",
   }),
-  tagTypes:["Tweets"], 
+  tagTypes: ["Tweets", "Comments"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
       query: (credentials) => ({
@@ -27,26 +27,48 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    getTweets:builder.query<GetTweetsResponse,void>({
-      query:() => "/profile/tweets",
-      providesTags:["Tweets"]
+    getTweets: builder.query<GetTweetsResponse, void>({
+      query: () => "profile/tweets/0", //skip to be included
+      providesTags: ["Tweets"],
     }),
-    createTweet:builder.mutation({
-      query:(body) => ({
-        url:"/tweets",
-        method:"POST",
-        body:body,
+    createTweet: builder.mutation({
+      query: (body) => ({
+        url: "tweets",
+        method: "POST",
+        body: body,
       }),
-      invalidatesTags:["Tweets"]
-    })
-    // getComments: builder.query(
-    //   //Needs tweetid and skip
-    //   {
-    //     query: () => "/comment",
-    //   }
-    // ),
+      invalidatesTags: ["Tweets"],
+    }),
+    deleteTweet: builder.mutation({
+      query: (tweetId: string) => ({
+        url: "tweets",
+        method: "DELETE",
+        body: tweetId,
+      }),
+      invalidatesTags: ["Tweets"],
+    }),
+    //Needs tweetid and skip
+    // getComments: builder.query({
+    //   query: () => "/comment",
+    //   providesTags: ["Comments"],
+    // }),
+    createComment: builder.mutation({
+      query: (body) => ({
+        url: "comment",
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["Comments"],
+    }),
   }),
 });
 
 //Check lazyprofile query
-export const { useLoginMutation, useSignupMutation,useGetTweetsQuery,useCreateTweetMutation } = api;
+export const {
+  useLoginMutation,
+  useSignupMutation,
+  useGetTweetsQuery,
+  useCreateTweetMutation,
+  useDeleteTweetMutation,
+  useCreateCommentMutation,
+} = api;

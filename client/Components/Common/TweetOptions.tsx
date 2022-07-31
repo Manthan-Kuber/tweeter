@@ -5,40 +5,54 @@ import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 
-const optionsList = [
-  {
-    id: 1,
-    name: "Comments",
-    icon: <MdOutlineModeComment />,
-    activeColor: "black",
-  },
-  {
-    id: 2,
-    name: "Retweet",
-    icon: <AiOutlineRetweet />,
-    activeColor: "hsla(145, 63%, 42%, 1)",
-  },
-  {
-    id: 3,
-    name: "Like",
-    icon: <AiOutlineHeart />,
-    activeColor: "hsla(0, 79%, 63%, 1)",
-  },
-  {
-    id: 4,
-    name: "Saved",
-    icon: <BsBookmark />,
-    activeColor: "hsla(202, 71%, 52%, 1)",
-  },
-];
-
 const TweetOptions = (props: TweetOptionsProps) => {
   const { width } = useWindowSize();
   const [isActive, setIsActive] = useState({
+    Comments: false,
     Retweet: false,
-    Likes: false,
+    Like: false,
     Saved: false,
   });
+
+  const optionsList = [
+    {
+      id: 1,
+      name: "Comments",
+      icon: <MdOutlineModeComment />,
+      activeColor: "black",
+      onClick: () => {
+        setIsActive({ ...isActive, Comments: !isActive.Comments });
+        props.setIsCommentButtonClicked((prev: boolean) => !prev);
+      },
+    },
+    {
+      id: 2,
+      name: "Retweet",
+      icon: <AiOutlineRetweet />,
+      activeColor: "hsla(145, 63%, 42%, 1)",
+      onClick: () => {
+        setIsActive({ ...isActive, Retweet: !isActive.Retweet });
+      },
+    },
+    {
+      id: 3,
+      name: "Like",
+      icon: <AiOutlineHeart />,
+      activeColor: "hsla(0, 79%, 63%, 1)",
+      onClick: () => {
+        setIsActive({ ...isActive, Like: !isActive.Like });
+      },
+    },
+    {
+      id: 4,
+      name: "Saved",
+      icon: <BsBookmark />,
+      activeColor: "hsla(202, 71%, 52%, 1)",
+      onClick: () => {
+        setIsActive({ ...isActive, Saved: !isActive.Saved });
+      },
+    },
+  ];
 
   return (
     <>
@@ -46,12 +60,7 @@ const TweetOptions = (props: TweetOptionsProps) => {
         {optionsList.map((option) => (
           <OptionWrapper
             key={option.id}
-            onClick={() =>
-              setIsActive({
-                ...isActive,
-                [option.name]: !(isActive as any)[option.name],
-              })
-            }
+            onClick={option.onClick}
             isActive={(isActive as any)[option.name]}
             activeColor={option.activeColor}
           >

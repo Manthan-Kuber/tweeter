@@ -8,7 +8,6 @@ import { useAppSelector } from "../../Hooks/store";
 import { useRouter } from "next/router";
 import { MdEdit } from "react-icons/md";
 import { useState } from "react";
-import ProfileLoader from "./ComponentLoader";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
@@ -30,11 +29,7 @@ const ProfileBox = ({
     <ProfileContainer>
       <ProfileImageWrapper>
         {isLoading ? (
-          <ProfileLoader
-            width={width! > 880 ? 133 : 120}
-            height={width! > 880 ? 133 : 120}
-            borderRadius={8}
-          />
+          <></>
         ) : (
           <>
             {profilePic !== undefined && (

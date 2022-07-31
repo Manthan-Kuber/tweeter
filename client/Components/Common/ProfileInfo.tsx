@@ -22,7 +22,7 @@ const ProfilePic = styled(Image)`
   border-radius: 6px;
 `;
 
-const ProfileInfoWrapper = styled.div`
+export const ProfileInfoWrapper = styled.div`
   display: flex;
   gap: 2rem;
   span {

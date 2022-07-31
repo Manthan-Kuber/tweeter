@@ -175,20 +175,18 @@ interface CreateTweetProps {
     >
   >;
   onSubmit: (e: React.FormEvent) => void;
+  replyImageUrl?: string;
 }
 
-interface TweetProps
-  extends Pick<
-    CreateTweetProps,
-    "fileList" | "message" | "setMessage" | "setFileList" | "onSubmit"
-  > {
-    authorName:string;
-    authorUserName:string;
-    authorFollowers:number;
-    authorProfilePic:string;
-    authorTweet:string;
-    mediaList:string[];
-  }
+interface TweetProps {
+  authorName: string;
+  authorUserName: string;
+  authorFollowers: number;
+  authorProfilePic: string;
+  authorTweet: string;
+  mediaList: string[];
+  tweetId: string;
+}
 
 interface EditProfileProps {
   coverPic: string;
@@ -235,15 +233,16 @@ interface SuggestedFollowProps {
 }
 
 interface TweetOptionsProps {
-  setIsCommentVisible: Dispatch<SetStateAction<boolean>>;
+  setIsCommentButtonClicked: Dispatch<SetStateAction<boolean>>;
 }
 
 interface GetTweetsResponseElement {
-  creator: { username: string; profilePic: string; name: string }[]; //Add name here
+  creator: { username: string; profilePic: string; name: string }[];
   tweet: string;
   media: string[];
   likes: number;
   retweetedUsers: number;
+  _id: string;
   // commentCount:[]
   // retweeted:[];
   // save:[];
