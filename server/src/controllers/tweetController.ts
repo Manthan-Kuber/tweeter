@@ -216,7 +216,7 @@ export const saveTweet = async (req: IRequest, res: Response) => {
 };
 
 export const deleteTweet = async (req: IRequest, res: Response) => {
-  const { tweetId } = req.body;
+  const tweetId = req.params.tweetId;
   const id = req.user?._id;
 
   try {
