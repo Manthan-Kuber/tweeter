@@ -24,7 +24,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
           <LikesWrapper>
             <LikesContainer
               isLiked={isLiked}
-              onClick={() => setIsLiked((prev) => !prev)}
+              onClick={() => setIsLiked((prev) => !prev)} //Api call here
             >
               <AiOutlineHeart size={14} />
               <span>Like</span>

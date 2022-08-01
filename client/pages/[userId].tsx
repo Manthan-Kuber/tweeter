@@ -19,9 +19,17 @@ import {
   ToastMessage,
 } from "../styles/Toast.styles";
 import EditProfile from "../Components/Common/EditProfile";
-import { useGetTweetsQuery } from "../app/services/api";
+import {
+  api,
+  useGetTweetsQuery,
+  useLazyGetCommentsQuery,
+  useLazyGetTweetsQuery,
+} from "../app/services/api";
 import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
 import Tweet from "../Components/Common/Tweet";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+var tweetLimit = 10;
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -42,14 +50,34 @@ const Profile = () => {
     bio: "",
   });
   const {
-    data: RawData,
+    data: TweetsData,
     isLoading: isTweetLoading,
     isFetching: isTweetFetching,
-  } = useGetTweetsQuery();
-  const TweetDataArray = RawData?.data;
+  } = useGetTweetsQuery(0,{refetchOnMountOrArgChange:true});
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
+  const [hasMoreTweets, setHasMoreTweets] = useState(true);
+  const [trigger] = useLazyGetTweetsQuery();
+
+  const getMoreTweets = async () => {
+    try {
+      if (TweetsData !== undefined) {
+        const { data: newTweetData } = await trigger(
+          TweetsData.data.length / 10
+        ).unwrap();
+        if (newTweetData.length < TweetsData.data.length) setHasMoreTweets(false);
+        dispatch(
+          api.util.updateQueryData("getTweets", 0, (tweetData) => {
+            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
 
   const getProfile = async () => {
     try {
@@ -178,31 +206,41 @@ const Profile = () => {
       <ContentContainer>
         <FilterBox filterList={filterList} />
         <div>
-          {TweetDataArray?.length === 0 ? (
-            <NoTweetsToShow />
-          ) : (
-            TweetDataArray?.map((tweet) =>
-              !TweetDataArray ? (
-                <></>
+          {TweetsData !== undefined && (
+            <InfiniteScroll
+              dataLength={TweetsData.data.length}
+              next={getMoreTweets}
+              hasMore={hasMoreTweets}
+              loader={<p>Loading...</p>} //Change Later
+              endMessage={<p>You've reached the end</p>} //Change Later
+            >
+              {TweetsData.data.length === 0 ? (
+                <NoTweetsToShow />
               ) : (
-                // <TweetWrapper> Add loader or skeleton
-                //   <TweetBox>
-                //     <Skeleton count={5} />
-                //   </TweetBox>
-                // </TweetWrapper>
-                <Tweet
-                  key={tweet._id}
-                  authorName={tweet.creator[0].name}
-                  authorUserName={tweet.creator[0].username}
-                  authorFollowers={6969} //Change
-                  authorProfilePic={tweet.creator[0].profilePic}
-                  mediaList={tweet.media}
-                  authorTweet={tweet.tweet}
-                  tweetId={tweet._id}
-                  tweetCreationDate={tweet.createdAt}
-                />
-              )
-            )
+                TweetsData.data.map((tweet) =>
+                  !TweetsData.data ? (
+                    <p>Loading</p>
+                  ) : (
+                    // <TweetWrapper> Add loader or skeleton
+                    //   <TweetBox>
+                    //     <Skeleton count={5} />
+                    //   </TweetBox>
+                    // </TweetWrapper>
+                    <Tweet
+                      key={tweet._id}
+                      authorName={tweet.creator[0].name}
+                      authorUserName={tweet.creator[0].username}
+                      authorFollowers={6969} //Change
+                      authorProfilePic={tweet.creator[0].profilePic}
+                      mediaList={tweet.media}
+                      authorTweet={tweet.tweet}
+                      tweetId={tweet._id}
+                      tweetCreationDate={tweet.createdAt}
+                    />
+                  )
+                )
+              )}
+            </InfiniteScroll>
           )}
         </div>
       </ContentContainer>
