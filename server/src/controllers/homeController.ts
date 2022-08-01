@@ -41,6 +41,7 @@ export const getPeopleSuggestions = async (req: IRequest, res: Response) => {
       { $sort: { followerCount: -1 } },
       { $skip: skip },
       { $limit: limit },
+      { $project: { name: 1, username: 1, profilePic: 1 } },
     ]);
     res.status(200).json(peopleSuggestions);
   } catch (err) {
