@@ -10,7 +10,9 @@ import axiosApi from "../app/services/axiosApi";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { logOut } from "../features/auth/authSlice";
-import FullScreenLoader from "../Components/Common/FullScreenLoader";
+import FullScreenLoader, {
+  Loader,
+} from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import {
   CancelButton,
@@ -22,11 +24,10 @@ import EditProfile from "../Components/Common/EditProfile";
 import {
   api,
   useGetTweetsQuery,
-  useLazyGetCommentsQuery,
   useLazyGetTweetsQuery,
 } from "../app/services/api";
 import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
-import Tweet from "../Components/Common/Tweet";
+import Tweet, { TweetBox } from "../Components/Common/Tweet";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 var tweetLimit = 10;
@@ -53,7 +54,7 @@ const Profile = () => {
     data: TweetsData,
     isLoading: isTweetLoading,
     isFetching: isTweetFetching,
-  } = useGetTweetsQuery(0,{refetchOnMountOrArgChange:true});
+  } = useGetTweetsQuery(0, { refetchOnMountOrArgChange: true }); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
@@ -64,9 +65,10 @@ const Profile = () => {
     try {
       if (TweetsData !== undefined) {
         const { data: newTweetData } = await trigger(
-          TweetsData.data.length / 10
+          TweetsData.data.length / tweetLimit
         ).unwrap();
-        if (newTweetData.length < TweetsData.data.length) setHasMoreTweets(false);
+        if (newTweetData.length < TweetsData.data.length)
+          setHasMoreTweets(false);
         dispatch(
           api.util.updateQueryData("getTweets", 0, (tweetData) => {
             newTweetData.map((newTweet) => tweetData.data.push(newTweet));
@@ -211,15 +213,17 @@ const Profile = () => {
               dataLength={TweetsData.data.length}
               next={getMoreTweets}
               hasMore={hasMoreTweets}
-              loader={<p>Loading...</p>} //Change Later
-              endMessage={<p>You've reached the end</p>} //Change Later
+              loader={<ScrollerMessage>Loading...</ScrollerMessage>}
+              endMessage={
+                <ScrollerMessage>You have reached the end...</ScrollerMessage>
+              }
             >
               {TweetsData.data.length === 0 ? (
                 <NoTweetsToShow />
               ) : (
                 TweetsData.data.map((tweet) =>
                   !TweetsData.data ? (
-                    <p>Loading</p>
+                    <Loader size={32} color={"var(--clr-primary)"} />
                   ) : (
                     // <TweetWrapper> Add loader or skeleton
                     //   <TweetBox>
@@ -255,6 +259,13 @@ const BannerWrapper = styled.div`
   margin-inline: auto;
 `;
 
+const PlaceholderTweetBox = styled(TweetBox)`
+  margin-bottom: 1rem;
+  display: grid;
+  place-items: center;
+  height: 450px;
+`;
+
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);
   margin-inline: auto;
@@ -265,4 +276,9 @@ const ContentContainer = styled.div`
     grid-template-columns: 25rem auto;
     gap: 2rem;
   }
+`;
+
+const ScrollerMessage = styled.p`
+  font: 600 1.4rem var(--ff-noto);
+  color: #4f4f4f;
 `;

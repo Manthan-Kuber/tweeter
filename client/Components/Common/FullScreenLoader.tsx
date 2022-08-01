@@ -23,6 +23,6 @@ const spin = keyframes`
     to{transform:rotate(360deg)};
 `;
 
-const Loader = styled(CgSpinner)`
+export const Loader = styled(CgSpinner)`
   animation: 0.5s ${spin} infinite linear;
 `;
