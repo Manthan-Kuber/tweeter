@@ -16,8 +16,8 @@ var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
 
 const Home = ({
-  initialTrendData=[],
-  initialSuggestedFollowersData=[],
+  initialTrendData = [],
+  initialSuggestedFollowersData = [],
   isAuthenticated = true,
 }: {
   initialTrendData: any;
@@ -73,7 +73,7 @@ const Home = ({
         `home/hashtags/${hashtagArray.length}/${hashtagLimit}`,
         requestConfig
       );
-      if(response.data.length < hashtagLimit) setHasMoreTrends(false)
+      if (response.data.length < hashtagLimit) setHasMoreTrends(false);
       response.data.map((item: typeof response.data) =>
         setHashtagArray((prev) => [
           ...prev,
@@ -84,7 +84,6 @@ const Home = ({
           },
         ])
       );
-      // set loading to false
     } catch (error) {
       console.log(error);
     }
@@ -96,7 +95,8 @@ const Home = ({
         `home/people/${suggestedFollowersArray.length}/${suggestedFollowerLimit}`,
         requestConfig
       );
-      if(response.data.length < suggestedFollowerLimit) setHasMoreSuggestions(false)
+      if (response.data.length < suggestedFollowerLimit)
+        setHasMoreSuggestions(false);
       response.data.map((item: typeof response.data) =>
         setSuggestedFollowersArray((prev: typeof response.data) => [
           ...prev,
@@ -108,7 +108,6 @@ const Home = ({
           },
         ])
       );
-      // set loading to false
     } catch (error) {
       console.log(error);
     }

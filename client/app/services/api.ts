@@ -27,8 +27,8 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    getTweets: builder.query<GetTweetsResponse, void>({
-      query: () => "profile/tweets/0", //skip to be included
+    getTweets: builder.query<GetTweetsResponse, number>({
+      query: (skip) => `profile/tweets/${skip}`, //skip to be included
       providesTags: ["Tweets"],
     }),
     createTweet: builder.mutation({
@@ -71,5 +71,6 @@ export const {
   useDeleteTweetMutation,
   useCreateCommentMutation,
   useLazyGetCommentsQuery,
-  useGetCommentsQuery
+  useGetCommentsQuery,
+  useLazyGetTweetsQuery,
 } = api;

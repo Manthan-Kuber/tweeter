@@ -10,7 +10,9 @@ import axiosApi from "../app/services/axiosApi";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { logOut } from "../features/auth/authSlice";
-import FullScreenLoader from "../Components/Common/FullScreenLoader";
+import FullScreenLoader, {
+  Loader,
+} from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import {
   CancelButton,
@@ -19,9 +21,16 @@ import {
   ToastMessage,
 } from "../styles/Toast.styles";
 import EditProfile from "../Components/Common/EditProfile";
-import { useGetTweetsQuery } from "../app/services/api";
+import {
+  api,
+  useGetTweetsQuery,
+  useLazyGetTweetsQuery,
+} from "../app/services/api";
 import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
-import Tweet from "../Components/Common/Tweet";
+import Tweet, { TweetBox } from "../Components/Common/Tweet";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+var tweetLimit = 10;
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -42,14 +51,35 @@ const Profile = () => {
     bio: "",
   });
   const {
-    data: RawData,
+    data: TweetsData,
     isLoading: isTweetLoading,
     isFetching: isTweetFetching,
-  } = useGetTweetsQuery();
-  const TweetDataArray = RawData?.data;
+  } = useGetTweetsQuery(0, { refetchOnMountOrArgChange: true }); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
+  const [hasMoreTweets, setHasMoreTweets] = useState(true);
+  const [trigger] = useLazyGetTweetsQuery();
+
+  const getMoreTweets = async () => {
+    try {
+      if (TweetsData !== undefined) {
+        const { data: newTweetData } = await trigger(
+          TweetsData.data.length / tweetLimit
+        ).unwrap();
+        if (newTweetData.length < TweetsData.data.length)
+          setHasMoreTweets(false);
+        dispatch(
+          api.util.updateQueryData("getTweets", 0, (tweetData) => {
+            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
 
   const getProfile = async () => {
     try {
@@ -178,31 +208,43 @@ const Profile = () => {
       <ContentContainer>
         <FilterBox filterList={filterList} />
         <div>
-          {TweetDataArray?.length === 0 ? (
-            <NoTweetsToShow />
-          ) : (
-            TweetDataArray?.map((tweet) =>
-              !TweetDataArray ? (
-                <></>
+          {TweetsData !== undefined && (
+            <InfiniteScroll
+              dataLength={TweetsData.data.length}
+              next={getMoreTweets}
+              hasMore={hasMoreTweets}
+              loader={<ScrollerMessage>Loading...</ScrollerMessage>}
+              endMessage={
+                <ScrollerMessage>You have reached the end...</ScrollerMessage>
+              }
+            >
+              {TweetsData.data.length === 0 ? (
+                <NoTweetsToShow />
               ) : (
-                // <TweetWrapper> Add loader or skeleton
-                //   <TweetBox>
-                //     <Skeleton count={5} />
-                //   </TweetBox>
-                // </TweetWrapper>
-                <Tweet
-                  key={tweet._id}
-                  authorName={tweet.creator[0].name}
-                  authorUserName={tweet.creator[0].username}
-                  authorFollowers={6969} //Change
-                  authorProfilePic={tweet.creator[0].profilePic}
-                  mediaList={tweet.media}
-                  authorTweet={tweet.tweet}
-                  tweetId={tweet._id}
-                  tweetCreationDate={tweet.createdAt}
-                />
-              )
-            )
+                TweetsData.data.map((tweet) =>
+                  !TweetsData.data ? (
+                    <Loader size={32} color={"var(--clr-primary)"} />
+                  ) : (
+                    // <TweetWrapper> Add loader or skeleton
+                    //   <TweetBox>
+                    //     <Skeleton count={5} />
+                    //   </TweetBox>
+                    // </TweetWrapper>
+                    <Tweet
+                      key={tweet._id}
+                      authorName={tweet.creator[0].name}
+                      authorUserName={tweet.creator[0].username}
+                      authorFollowers={6969} //Change
+                      authorProfilePic={tweet.creator[0].profilePic}
+                      mediaList={tweet.media}
+                      authorTweet={tweet.tweet}
+                      tweetId={tweet._id}
+                      tweetCreationDate={tweet.createdAt}
+                    />
+                  )
+                )
+              )}
+            </InfiniteScroll>
           )}
         </div>
       </ContentContainer>
@@ -217,6 +259,13 @@ const BannerWrapper = styled.div`
   margin-inline: auto;
 `;
 
+const PlaceholderTweetBox = styled(TweetBox)`
+  margin-bottom: 1rem;
+  display: grid;
+  place-items: center;
+  height: 450px;
+`;
+
 const ContentContainer = styled.div`
   width: min(95%, 102.4rem);
   margin-inline: auto;
@@ -227,4 +276,9 @@ const ContentContainer = styled.div`
     grid-template-columns: 25rem auto;
     gap: 2rem;
   }
+`;
+
+const ScrollerMessage = styled.p`
+  font: 600 1.4rem var(--ff-noto);
+  color: #4f4f4f;
 `;
