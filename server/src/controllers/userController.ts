@@ -47,10 +47,14 @@ export const getProfile = async (req: IRequest, res: Response) => {
 export const followUser = async (req: IRequest, res: Response) => {
   const { targetid } = req.body;
   const id = req.user?._id;
+
   try {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetid);
-    if (!user?.following?.includes(targetid) && id !== targetid) {
+    if (
+      !user?.following?.includes(targetid) &&
+      id.toString() !== targetid.toString()
+    ) {
       const updatedUser = await User.findByIdAndUpdate(id, {
         $push: { following: targetid },
       });
@@ -58,7 +62,10 @@ export const followUser = async (req: IRequest, res: Response) => {
         $push: { followers: id },
       });
       res.status(200).json({ message: "Successfully followed the user" });
-    } else if (user?.following?.includes(targetid) && id !== targetid) {
+    } else if (
+      user?.following?.includes(targetid) &&
+      id.toString() !== targetid.toString()
+    ) {
       res.status(200).json({ message: "You already follow the user" });
     } else {
       res.status(400).json({ message: "You cannot follow yourself" });
