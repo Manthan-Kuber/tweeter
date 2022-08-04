@@ -64,16 +64,20 @@ const Profile = () => {
   const getMoreTweets = async () => {
     try {
       if (TweetsData !== undefined) {
-        const { data: newTweetData } = await trigger(
-          TweetsData.data.length / tweetLimit
-        ).unwrap();
-        if (newTweetData.length < TweetsData.data.length)
+        if (TweetsData.data.length < tweetLimit) {
           setHasMoreTweets(false);
-        dispatch(
-          api.util.updateQueryData("getTweets", 0, (tweetData) => {
-            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-          })
-        );
+        } else {
+          const { data: newTweetData } = await trigger(
+            TweetsData.data.length / tweetLimit
+          ).unwrap();
+          if (newTweetData.length < TweetsData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData("getTweets", 0, (tweetData) => {
+              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+            })
+          );
+        }
       }
     } catch (error) {
       console.log(error);
