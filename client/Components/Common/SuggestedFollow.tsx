@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
@@ -10,6 +11,7 @@ const SuggestedFollow = ({
   suggestedFollowList,
   ...props
 }: SuggestedFollowProps) => {
+  const router = useRouter();
   return (
     <Article as="article" id="suggestedFollowerScroll">
       <h5>Whom to follow</h5>
@@ -23,8 +25,12 @@ const SuggestedFollow = ({
       >
         {suggestedFollowList.map((item, index) => (
           // Key might be error prone
-          <FollowerContainer key={`${item._id} ${index}`}>
+          <FollowerContainer
+            key={item.id}
+            onClick={() => router.push(`/${item.id}`)}
+          >
             <hr />
+            {/* <p>{item.id}</p> */}
             <ProfileInfoWrapper>
               <ProfileInfo
                 name={item.name}
@@ -52,7 +58,7 @@ export default SuggestedFollow;
 const Article = styled(AsideContainer)`
   padding: 1rem;
   color: #4f4f4f;
-  max-height: 40rem;
+  max-height: 35rem;
   overflow-y: scroll;
   h5 {
     margin-bottom: 1rem;
@@ -60,6 +66,7 @@ const Article = styled(AsideContainer)`
 `;
 
 const FollowerContainer = styled.div`
+  cursor: pointer;
   hr {
     margin-bottom: 2rem;
     color: hsla(0, 0%, 88%, 1);

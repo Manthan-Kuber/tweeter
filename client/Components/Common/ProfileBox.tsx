@@ -11,6 +11,7 @@ import { useState } from "react";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
+  setFollowingModalIsOpen,
   setEditProfileModalIsOpen,
   editProfileModalIsOpen,
   followerModalIsOpen,
@@ -25,6 +26,7 @@ const ProfileBox = ({
   const router = useRouter();
   const { userId } = router.query;
   const [isLoading, setIsLoading] = useState(false);
+
   return (
     <ProfileContainer>
       <ProfileImageWrapper>
@@ -49,10 +51,28 @@ const ProfileBox = ({
             <h3>{name}</h3>
             <FollowerContainer>
               {/* Replace With Following Modal */}
-              <span onClick={() => setFollowerModalIsOpen(true)}>
+              <span
+                onClick={async () => {
+                  try {
+                    await props.GetFollowingTrigger(userId).unwrap();
+                    setFollowingModalIsOpen(true);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }}
+              >
                 <span>{props.following}</span> Following
               </span>
-              <span onClick={() => setFollowerModalIsOpen(true)}>
+              <span
+                onClick={async () => {
+                  try {
+                    await props.GetFollowersTrigger(userId).unwrap();
+                    setFollowerModalIsOpen(true);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }}
+              >
                 <span>{props.followers}</span> Followers
               </span>
             </FollowerContainer>
@@ -65,12 +85,17 @@ const ProfileBox = ({
             as={motion.button}
             whileTap={{ scale: 0.9 }}
             onClick={() => setEditProfileModalIsOpen(true)}
+            disabled={!(userId === currentUserId)}
           >
             <MdEdit />
             Edit Profile
           </EditProfileButton>
         ) : (
-          <FollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
+          <FollowButton
+            as={motion.button}
+            whileTap={{ scale: 0.9 }}
+            disabled={userId === currentUserId}
+          >
             <BsFillPersonPlusFill />
             Follow
           </FollowButton>

@@ -4,16 +4,20 @@ import styled from "styled-components";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
-interface Props {}
-const FollowerInfo = (props: Props) => {
+const FollowerInfo = ({ RawData, ...props }: FollowerInfoProps) => {
   return (
     <>
-      {Array.from(Array(10).keys()).map((index, item) => (
-        <div key={index}>
+      {RawData.data.map((item) => (
+        <div key={item._id}>
           <ProfileElementWrapper>
             <div>
-              <ProfileInfo />
-              <p>
+              <ProfileInfo
+                name={item.name}
+                username={item.username}
+                profilePic={item.profilePic}
+              />
+              {/* Replace by {item.bio} */}
+              <p> 
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
                 eu erat eu ipsum placerat gravida. Duis nec nisl eget enim
                 facilisis rhoncus ac sit amet turpis. Maecenas fermentum quis

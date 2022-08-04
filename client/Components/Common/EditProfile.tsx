@@ -78,13 +78,13 @@ const EditProfile = (props: EditProfileProps) => {
         requestConfig
       );
       const { name, username, bio } = formValues;
-      const pfp = profilePictureFile as Blob;
-      const coverpic = coverPictureFile as Blob;
+      // const pfp = profilePictureFile as Blob;
+      // const coverpic = coverPictureFile as Blob;
       dispatch(setProfilePic(response.data.data.profilePic)); //set with response's url
       // dispatch(setCoverp)
       props.setProfileData((prev) => ({ ...prev, name, username, bio }));
-      console.log(coverPictureFile);
-      console.log(profilePictureFile);
+      console.log(response.data.data.profilePic);
+      console.log( response.data.data.coverPic);
       profilePictureFile !== undefined &&
         props.setProfileData((prev) => ({
           ...prev,

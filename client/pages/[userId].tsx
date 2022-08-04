@@ -23,22 +23,26 @@ import {
 import EditProfile from "../Components/Common/EditProfile";
 import {
   api,
-  useGetTweetsQuery,
-  useLazyGetTweetsQuery,
+  useGetProfileTweetsQuery,
+  useLazyGetFollowersQuery,
+  useLazyGetFollowingQuery,
+  useLazyGetProfileTweetsQuery,
 } from "../app/services/api";
 import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
 import Tweet, { TweetBox } from "../Components/Common/Tweet";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/router";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 var tweetLimit = 10;
 
-const Profile = () => {
+const Profile = ({ userId }: { userId: string }) => {
   const dispatch = useAppDispatch();
   const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
   const [followingModalIsOpen, setFollowingModalIsOpen] = useState(false);
   const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const { width } = useWindowSize();
-  const userId = useAppSelector((state) => state.auth.user?.id);
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [profileData, setProfileData] = useState({
@@ -54,12 +58,17 @@ const Profile = () => {
     data: TweetsData,
     isLoading: isTweetLoading,
     isFetching: isTweetFetching,
-  } = useGetTweetsQuery(0, { refetchOnMountOrArgChange: true }); //Resets api cache on mount
+    refetch: refetchTweets,
+  } = useGetProfileTweetsQuery(0, { refetchOnMountOrArgChange: true }); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
-  const [trigger] = useLazyGetTweetsQuery();
+  const [GetProfileTrigger] = useLazyGetProfileTweetsQuery();
+  const [GetFollowersTrigger, { data: GetFollowersData }] =
+    useLazyGetFollowersQuery();
+  const [GetFollowingTrigger, { data: GetFollowingData }] =
+    useLazyGetFollowingQuery();
 
   const getMoreTweets = async () => {
     try {
@@ -67,13 +76,13 @@ const Profile = () => {
         if (TweetsData.data.length < tweetLimit) {
           setHasMoreTweets(false);
         } else {
-          const { data: newTweetData } = await trigger(
+          const { data: newTweetData } = await GetProfileTrigger(
             TweetsData.data.length / tweetLimit
           ).unwrap();
           if (newTweetData.length < TweetsData.data.length)
             setHasMoreTweets(false);
           dispatch(
-            api.util.updateQueryData("getTweets", 0, (tweetData) => {
+            api.util.updateQueryData("getProfileTweets", 0, (tweetData) => {
               newTweetData.map((newTweet) => tweetData.data.push(newTweet));
             })
           );
@@ -105,6 +114,8 @@ const Profile = () => {
     if (!isAuthenticated) {
       async () => await axiosApi.get("clearcookie");
       dispatch(logOut());
+    } else if (userId !== currentUserId) {
+      refetchTweets();
     }
     getProfile();
   }, []);
@@ -142,8 +153,10 @@ const Profile = () => {
         /* </BannerWrapper> */
       )}
       <ProfileBox
-        setFollowerModalIsOpen={setFollowerModalIsOpen}
         followerModalIsOpen={followerModalIsOpen}
+        setFollowerModalIsOpen={setFollowerModalIsOpen}
+        followingModalIsOpen={followingModalIsOpen}
+        setFollowingModalIsOpen={setFollowingModalIsOpen}
         setEditProfileModalIsOpen={setEditProfileModalIsOpen}
         editProfileModalIsOpen={editProfileModalIsOpen}
         name={name}
@@ -152,6 +165,8 @@ const Profile = () => {
         followers={followers}
         following={following}
         bio={bio}
+        GetFollowersTrigger={GetFollowersTrigger}
+        GetFollowingTrigger={GetFollowingTrigger}
       />
       <CustomModal
         setModalIsOpen={setFollowerModalIsOpen}
@@ -160,9 +175,24 @@ const Profile = () => {
         username={username}
         followers={followers}
         following={following}
+        modalTitle={`${name} is Followed By`}
+      >
+        {GetFollowersData !== undefined && (
+          <FollowerInfo RawData={GetFollowersData} />
+        )}
+      </CustomModal>
+      <CustomModal
+        setModalIsOpen={setFollowingModalIsOpen}
+        modalIsOpen={followingModalIsOpen}
+        name={name}
+        username={username}
+        followers={followers}
+        following={following}
         modalTitle={`${name} is Following`}
       >
-        <FollowerInfo />
+        {GetFollowingData !== undefined && (
+          <FollowerInfo RawData={GetFollowingData} />
+        )}
       </CustomModal>
       <CustomModal
         setModalIsOpen={setEditProfileModalIsOpen}
@@ -257,6 +287,27 @@ const Profile = () => {
 };
 
 export default Profile;
+
+export const getStaticPaths: GetStaticPaths = (context) => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = (context) => {
+  if (context.params !== undefined) {
+    const userId = context.params.userId;
+    return {
+      props: {
+        userId,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
 
 const BannerWrapper = styled.div`
   max-width: 120rem;

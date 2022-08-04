@@ -121,15 +121,47 @@ interface ProfileBoxProps
   extends Omit<ModalProps, "setModalIsOpen" | "modalIsOpen"> {
   followerModalIsOpen: boolean;
   setFollowerModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  followingModalIsOpen: boolean;
+  setFollowingModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editProfileModalIsOpen: boolean;
   setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  GetFollowersTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      string,
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      "Tweets" | "Comments",
+      GetFollowingAndFollowersResponse,
+      "api"
+    >
+  >;
+  GetFollowingTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      string,
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      "Tweets" | "Comments",
+      GetFollowingAndFollowersResponse,
+      "api"
+    >
+  >;
 }
 
 interface ProfileInfoProps {
   name: string;
-  username:string;
-  tweetCreationDate?:string;
-  followerCount: number;
+  username: string;
+  tweetCreationDate?: string;
+  followerCount?: number;
   profilePic: string;
 }
 
@@ -187,7 +219,7 @@ interface TweetProps {
   authorTweet: string;
   mediaList: string[];
   tweetId: string;
-  tweetCreationDate:Date;
+  tweetCreationDate: Date;
 }
 
 interface EditProfileProps {
@@ -217,6 +249,7 @@ interface ComponentLoaderProps {
 }
 
 interface SuggestedFollowerResponse {
+  id: string; //For Follower props
   _id: string;
   name: string;
   email: string;
@@ -228,8 +261,13 @@ interface SuggestedFollowerResponse {
   followerCount: number;
 }
 
+interface SuggestedFollowListElement
+  extends Omit<SuggestedFollowerResponse, "_id"> {
+  id: string;
+}
+
 interface SuggestedFollowProps {
-  suggestedFollowList: Array<SuggestedFollowerResponse>;
+  suggestedFollowList: Array<SuggestedFollowListElement>;
   getSuggestedFollowers: () => Promise<void>;
   hasMore: boolean;
 }
@@ -237,7 +275,21 @@ interface SuggestedFollowProps {
 interface TweetOptionsProps {
   setIsCommentButtonClicked: Dispatch<SetStateAction<boolean>>;
   tweetId: string;
-  commentFetchTrigger: LazyQueryTrigger<QueryDefinition<string, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, "Tweets" | "Comments", GetCommentsResponse, "api">>
+  commentFetchTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      string,
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      "Tweets" | "Comments",
+      GetCommentsResponse,
+      "api"
+    >
+  >;
 }
 
 interface GetTweetsResponseElement {
@@ -247,8 +299,9 @@ interface GetTweetsResponseElement {
   likes: number;
   retweetedUsers: number;
   _id: string;
-  createdAt:Date;
-  // commentCount:[]
+  createdAt: Date;
+  commentCount: number[]; //commentCount[0] gives count
+  retweetedUsers: number;
   // retweeted:[];
   // save:[];
 }
@@ -279,5 +332,21 @@ interface TweetRepliesProps
   > {
   commentText: string;
   likesCount: number;
-  commentCreationDate:Date;
+  commentCreationDate: Date;
+}
+
+interface GetFollowingAndFollowersElement {
+  _id: string;
+  name: string;
+  username: string;
+  profilePic: string;
+  bio:string;
+}
+
+interface GetFollowingAndFollowersResponse {
+  data: GetFollowingAndFollowersElement[];
+}
+
+interface FollowerInfoProps {
+  RawData: GetFollowingAndFollowersResponse;
 }

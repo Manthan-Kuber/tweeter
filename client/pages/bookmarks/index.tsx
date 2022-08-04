@@ -1,8 +1,11 @@
-import { GetServerSideProps } from "next";
 import styled from "styled-components";
-import axiosApi from "../../app/services/axiosApi";
+import { useGetBookmarksQuery } from "../../app/services/api";
 
 function Bookmarks() {
+  const {data} = useGetBookmarksQuery(0);
+  console.log(data);
+
+
   return <Container>Bookmarks</Container>;
 }
 
@@ -13,15 +16,15 @@ const Container = styled.div`
   margin-inline: auto;
   padding-block: 2rem;
 `;
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const token = ctx.req.cookies.jwt;
-  const response = await axiosApi.get("/home/bookmarks/100",{
-    headers:{
-      authorization:`Bearer ${token}`
-    }
-  })
-  console.log(response.data);
-  return {
-    props: {},
-  };
-};
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const token = ctx.req.cookies.jwt;
+//   const response = await axiosApi.get("/home/bookmarks/100",{
+//     headers:{
+//       authorization:`Bearer ${token}`
+//     }
+//   })
+//   console.log(response.data);
+//   return {
+//     props: {},
+//   };
+// };

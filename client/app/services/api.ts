@@ -27,7 +27,7 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    getTweets: builder.query<GetTweetsResponse, number>({
+    getProfileTweets: builder.query<GetTweetsResponse, number>({
       query: (skip) => `profile/tweets/${skip}`, //skip to be included
       providesTags: ["Tweets"],
     }),
@@ -60,17 +60,45 @@ export const api = createApi({
       }),
       invalidatesTags: ["Comments"],
     }),
+    getBookmarks:builder.query<GetTweetsResponse,number>({
+      query: (skip) => `home/bookmarks/${skip}`
+    }),
+    getHomeTweets:builder.query<GetTweetsResponse,number>({
+      query:(skip) => `home/tweets/${skip}`
+    }),
+    likeTweet:builder.mutation<string,string>({
+      query:(tweetId) => ({
+        url:"/tweets/like",
+        method:"PUT",
+        body:tweetId, //invalidate tags for liked tweets fetch
+      })
+    }),
+    getFollowers:builder.query<GetFollowingAndFollowersResponse,string>({
+        query: (userId) => `users/followers/${userId}/0`,
+    }),
+    getFollowing:builder.query<GetFollowingAndFollowersResponse,string>({
+        query: (userId) => `users/following/${userId}/0`,
+    })
+    // getProfileTweetsAndReplies:builder.query<GetTweetsResponse,number>({
+    //   query:(skip) => `profile/tweets/${skip}`
+    // })
   }),
 });
 
 export const {
   useLoginMutation,
   useSignupMutation,
-  useGetTweetsQuery,
+  useGetProfileTweetsQuery,
   useCreateTweetMutation,
   useDeleteTweetMutation,
   useCreateCommentMutation,
   useLazyGetCommentsQuery,
   useGetCommentsQuery,
-  useLazyGetTweetsQuery,
+  useLazyGetProfileTweetsQuery,
+  useGetBookmarksQuery,
+  useGetHomeTweetsQuery,
+  useLikeTweetMutation,
+  useLazyGetFollowersQuery,
+  useLazyGetFollowingQuery
+  // useGetProfileTweetsAndRepliesQuery,
 } = api;
