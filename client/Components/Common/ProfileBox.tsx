@@ -8,6 +8,7 @@ import { useAppSelector } from "../../Hooks/store";
 import { useRouter } from "next/router";
 import { MdEdit } from "react-icons/md";
 import { useState } from "react";
+import { ToastMessage } from "../../styles/Toast.styles";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
@@ -57,7 +58,7 @@ const ProfileBox = ({
                     await props.GetFollowingTrigger(userId).unwrap();
                     setFollowingModalIsOpen(true);
                   } catch (err) {
-                    console.log(err);
+                    <ToastMessage> Error in Fetching Following </ToastMessage>;
                   }
                 }}
               >
@@ -69,7 +70,7 @@ const ProfileBox = ({
                     await props.GetFollowersTrigger(userId).unwrap();
                     setFollowerModalIsOpen(true);
                   } catch (err) {
-                    console.log(err);
+                    <ToastMessage> Error in Fetching Followers </ToastMessage>;
                   }
                 }}
               >
