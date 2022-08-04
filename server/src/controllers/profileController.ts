@@ -11,7 +11,9 @@ export const editProfile = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
   const { name, username, password, bio } = req.body;
   const files = req.files as Files;
+
   try {
+    let user = await User.findById(id);
     if (files) {
       if (files.profilePic) {
         let upload_stream = cloudinary.uploader.upload_stream(
@@ -23,12 +25,9 @@ export const editProfile = async (req: IRequest, res: Response) => {
           },
           async (err, result) => {
             if (result) {
-              await User.updateOne(
-                { _id: id },
-                {
-                  $set: { profilePic: result.secure_url },
-                }
-              );
+              user = await User.findByIdAndUpdate(id, {
+                $set: { profilePic: result.secure_url },
+              });
             }
           }
         );
@@ -46,12 +45,9 @@ export const editProfile = async (req: IRequest, res: Response) => {
           },
           async (err, result) => {
             if (result) {
-              await User.updateOne(
-                { _id: id },
-                {
-                  $set: { coverPic: result.secure_url },
-                }
-              );
+              user = await User.findByIdAndUpdate(id, {
+                $set: { coverPic: result.secure_url },
+              });
             }
           }
         );
@@ -80,14 +76,14 @@ export const editProfile = async (req: IRequest, res: Response) => {
         }
       );
     }
-    const user = await User.findById(id, {
-      _id: 0,
-      profilePic: 1,
-      coverPic: 1,
-    });
-    res
-      .status(200)
-      .json({ data: user, message: "User info updated successfully" });
+    if (files.profilePic || files.coverPic) {
+      res.status(200).json({
+        data: { profilePic: user!.profilePic, coverPic: user!.coverPic },
+        message: "User info updated successfully",
+      });
+    } else {
+      res.status(200).json({ message: "User info updated successfully" });
+    }
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: err });
@@ -124,6 +120,15 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
           saved: {
             $filter: {
               input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          liked: {
+            $filter: {
+              input: "$likes",
               as: "user",
               cond: {
                 $eq: ["$$user", new ObjectId(id)],
@@ -171,6 +176,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
               else: 0,
             },
           },
+          liked: 1,
           retweeted: 1,
           saved: 1,
           commentCount: "$count.count",
@@ -213,6 +219,15 @@ export const media = async (req: IRequest, res: Response) => {
           saved: {
             $filter: {
               input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          liked: {
+            $filter: {
+              input: "$likes",
               as: "user",
               cond: {
                 $eq: ["$$user", new ObjectId(id)],
@@ -277,6 +292,7 @@ export const media = async (req: IRequest, res: Response) => {
           comment: 1,
           commentCount: "$commentCount.count",
           replyCount: "$count.count",
+          liked: 1,
           retweeted: 1,
           saved: 1,
           retweetedUsers: { $size: "$retweetedUsers" },

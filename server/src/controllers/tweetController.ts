@@ -39,6 +39,15 @@ export const getTweet = async (req: IRequest, res: Response) => {
               },
             },
           },
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
         },
       },
       {
@@ -75,6 +84,7 @@ export const getTweet = async (req: IRequest, res: Response) => {
               else: 0,
             },
           },
+          liked: 1,
           retweeted: 1,
           saved: 1,
           retweetedUsers: { $size: "$retweetedUsers" },
@@ -221,7 +231,7 @@ export const deleteTweet = async (req: IRequest, res: Response) => {
 
   try {
     const tweet = await Tweet.findById(tweetId);
-    if (tweet?.creator.toString() === id) {
+    if (tweet?.creator.toString() === id.toString()) {
       if (tweet?.hashtags) {
         for (var hashtag in tweet.hashtags) {
           await Hashtag.findOneAndUpdate(
