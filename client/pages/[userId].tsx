@@ -253,7 +253,7 @@ const Profile = ({ userId }: { userId: string }) => {
               }
             >
               {TweetsData.data.length === 0 ? (
-                <NoTweetsToShow />
+                <NoTweetsToShow message="No Tweets To Show !" />
               ) : (
                 TweetsData.data.map((tweet) =>
                   !TweetsData.data ? (

@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import styled from "styled-components";
+import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
 const FollowerInfo = ({ RawData, ...props }: FollowerInfoProps) => {
   return (
     <>
-      {RawData.data.map((item) => (
+      {RawData.data.length === 0 ? <NoTweetsToShow message="Nothing to Show !" /> :   RawData.data.map((item) => (
         <div key={item._id}>
           <ProfileElementWrapper>
             <div>

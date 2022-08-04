@@ -350,3 +350,7 @@ interface GetFollowingAndFollowersResponse {
 interface FollowerInfoProps {
   RawData: GetFollowingAndFollowersResponse;
 }
+
+interface NoTweetsToShowProps{
+ message:string;
+}

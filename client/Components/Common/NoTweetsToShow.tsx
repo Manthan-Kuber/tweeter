@@ -1,11 +1,11 @@
 import Image from "next/image";
 import styled from "styled-components";
 
-const NoTweetsToShow = () => {
+const NoTweetsToShow = ({message,...props}:NoTweetsToShowProps) => {
   return (
     <Container>
       <Image src="/notFound.svg" width={200} height={200} />
-      <p>No Tweets To Show !</p>
+      <p>{message}</p>
     </Container>
   );
 };
