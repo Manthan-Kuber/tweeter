@@ -101,36 +101,36 @@ export const unfollowUser = async (req: IRequest, res: Response) => {
 };
 
 export const getFollowers = async (req: IRequest, res: Response) => {
-  const { skip } = req.body;
+  const skip = parseInt(req.params.skip);
   const id = req.params.userid;
 
   try {
-    const user = await User.findById(id, { _id: 0, followers: 1 }).populate({
-      path: "followers",
-      select: { _id: 0, name: 1, username: 1, profilPic: 1 },
-    });
-    res
-      .status(200)
-      .json({ data: user?.followers?.splice(skip * 10, skip * 10 + 10) });
+    const user = await User.findById(id)
+      .skip(skip * 10)
+      .limit(10)
+      .populate({
+        path: "followers",
+        select: { name: 1, username: 1, profilePic: 1 },
+      });
+    res.status(200).json({ data: user?.followers });
   } catch (err) {
     res.status(400).json({ error: err });
   }
 };
 
 export const getFollowing = async (req: IRequest, res: Response) => {
-  const { skip } = req.body;
+  const skip = parseInt(req.params.skip);
   const id = req.params.userid;
 
   try {
-    const user = await User.findById(id, { _id: 0, following: 1 }).populate({
-      path: "following",
-      select: { _id: 0, name: 1, username: 1, profilePic: 1 },
-    });
-    if (user && user.following) {
-      res
-        .status(200)
-        .json({ data: user.following.splice(skip * 10, skip * 10 + 10) });
-    }
+    const user = await User.findById(id)
+      .skip(skip * 10)
+      .limit(10)
+      .populate({
+        path: "following",
+        select: { name: 1, username: 1, profilePic: 1 },
+      });
+    res.status(200).json({ data: user?.following });
   } catch (err) {
     res.status(400).json({ error: err });
   }
