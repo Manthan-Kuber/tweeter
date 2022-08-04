@@ -11,6 +11,8 @@ export const editProfile = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
   const { name, username, password, bio } = req.body;
   const files = req.files as Files;
+  let profilePic: string | undefined;
+  let coverPic: string | undefined;
 
   try {
     let user = await User.findById(id);
@@ -76,14 +78,16 @@ export const editProfile = async (req: IRequest, res: Response) => {
         }
       );
     }
-    if (files.profilePic || files.coverPic) {
-      res.status(200).json({
-        data: { profilePic: user!.profilePic, coverPic: user!.coverPic },
-        message: "User info updated successfully",
-      });
-    } else {
-      res.status(200).json({ message: "User info updated successfully" });
+    if (files.profilePic) {
+      profilePic = user?.profilePic;
     }
+    if (files.coverPic) {
+      coverPic = user?.coverPic;
+    }
+    res.status(200).json({
+      data: { profilePic: profilePic, coverPic: coverPic },
+      message: "User info updated successfully",
+    });
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: err });
