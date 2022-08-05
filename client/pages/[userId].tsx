@@ -124,7 +124,7 @@ const Profile = ({ userId }: { userId: string }) => {
       dispatch(logOut());
     }
     getProfile();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (followerModalIsOpen || editProfileModalIsOpen || followingModalIsOpen) {
