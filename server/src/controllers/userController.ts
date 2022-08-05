@@ -110,7 +110,7 @@ export const getFollowers = async (req: IRequest, res: Response) => {
       .limit(10)
       .populate({
         path: "followers",
-        select: { name: 1, username: 1, profilePic: 1 },
+        select: { name: 1, username: 1, profilePic: 1, bio: 1 },
       });
     res.status(200).json({ data: user?.followers });
   } catch (err) {
@@ -128,7 +128,7 @@ export const getFollowing = async (req: IRequest, res: Response) => {
       .limit(10)
       .populate({
         path: "following",
-        select: { name: 1, username: 1, profilePic: 1 },
+        select: { name: 1, username: 1, profilePic: 1, bio: 1 },
       });
     res.status(200).json({ data: user?.following });
   } catch (err) {
