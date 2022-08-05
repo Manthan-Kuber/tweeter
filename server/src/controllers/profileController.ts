@@ -8,7 +8,7 @@ import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
 export const editProfile = async (req: IRequest, res: Response) => {
-  const id = req.user?._id;
+  const id = req.params.userId;
   const { name, username, password, bio } = req.body;
   const files = req.files as Files;
   let profilePic: string | undefined;
@@ -96,7 +96,7 @@ export const editProfile = async (req: IRequest, res: Response) => {
 
 export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
-  const id = req.user?._id;
+  const id = req.params.userId;
   if (!skip) skip = 0;
 
   try {
@@ -197,7 +197,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
 
 export const media = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
-  const id = req.user?._id;
+  const id = req.params.userId;
   if (!skip) skip = 0;
 
   try {
@@ -312,7 +312,7 @@ export const media = async (req: IRequest, res: Response) => {
 
 export const liked = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
-  const id = req.user?._id;
+  const id = req.params.userId;
   if (!skip) skip = 0;
 
   try {
@@ -437,7 +437,7 @@ export const liked = async (req: IRequest, res: Response) => {
 
 export const tweetsAndReplies = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
-  const id = req.user?._id;
+  const id = req.params.userId;
   if (!skip) skip = 0;
 
   try {
