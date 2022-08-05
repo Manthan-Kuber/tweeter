@@ -27,8 +27,8 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    getProfileTweets: builder.query<GetTweetsResponse, number>({
-      query: (skip) => `profile/tweets/${skip}`, //skip to be included
+    getProfileTweets: builder.query<GetTweetsResponse, {userId:string,skip:number}>({
+      query: (argObj) => `profile/tweets/${argObj.userId}/${argObj.skip}`, //skip to be included
       providesTags: ["Tweets"],
     }),
     createTweet: builder.mutation({
