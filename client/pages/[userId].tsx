@@ -41,7 +41,6 @@ const Profile = ({ userId }: { userId: string }) => {
   const [followingModalIsOpen, setFollowingModalIsOpen] = useState(false);
   const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const { width } = useWindowSize();
-  const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [profileData, setProfileData] = useState({
@@ -53,11 +52,7 @@ const Profile = ({ userId }: { userId: string }) => {
     following: 0,
     bio: "",
   });
-  const {
-    data: TweetsData,
-    isLoading: isTweetLoading,
-    isFetching: isTweetFetching,
-  } = useGetProfileTweetsQuery(
+  const { data: TweetsData } = useGetProfileTweetsQuery(
     { userId, skip: 0 },
     {
       refetchOnMountOrArgChange: true,
@@ -174,6 +169,7 @@ const Profile = ({ userId }: { userId: string }) => {
         GetFollowersTrigger={GetFollowersTrigger}
         GetFollowingTrigger={GetFollowingTrigger}
       />
+      {/* Extact into a separate component */}
       <CustomModal
         setModalIsOpen={setFollowerModalIsOpen}
         modalIsOpen={followerModalIsOpen}
@@ -280,6 +276,13 @@ const Profile = ({ userId }: { userId: string }) => {
                       authorTweet={tweet.tweet}
                       tweetId={tweet._id}
                       tweetCreationDate={tweet.createdAt}
+                      isSaved={tweet.saved.length === 0 ? false : true}
+                      isLiked={tweet.liked.length === 0 ? false : true}
+                      isRetweeted={tweet.retweeted.length === 0 ? false : true}
+                      commentCount={tweet.commentCount[0]}
+                      likes={tweet.likes}
+                      retweetedUsers={tweet.retweetedUsers}
+                      saves={tweet.saved.length}
                     />
                   )
                 )
