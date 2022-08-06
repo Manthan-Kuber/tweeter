@@ -17,14 +17,8 @@ const FollowerInfo = ({ RawData, ...props }: FollowerInfoProps) => {
                 username={item.username}
                 profilePic={item.profilePic}
               />
-              {/* Replace by {item.bio} */}
               <p> 
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                eu erat eu ipsum placerat gravida. Duis nec nisl eget enim
-                facilisis rhoncus ac sit amet turpis. Maecenas fermentum quis
-                nulla consequat lobortis. Cras et elit at quam ornare efficitur.
-                Aliquam erat volutpat. In leo lorem, rhoncus sed fermentum a,
-                feugiat non metus. Vivamus cursus aliquet metus.
+               {item.bio}
               </p>
             </div>
             <StyledFollowButton as={motion.button} whileTap={{ scale: 0.9 }}>

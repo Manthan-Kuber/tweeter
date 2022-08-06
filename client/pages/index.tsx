@@ -3,7 +3,10 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
-import { useCreateTweetMutation, useGetHomeTweetsQuery } from "../app/services/api";
+import {
+  useCreateTweetMutation,
+  useGetHomeTweetsQuery,
+} from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
@@ -52,6 +55,7 @@ const Home = ({
       id: item._id,
       bio: item.bio,
       name: item.name,
+      username: item.username,
       profilePic: item.profilePic,
     }))
   );
@@ -63,7 +67,6 @@ const Home = ({
   // const {data} = useGetHomeTweetsQuery(0);
 
   // console.log(data);
-
 
   const requestConfig = {
     headers: {
@@ -108,6 +111,7 @@ const Home = ({
             id: item._id,
             bio: item.bio,
             name: item.name,
+            username: item.username,
             profilePic: item.profilePic,
           },
         ])

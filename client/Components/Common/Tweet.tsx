@@ -5,7 +5,7 @@ import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import TweetReplies from "./TweetReplies";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   CancelButton,
   DiscardButton,

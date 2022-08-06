@@ -31,7 +31,6 @@ import {
 import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
 import Tweet, { TweetBox } from "../Components/Common/Tweet";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useRouter } from "next/router";
 import { GetStaticPaths, GetStaticProps } from "next";
 
 var tweetLimit = 10;
@@ -58,8 +57,12 @@ const Profile = ({ userId }: { userId: string }) => {
     data: TweetsData,
     isLoading: isTweetLoading,
     isFetching: isTweetFetching,
-    refetch: refetchTweets,
-  } = useGetProfileTweetsQuery(0, { refetchOnMountOrArgChange: true }); //Resets api cache on mount
+  } = useGetProfileTweetsQuery(
+    { userId, skip: 0 },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  ); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
@@ -76,15 +79,20 @@ const Profile = ({ userId }: { userId: string }) => {
         if (TweetsData.data.length < tweetLimit) {
           setHasMoreTweets(false);
         } else {
-          const { data: newTweetData } = await GetProfileTrigger(
-            TweetsData.data.length / tweetLimit
-          ).unwrap();
+          const { data: newTweetData } = await GetProfileTrigger({
+            userId,
+            skip: TweetsData.data.length / tweetLimit,
+          }).unwrap();
           if (newTweetData.length < TweetsData.data.length)
             setHasMoreTweets(false);
           dispatch(
-            api.util.updateQueryData("getProfileTweets", 0, (tweetData) => {
-              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-            })
+            api.util.updateQueryData(
+              "getProfileTweets",
+              { userId, skip: 0 },
+              (tweetData) => {
+                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+              }
+            )
           );
         }
       }
@@ -114,11 +122,9 @@ const Profile = ({ userId }: { userId: string }) => {
     if (!isAuthenticated) {
       async () => await axiosApi.get("clearcookie");
       dispatch(logOut());
-    } else if (userId !== currentUserId) {
-      refetchTweets();
     }
     getProfile();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (followerModalIsOpen || editProfileModalIsOpen || followingModalIsOpen) {

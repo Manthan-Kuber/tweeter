@@ -30,7 +30,6 @@ const SuggestedFollow = ({
             onClick={() => router.push(`/${item.id}`)}
           >
             <hr />
-            {/* <p>{item.id}</p> */}
             <ProfileInfoWrapper>
               <ProfileInfo
                 name={item.name}
