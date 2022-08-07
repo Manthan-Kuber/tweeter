@@ -136,7 +136,7 @@ const Tweet = (props: TweetProps) => {
         <TweetInfo>
           <span>{props.commentCount || 0} Comments</span>
           <span>{props.retweetedUsers || 0} Retweets</span>
-          <span>{props.saves || 0} Saved</span>
+          <span>{props.savedBy || 0} Saved</span>
         </TweetInfo>
         <TweetOptions
           setIsCommentButtonClicked={setIsCommentButtonClicked}

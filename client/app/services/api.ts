@@ -48,7 +48,7 @@ export const api = createApi({
         method: "DELETE",
         body: { tweetId },
       }),
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: ["Tweets","Bookmarks"],
     }),
     //Needs tweetid and skip
     getComments: builder.query<GetCommentsResponse, string>({
@@ -123,5 +123,6 @@ export const {
   useRetweetTweetMutation,
   useLazyGetFollowersQuery,
   useLazyGetFollowingQuery,
+  useLazyGetBookmarksQuery,
   // useGetProfileTweetsAndRepliesQuery,
 } = api;

@@ -62,11 +62,12 @@ const Profile = ({ userId }: { userId: string }) => {
     profileData;
   const token = useAppSelector((state) => state.auth.token);
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
-  const [GetProfileTrigger] = useLazyGetProfileTweetsQuery();
+  const [GetProfileTweetsTrigger] = useLazyGetProfileTweetsQuery();
   const [GetFollowersTrigger, { data: GetFollowersData }] =
     useLazyGetFollowersQuery();
   const [GetFollowingTrigger, { data: GetFollowingData }] =
     useLazyGetFollowingQuery();
+  
 
   const getMoreTweets = async () => {
     try {
@@ -74,7 +75,7 @@ const Profile = ({ userId }: { userId: string }) => {
         if (TweetsData.data.length < tweetLimit) {
           setHasMoreTweets(false);
         } else {
-          const { data: newTweetData } = await GetProfileTrigger({
+          const { data: newTweetData } = await GetProfileTweetsTrigger({
             userId,
             skip: TweetsData.data.length / tweetLimit,
           }).unwrap();
@@ -257,35 +258,39 @@ const Profile = ({ userId }: { userId: string }) => {
               {TweetsData.data.length === 0 ? (
                 <NoTweetsToShow message="No Tweets To Show !" />
               ) : (
-                TweetsData.data.map((tweet) =>
-                  !TweetsData.data ? (
-                    <Loader size={32} color={"var(--clr-primary)"} />
-                  ) : (
-                    // <TweetWrapper> Add loader or skeleton
-                    //   <TweetBox>
-                    //     <Skeleton count={5} />
-                    //   </TweetBox>
-                    // </TweetWrapper>
-                    <Tweet
-                      key={tweet._id}
-                      authorName={tweet.creator[0].name}
-                      authorUserName={tweet.creator[0].username}
-                      authorFollowers={6969} //Change
-                      authorProfilePic={tweet.creator[0].profilePic}
-                      mediaList={tweet.media}
-                      authorTweet={tweet.tweet}
-                      tweetId={tweet._id}
-                      tweetCreationDate={tweet.createdAt}
-                      isSaved={tweet.saved.length === 0 ? false : true}
-                      isLiked={tweet.liked.length === 0 ? false : true}
-                      isRetweeted={tweet.retweeted.length === 0 ? false : true}
-                      commentCount={tweet.commentCount[0]}
-                      likes={tweet.likes}
-                      retweetedUsers={tweet.retweetedUsers}
-                      saves={tweet.saved.length}
-                    />
+                TweetsData.data
+                  .filter((tweet) => tweet.media.length !== 0)
+                  .map((tweet) =>
+                    !TweetsData.data ? (
+                      <Loader size={32} color={"var(--clr-primary)"} />
+                    ) : (
+                      // <TweetWrapper> Add loader or skeleton
+                      //   <TweetBox>
+                      //     <Skeleton count={5} />
+                      //   </TweetBox>
+                      // </TweetWrapper>
+                      <Tweet
+                        key={tweet._id}
+                        authorName={tweet.creator[0].name}
+                        authorUserName={tweet.creator[0].username}
+                        authorFollowers={6969} //Change
+                        authorProfilePic={tweet.creator[0].profilePic}
+                        mediaList={tweet.media}
+                        authorTweet={tweet.tweet}
+                        tweetId={tweet._id}
+                        tweetCreationDate={tweet.createdAt}
+                        isSaved={tweet.saved.length === 0 ? false : true}
+                        isLiked={tweet.liked.length === 0 ? false : true}
+                        isRetweeted={
+                          tweet.retweeted.length === 0 ? false : true
+                        }
+                        commentCount={tweet.commentCount[0]}
+                        likes={tweet.likes}
+                        retweetedUsers={tweet.retweetedUsers}
+                        savedBy={tweet.savedBy}
+                      />
+                    )
                   )
-                )
               )}
             </InfiniteScroll>
           )}
@@ -342,7 +347,7 @@ const ContentContainer = styled.div`
   }
 `;
 
-const ScrollerMessage = styled.p`
+export const ScrollerMessage = styled.p`
   font: 600 1.4rem var(--ff-noto);
   color: #4f4f4f;
 `;

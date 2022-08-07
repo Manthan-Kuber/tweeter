@@ -226,7 +226,7 @@ interface TweetProps {
   isRetweeted: boolean;
   likes:number;
   retweetedUsers:number;
-  saves:number;
+  savedBy:number;
 }
 
 interface EditProfileProps {
@@ -317,6 +317,7 @@ interface GetTweetsResponseElement {
   retweeted: string[]; //if length of array 0 , then not retweeted/saved/like otherwise has userId in it
   saved: string[];
   liked: string[];
+  savedBy:number;
 }
 
 interface GetTweetsResponse {
