@@ -164,14 +164,20 @@ export const likeTweet = async (req: IRequest, res: Response) => {
     const user = await User.findById(id);
     const tweet = await Tweet.findById(tweetId);
     if (!tweet?.likes?.includes(id)) {
-      const updatedTweet = await Tweet.findByIdAndUpdate(id, {
-        $push: { likes: id },
-      });
+      await Tweet.updateOne(
+        { _id: tweetId },
+        {
+          $push: { likes: id },
+        }
+      );
       res.status(200).json({ message: "Tweet liked successfully" });
     } else {
-      const updatedTweet = await Tweet.findByIdAndUpdate(id, {
-        $pull: { likes: id },
-      });
+      await Tweet.updateOne(
+        { _id: tweetId },
+        {
+          $pull: { likes: id },
+        }
+      );
       res.status(200).json({ message: "Tweet unliked successfully" });
     }
   } catch (err) {
