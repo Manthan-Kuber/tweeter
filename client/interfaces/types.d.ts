@@ -219,7 +219,14 @@ interface TweetProps {
   authorTweet: string;
   mediaList: string[];
   tweetId: string;
+  commentCount:number;
   tweetCreationDate: Date;
+  isSaved: boolean;
+  isLiked: boolean;
+  isRetweeted: boolean;
+  likes:number;
+  retweetedUsers:number;
+  savedBy:number;
 }
 
 interface EditProfileProps {
@@ -290,6 +297,12 @@ interface TweetOptionsProps {
       "api"
     >
   >;
+  isSaved: boolean;
+  isLiked: boolean;
+  isRetweeted: boolean;
+  setIsSaved: React.Dispatch<SetStateAction<boolean>>;
+  setIsLiked: React.Dispatch<SetStateAction<boolean>>;
+  setIsRetweeted: React.Dispatch<SetStateAction<boolean>>;
 }
 
 interface GetTweetsResponseElement {
@@ -297,13 +310,14 @@ interface GetTweetsResponseElement {
   tweet: string;
   media: string[];
   likes: number;
-  retweetedUsers: number;
   _id: string;
   createdAt: Date;
   commentCount: number[]; //commentCount[0] gives count
   retweetedUsers: number;
-  // retweeted:[];
-  // save:[];
+  retweeted: string[]; //if length of array 0 , then not retweeted/saved/like otherwise has userId in it
+  saved: string[];
+  liked: string[];
+  savedBy:number;
 }
 
 interface GetTweetsResponse {
@@ -340,7 +354,7 @@ interface GetFollowingAndFollowersElement {
   name: string;
   username: string;
   profilePic: string;
-  bio:string;
+  bio: string;
 }
 
 interface GetFollowingAndFollowersResponse {
@@ -351,6 +365,6 @@ interface FollowerInfoProps {
   RawData: GetFollowingAndFollowersResponse;
 }
 
-interface NoTweetsToShowProps{
- message:string;
+interface NoTweetsToShowProps {
+  message: string;
 }

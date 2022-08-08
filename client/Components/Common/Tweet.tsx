@@ -30,6 +30,9 @@ const Tweet = (props: TweetProps) => {
   const [commentFetchTrigger, { data: commentsData }] =
     useLazyGetCommentsQuery();
   const tweetCreationDate = new Date(props.tweetCreationDate);
+  const [isLiked, setIsLiked] = useState(props.isLiked);
+  const [isSaved, setIsSaved] = useState(props.isSaved);
+  const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
@@ -98,9 +101,12 @@ const Tweet = (props: TweetProps) => {
   return (
     <TweetWrapper>
       <RetweetWrapper>
-        <AiOutlineRetweet size={14} />
-        {/* To be Conditionally Rendered */}
-        <span>{props.authorName} Retweeted</span>
+        {props.isRetweeted && (
+          <>
+            <AiOutlineRetweet size={14} />{" "}
+            <span>{props.authorName} Retweeted</span>
+          </>
+        )}
       </RetweetWrapper>
       <TweetBox>
         <ProfileInfoWrapper>
@@ -128,14 +134,20 @@ const Tweet = (props: TweetProps) => {
           ))}
         </ImageWrapper>
         <TweetInfo>
-          <span>449 Comments</span>
-          <span>59K Retweets</span>
-          <span>234 Saved</span>
+          <span>{props.commentCount || 0} Comments</span>
+          <span>{props.retweetedUsers || 0} Retweets</span>
+          <span>{props.savedBy || 0} Saved</span>
         </TweetInfo>
         <TweetOptions
           setIsCommentButtonClicked={setIsCommentButtonClicked}
           tweetId={props.tweetId}
           commentFetchTrigger={commentFetchTrigger}
+          isLiked={isLiked}
+          isSaved={isSaved}
+          isRetweeted={isRetweeted}
+          setIsLiked={setIsLiked}
+          setIsSaved={setIsSaved}
+          setIsRetweeted={setIsRetweeted}
         />
         {isCommentButtonClicked && (
           <CreateTweet

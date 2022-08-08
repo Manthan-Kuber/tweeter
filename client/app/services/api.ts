@@ -11,7 +11,7 @@ export const api = createApi({
     },
     credentials: "include",
   }),
-  tagTypes: ["Tweets", "Comments"],
+  tagTypes: ["Tweets", "Comments", "Bookmarks"],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
       query: (credentials) => ({
@@ -27,8 +27,11 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    getProfileTweets: builder.query<GetTweetsResponse, {userId:string,skip:number}>({
-      query: (argObj) => `profile/tweets/${argObj.userId}/${argObj.skip}`, //skip to be included
+    getProfileTweets: builder.query<
+      GetTweetsResponse,
+      { userId: string; skip: number }
+    >({
+      query: ({ userId, skip }) => `profile/tweets/${userId}/${skip}`,
       providesTags: ["Tweets"],
     }),
     createTweet: builder.mutation({
@@ -43,13 +46,14 @@ export const api = createApi({
       query: (tweetId: string) => ({
         url: "tweets",
         method: "DELETE",
-        body: tweetId,
+        body: { tweetId },
       }),
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: ["Tweets","Bookmarks"],
     }),
     //Needs tweetid and skip
-    getComments: builder.query<GetCommentsResponse,string>({ //change to object later for skip
-      query: (tweetId:string) => `comment/${tweetId}/0`,
+    getComments: builder.query<GetCommentsResponse, string>({
+      //change to object later for skip if req
+      query: (tweetId: string) => `comment/${tweetId}/0`,
       providesTags: ["Comments"],
     }),
     createComment: builder.mutation({
@@ -60,25 +64,42 @@ export const api = createApi({
       }),
       invalidatesTags: ["Comments"],
     }),
-    getBookmarks:builder.query<GetTweetsResponse,number>({
-      query: (skip) => `home/bookmarks/${skip}`
+    getBookmarks: builder.query<GetTweetsResponse, number>({
+      query: (skip) => `home/bookmarks/${skip}`,
     }),
-    getHomeTweets:builder.query<GetTweetsResponse,number>({
-      query:(skip) => `home/tweets/${skip}`
+    getHomeTweets: builder.query<GetTweetsResponse, number>({
+      query: (skip) => `home/tweets/${skip}`,
     }),
-    likeTweet:builder.mutation<string,string>({
-      query:(tweetId) => ({
-        url:"/tweets/like",
-        method:"PUT",
-        body:tweetId, //invalidate tags for liked tweets fetch
-      })
+    getFollowers: builder.query<GetFollowingAndFollowersResponse, string>({
+      query: (userId) => `users/followers/${userId}/0`,
     }),
-    getFollowers:builder.query<GetFollowingAndFollowersResponse,string>({
-        query: (userId) => `users/followers/${userId}/0`,
+    getFollowing: builder.query<GetFollowingAndFollowersResponse, string>({
+      query: (userId) => `users/following/${userId}/0`,
     }),
-    getFollowing:builder.query<GetFollowingAndFollowersResponse,string>({
-        query: (userId) => `users/following/${userId}/0`,
-    })
+    likeTweet: builder.mutation<string, string>({
+      query: (tweetId) => ({
+        url: "/tweets/like",
+        method: "PUT",
+        body: { tweetId }, //invalidate tags for liked tweets fetch
+      }),
+      invalidatesTags: ["Tweets"],
+    }),
+    saveTweet: builder.mutation<string, string>({
+      query: (tweetId) => ({
+        url: "/tweets/save",
+        method: "PUT",
+        body: { tweetId },
+      }),
+      invalidatesTags: ["Tweets","Bookmarks"],
+    }),
+    retweetTweet: builder.mutation<string, string>({
+      query: (tweetId) => ({
+        url: "/tweets/retweet",
+        method: "PUT",
+        body: { tweetId },
+      }),
+      invalidatesTags: ["Tweets"],
+    }),
     // getProfileTweetsAndReplies:builder.query<GetTweetsResponse,number>({
     //   query:(skip) => `profile/tweets/${skip}`
     // })
@@ -98,7 +119,10 @@ export const {
   useGetBookmarksQuery,
   useGetHomeTweetsQuery,
   useLikeTweetMutation,
+  useSaveTweetMutation,
+  useRetweetTweetMutation,
   useLazyGetFollowersQuery,
-  useLazyGetFollowingQuery
+  useLazyGetFollowingQuery,
+  useLazyGetBookmarksQuery,
   // useGetProfileTweetsAndRepliesQuery,
 } = api;

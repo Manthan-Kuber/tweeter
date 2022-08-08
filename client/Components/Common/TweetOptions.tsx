@@ -4,18 +4,30 @@ import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
 import { BsBookmark } from "react-icons/bs";
 import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
-import { useLazyGetCommentsQuery } from "../../app/services/api";
+import {
+  useLikeTweetMutation,
+  useRetweetTweetMutation,
+  useSaveTweetMutation,
+} from "../../app/services/api";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import { ToastMessage } from "../../styles/Toast.styles";
 
-const TweetOptions = (props: TweetOptionsProps) => {
+const TweetOptions = ({
+  setIsLiked,
+  setIsSaved,
+  setIsRetweeted,
+  ...props
+}: TweetOptionsProps) => {
   const { width } = useWindowSize();
   const [isActive, setIsActive] = useState({
     Comments: false,
-    Retweet: false,
-    Like: false,
-    Saved: false,
+    Retweet: props.isRetweeted,
+    Like: props.isLiked,
+    Saved: props.isSaved,
   });
+  const [likeTweet] = useLikeTweetMutation();
+  const [saveTweet] = useSaveTweetMutation();
+  const [retweetTweet] = useRetweetTweetMutation();
 
   const optionsList = [
     {
@@ -26,15 +38,15 @@ const TweetOptions = (props: TweetOptionsProps) => {
       onClick: async () => {
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
         if (isActive.Comments === false) {
-          try{
+          try {
             await props.commentFetchTrigger(props.tweetId).unwrap();
           } catch (error) {
             toast.error(() => (
               <ToastMessage>Error in Creating Comment</ToastMessage>
-              ));
-            }
+            ));
           }
-          setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
+        }
+        setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
       },
     },
     {
@@ -42,8 +54,16 @@ const TweetOptions = (props: TweetOptionsProps) => {
       name: "Retweet",
       icon: <AiOutlineRetweet />,
       activeColor: "hsla(145, 63%, 42%, 1)",
-      onClick: () => {
-        setIsActive({ ...isActive, Retweet: !isActive.Retweet });
+      onClick: async () => {
+        try {
+          await retweetTweet(props.tweetId).unwrap();
+          setIsActive({ ...isActive, Retweet: !isActive.Retweet });
+          setIsRetweeted(!props.isRetweeted);
+        } catch (error) {
+          toast.error(() => (
+            <ToastMessage>Error in Retweeting Tweet</ToastMessage>
+          ));
+        }
       },
     },
     {
@@ -51,8 +71,14 @@ const TweetOptions = (props: TweetOptionsProps) => {
       name: "Like",
       icon: <AiOutlineHeart />,
       activeColor: "hsla(0, 79%, 63%, 1)",
-      onClick: () => {
-        setIsActive({ ...isActive, Like: !isActive.Like });
+      onClick: async () => {
+        try {
+          await likeTweet(props.tweetId).unwrap();
+          setIsActive({ ...isActive, Like: !isActive.Like });
+          setIsLiked(!props.isLiked);
+        } catch (error) {
+          toast.error(() => <ToastMessage>Error in Liking Tweet</ToastMessage>);
+        }
       },
     },
     {
@@ -60,8 +86,14 @@ const TweetOptions = (props: TweetOptionsProps) => {
       name: "Saved",
       icon: <BsBookmark />,
       activeColor: "hsla(202, 71%, 52%, 1)",
-      onClick: () => {
+      onClick: async () => {
+        await saveTweet(props.tweetId).unwrap();
         setIsActive({ ...isActive, Saved: !isActive.Saved });
+        setIsSaved(!props.isSaved);
+        try {
+        } catch (error) {
+          toast.error(() => <ToastMessage>Error in Saving Tweet</ToastMessage>);
+        }
       },
     },
   ];
