@@ -177,6 +177,15 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
               },
             },
           },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
           liked: {
             $filter: {
               input: "$likes",
@@ -223,6 +232,7 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
             },
           },
           liked: 1,
+          saved: 1,
           retweeted: 1,
           savedBy: { $size: "$savedBy" },
           retweetedUsers: { $size: "$retweetedUsers" },
