@@ -26,12 +26,16 @@ import {
   useGetProfileTweetsQuery,
   useLazyGetFollowersQuery,
   useLazyGetFollowingQuery,
+  useLazyGetProfileTweetsAndRepliesQuery,
+  useLazyGetProfileTweetsLikesQuery,
+  useLazyGetProfileTweetsMediaQuery,
   useLazyGetProfileTweetsQuery,
 } from "../app/services/api";
 import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
 import Tweet, { TweetBox } from "../Components/Common/Tweet";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { GetStaticPaths, GetStaticProps } from "next";
+import TweetsDataList from "../Components/Common/TweetsDataList";
 
 var tweetLimit = 10;
 
@@ -54,49 +58,34 @@ const Profile = ({ userId }: { userId: string }) => {
   });
   const { data: TweetsData } = useGetProfileTweetsQuery(
     { userId, skip: 0 },
-    {
-      refetchOnMountOrArgChange: true,
-    }
+    { refetchOnMountOrArgChange: true }
   ); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
-  const [hasMoreTweets, setHasMoreTweets] = useState(true);
-  const [GetProfileTweetsTrigger] = useLazyGetProfileTweetsQuery();
   const [GetFollowersTrigger, { data: GetFollowersData }] =
     useLazyGetFollowersQuery();
   const [GetFollowingTrigger, { data: GetFollowingData }] =
     useLazyGetFollowingQuery();
-  
+  // const [currentData, setCurrentData] = useState<GetTweetsResponse>();
+  const [GetProfileTweetsTrigger] = useLazyGetProfileTweetsQuery();
+  const [GetProfileTweetsAndRepliesTrigger] =
+    useLazyGetProfileTweetsAndRepliesQuery();
+  const [GetProfileTweetsMediaTrigger] = useLazyGetProfileTweetsMediaQuery();
+  const [GetProfileTweetsLikesTrigger, { data: TweetsLikesData }] =
+    useLazyGetProfileTweetsLikesQuery();
+  const [tab, setTab] = useState(0);
 
-  const getMoreTweets = async () => {
-    try {
-      if (TweetsData !== undefined) {
-        if (TweetsData.data.length < tweetLimit) {
-          setHasMoreTweets(false);
-        } else {
-          const { data: newTweetData } = await GetProfileTweetsTrigger({
-            userId,
-            skip: TweetsData.data.length / tweetLimit,
-          }).unwrap();
-          if (newTweetData.length < TweetsData.data.length)
-            setHasMoreTweets(false);
-          dispatch(
-            api.util.updateQueryData(
-              "getProfileTweets",
-              { userId, skip: 0 },
-              (tweetData) => {
-                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-              }
-            )
-          );
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
-    }
-  };
+  // useEffect(() => {
+  //   if (TweetsData !== undefined) {
+  //     setCurrentData(TweetsData);
+  //     // if (currentData !== undefined)
+  //     //   if (currentData.data.length <= tweetLimit && !hasMoreTweets) {
+  //     //     setHasMoreTweets(true);
+  //     //     window.scrollTo({ top: 0, behavior: "auto" });
+  //     //   }
+  //   }
+  // }, [TweetsData]);
 
   const getProfile = async () => {
     try {
@@ -129,13 +118,6 @@ const Profile = ({ userId }: { userId: string }) => {
       document.body.style.overflow = "unset";
     }
   }, [followerModalIsOpen, editProfileModalIsOpen, followingModalIsOpen]);
-
-  const filterList = {
-    1: "Tweets",
-    2: "Tweets & Replies",
-    3: "Media",
-    4: "Likes",
-  };
 
   return isLoading ? (
     <FullScreenLoader />
@@ -243,56 +225,19 @@ const Profile = ({ userId }: { userId: string }) => {
         />
       </CustomModal>
       <ContentContainer>
-        <FilterBox filterList={filterList} />
+        <FilterBox
+          tab={tab}
+          setTab={setTab}
+          // setCurrentData={setCurrentData}
+          userId={userId}
+          TweetsTrigger={GetProfileTweetsTrigger}
+          TweetsAndRepliesTrigger={GetProfileTweetsAndRepliesTrigger}
+          TweetsMediaTrigger={GetProfileTweetsMediaTrigger}
+          TweetsLikesTrigger={GetProfileTweetsLikesTrigger}
+        />
         <div>
           {TweetsData !== undefined && (
-            <InfiniteScroll
-              dataLength={TweetsData.data.length}
-              next={getMoreTweets}
-              hasMore={hasMoreTweets}
-              loader={<ScrollerMessage>Loading...</ScrollerMessage>}
-              endMessage={
-                <ScrollerMessage>You have reached the end...</ScrollerMessage>
-              }
-            >
-              {TweetsData.data.length === 0 ? (
-                <NoTweetsToShow message="No Tweets To Show !" />
-              ) : (
-                TweetsData.data
-                  .filter((tweet) => tweet.media.length !== 0)
-                  .map((tweet) =>
-                    !TweetsData.data ? (
-                      <Loader size={32} color={"var(--clr-primary)"} />
-                    ) : (
-                      // <TweetWrapper> Add loader or skeleton
-                      //   <TweetBox>
-                      //     <Skeleton count={5} />
-                      //   </TweetBox>
-                      // </TweetWrapper>
-                      <Tweet
-                        key={tweet._id}
-                        authorName={tweet.creator[0].name}
-                        authorUserName={tweet.creator[0].username}
-                        authorFollowers={6969} //Change
-                        authorProfilePic={tweet.creator[0].profilePic}
-                        mediaList={tweet.media}
-                        authorTweet={tweet.tweet}
-                        tweetId={tweet._id}
-                        tweetCreationDate={tweet.createdAt}
-                        isSaved={tweet.saved.length === 0 ? false : true}
-                        isLiked={tweet.liked.length === 0 ? false : true}
-                        isRetweeted={
-                          tweet.retweeted.length === 0 ? false : true
-                        }
-                        commentCount={tweet.commentCount[0]}
-                        likes={tweet.likes}
-                        retweetedUsers={tweet.retweetedUsers}
-                        savedBy={tweet.savedBy}
-                      />
-                    )
-                  )
-              )}
-            </InfiniteScroll>
+            <TweetsDataList userId={userId} TweetsData={TweetsData} />
           )}
         </div>
       </ContentContainer>

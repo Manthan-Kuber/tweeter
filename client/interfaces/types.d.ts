@@ -90,12 +90,101 @@ interface NavProps {
 }
 
 interface FilterBoxProps {
-  filterList: {
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-  };
+  TweetsAndRepliesTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      {
+        userId: string;
+        skip: number;
+      },
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      | "Tweets"
+      | "TweetsAndReplies"
+      | "TweetsMedia"
+      | "TweetsLikes"
+      | "Comments"
+      | "Bookmarks",
+      GetTweetsResponse, //Might need to change
+      "api"
+    >
+  >;
+  TweetsTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      {
+        userId: string;
+        skip: number;
+      },
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      | "Tweets"
+      | "TweetsAndReplies"
+      | "TweetsMedia"
+      | "TweetsLikes"
+      | "Comments"
+      | "Bookmarks",
+      GetTweetsResponse,
+      "api"
+    >
+  >;
+  TweetsMediaTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      {
+        userId: string;
+        skip: number;
+      },
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      | "Tweets"
+      | "TweetsAndReplies"
+      | "TweetsMedia"
+      | "TweetsLikes"
+      | "Comments"
+      | "Bookmarks",
+      GetTweetsResponse,
+      "api"
+    >
+  >;
+  TweetsLikesTrigger: LazyQueryTrigger<
+    QueryDefinition<
+      {
+        userId: string;
+        skip: number;
+      },
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      | "Tweets"
+      | "TweetsAndReplies"
+      | "TweetsMedia"
+      | "TweetsLikes"
+      | "Comments"
+      | "Bookmarks",
+      GetTweetsResponse,
+      "api"
+    >
+  >;
+  userId: string;
+  setTab: Dispatch<SetStateAction<number>>;
+  tab:number;
 }
 
 interface ProfileDropDownProps {
@@ -219,14 +308,14 @@ interface TweetProps {
   authorTweet: string;
   mediaList: string[];
   tweetId: string;
-  commentCount:number;
+  commentCount: number;
   tweetCreationDate: Date;
   isSaved: boolean;
   isLiked: boolean;
   isRetweeted: boolean;
-  likes:number;
-  retweetedUsers:number;
-  savedBy:number;
+  likes: number;
+  retweetedUsers: number;
+  savedBy: number;
 }
 
 interface EditProfileProps {
@@ -317,7 +406,7 @@ interface GetTweetsResponseElement {
   retweeted: string[]; //if length of array 0 , then not retweeted/saved/like otherwise has userId in it
   saved: string[];
   liked: string[];
-  savedBy:number;
+  savedBy: number;
 }
 
 interface GetTweetsResponse {
@@ -367,4 +456,10 @@ interface FollowerInfoProps {
 
 interface NoTweetsToShowProps {
   message: string;
+}
+
+interface TweetsDataListProps{
+  userId:string;
+  TweetsData: GetTweetsResponse;
+  // TweetsData: GetTweetsResponse | undefined;
 }
