@@ -14,8 +14,8 @@ const TweetsDataList = ({
 }: TweetsDataListProps) => {
   
   useEffect(() => {
-    setHasMoreTweets(true);
-  }, []);
+    if(TweetsData.data.length === 10) setHasMoreTweets(true);
+  }, [TweetsData]);
 
   return (
     <InfiniteScroll

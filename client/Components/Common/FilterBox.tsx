@@ -22,7 +22,6 @@ const FilterBox = ({
         try {
           const { data } = await TweetsTrigger({ userId, skip: 0 });
           console.log(data);
-          // setCurrentData(data);
         } catch (error) {
           toast.error(() => (
             <ToastMessage>Error in Fetching Tweets</ToastMessage>
@@ -38,7 +37,6 @@ const FilterBox = ({
         try {
           const { data } = await TweetsAndRepliesTrigger({ userId, skip: 0 });
           console.log(data);
-          // setCurrentData(data);
         } catch (error) {
           toast.error(() => (
             <ToastMessage>Error in Fetching Tweets & Replies</ToastMessage>
@@ -54,7 +52,6 @@ const FilterBox = ({
         try {
           const { data } = await TweetsMediaTrigger({ userId, skip: 0 });
           console.log(data);
-          // setCurrentData(data);
         } catch (error) {
           toast.error(() => (
             <ToastMessage>Error in Fetching Media</ToastMessage>
@@ -70,7 +67,6 @@ const FilterBox = ({
         try {
           const { data } = await TweetsLikesTrigger({ userId, skip: 0 });
           console.log(data);
-          // setCurrentData(data);
         } catch (error) {
           toast.error(() => (
             <ToastMessage>Error in Fetching Likes</ToastMessage>

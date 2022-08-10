@@ -53,7 +53,7 @@ const Profile = ({ userId }: { userId: string }) => {
     bio: "",
   });
   const { data: TweetsData } = useGetProfileTweetsQuery(
-    { userId, skip: 0 },
+    { userId, skip: 0 }
     // { refetchOnMountOrArgChange: true }
   ); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
@@ -71,13 +71,13 @@ const Profile = ({ userId }: { userId: string }) => {
   const [GetProfileTweetsLikesTrigger, { data: TweetsLikesData }] =
     useLazyGetProfileTweetsLikesQuery();
   const [tab, setTab] = useState(0);
-  const [hasMoreTweets, setHasMoreTweets] = useState(true);
+  const [hasMoreTweets, setHasMoreTweets] = useState(false);
 
   // useEffect(() => {
   //   if (TweetsData !== undefined) {
   //     setCurrentData(TweetsData);
   //     // if (currentData !== undefined)
-  //     //   if (currentData.data.length <= tweetLimit && !hasMoreTweets) {
+  //     //   if (currentData.data. length <= tweetLimit && !hasMoreTweets) {
   //     //     setHasMoreTweets(true);
   //     //     window.scrollTo({ top: 0, behavior: "auto" });
   //     //   }
@@ -131,6 +131,35 @@ const Profile = ({ userId }: { userId: string }) => {
           dispatch(
             api.util.updateQueryData(
               "getProfileTweets",
+              { userId, skip: 0 },
+              (tweetData) => {
+                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+              }
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
+
+  const getMoreTweetsLikes = async () => {
+    try {
+      if (TweetsLikesData !== undefined) {
+        if (TweetsLikesData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetProfileTweetsLikesTrigger({
+            userId,
+            skip: TweetsLikesData.data.length / tweetLimit,
+          }).unwrap();
+          if (newTweetData.length < TweetsLikesData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getProfileTweetsLikes",
               { userId, skip: 0 },
               (tweetData) => {
                 newTweetData.map((newTweet) => tweetData.data.push(newTweet));
@@ -254,7 +283,6 @@ const Profile = ({ userId }: { userId: string }) => {
         <FilterBox
           tab={tab}
           setTab={setTab}
-          // setCurrentData={setCurrentData}
           userId={userId}
           TweetsTrigger={GetProfileTweetsTrigger}
           TweetsAndRepliesTrigger={GetProfileTweetsAndRepliesTrigger}
@@ -277,7 +305,15 @@ const Profile = ({ userId }: { userId: string }) => {
           ) : tab === 2 ? (
             <p>Media {tab}</p>
           ) : (
-            <p>Likes {tab}</p>
+            TweetsLikesData !== undefined && (
+              <TweetsDataList
+                userId={userId}
+                TweetsData={TweetsLikesData}
+                getMoreTweets={getMoreTweetsLikes}
+                hasMoreTweets={hasMoreTweets}
+                setHasMoreTweets={setHasMoreTweets}
+              />
+            )
           )}
         </div>
       </ContentContainer>
