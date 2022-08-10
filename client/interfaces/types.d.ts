@@ -461,5 +461,7 @@ interface NoTweetsToShowProps {
 interface TweetsDataListProps{
   userId:string;
   TweetsData: GetTweetsResponse;
-  // TweetsData: GetTweetsResponse | undefined;
+  getMoreTweets: () => Promise<void>;
+  hasMoreTweets:boolean;
+  setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>
 }

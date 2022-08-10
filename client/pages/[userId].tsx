@@ -10,9 +10,7 @@ import axiosApi from "../app/services/axiosApi";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { logOut } from "../features/auth/authSlice";
-import FullScreenLoader, {
-  Loader,
-} from "../Components/Common/FullScreenLoader";
+import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import {
   CancelButton,
@@ -31,9 +29,7 @@ import {
   useLazyGetProfileTweetsMediaQuery,
   useLazyGetProfileTweetsQuery,
 } from "../app/services/api";
-import NoTweetsToShow from "../Components/Common/NoTweetsToShow";
-import Tweet, { TweetBox } from "../Components/Common/Tweet";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { TweetBox } from "../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../Components/Common/TweetsDataList";
 
@@ -58,7 +54,7 @@ const Profile = ({ userId }: { userId: string }) => {
   });
   const { data: TweetsData } = useGetProfileTweetsQuery(
     { userId, skip: 0 },
-    { refetchOnMountOrArgChange: true }
+    // { refetchOnMountOrArgChange: true }
   ); //Resets api cache on mount
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
@@ -75,6 +71,7 @@ const Profile = ({ userId }: { userId: string }) => {
   const [GetProfileTweetsLikesTrigger, { data: TweetsLikesData }] =
     useLazyGetProfileTweetsLikesQuery();
   const [tab, setTab] = useState(0);
+  const [hasMoreTweets, setHasMoreTweets] = useState(true);
 
   // useEffect(() => {
   //   if (TweetsData !== undefined) {
@@ -118,6 +115,35 @@ const Profile = ({ userId }: { userId: string }) => {
       document.body.style.overflow = "unset";
     }
   }, [followerModalIsOpen, editProfileModalIsOpen, followingModalIsOpen]);
+
+  const getMoreTweets = async () => {
+    try {
+      if (TweetsData !== undefined) {
+        if (TweetsData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetProfileTweetsTrigger({
+            userId,
+            skip: TweetsData.data.length / tweetLimit,
+          }).unwrap();
+          if (newTweetData.length < TweetsData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getProfileTweets",
+              { userId, skip: 0 },
+              (tweetData) => {
+                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+              }
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
 
   return isLoading ? (
     <FullScreenLoader />
@@ -236,8 +262,22 @@ const Profile = ({ userId }: { userId: string }) => {
           TweetsLikesTrigger={GetProfileTweetsLikesTrigger}
         />
         <div>
-          {TweetsData !== undefined && (
-            <TweetsDataList userId={userId} TweetsData={TweetsData} />
+          {tab === 0 ? (
+            TweetsData !== undefined && (
+              <TweetsDataList
+                userId={userId}
+                TweetsData={TweetsData}
+                getMoreTweets={getMoreTweets}
+                hasMoreTweets={hasMoreTweets}
+                setHasMoreTweets={setHasMoreTweets}
+              />
+            )
+          ) : tab === 1 ? (
+            <p>Replies {tab}</p>
+          ) : tab === 2 ? (
+            <p>Media {tab}</p>
+          ) : (
+            <p>Likes {tab}</p>
           )}
         </div>
       </ContentContainer>
