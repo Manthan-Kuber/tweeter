@@ -4,84 +4,33 @@ import { useState } from "react";
 import { ToastMessage } from "../../styles/Toast.styles";
 import toast from "react-hot-toast";
 
-const FilterBox = ({
-  TweetsTrigger,
-  TweetsAndRepliesTrigger,
-  TweetsMediaTrigger,
-  TweetsLikesTrigger,
-  userId,
-  tab,
-  setTab,
-}: FilterBoxProps) => {
-  const filterList = [
-    {
-      id: 0,
-      label: "Tweets",
-      onClick: async () => {
-        setTab(0);
-        try {
-          const { data } = await TweetsTrigger({ userId, skip: 0 });
-          console.log(data);
-        } catch (error) {
-          toast.error(() => (
-            <ToastMessage>Error in Fetching Tweets</ToastMessage>
-          ));
-        }
-      },
-    },
-    {
-      id: 1,
-      label: "Tweets & Replies",
-      onClick: async () => {
-        setTab(1);
-        try {
-          const { data } = await TweetsAndRepliesTrigger({ userId, skip: 0 });
-          console.log(data);
-        } catch (error) {
-          toast.error(() => (
-            <ToastMessage>Error in Fetching Tweets & Replies</ToastMessage>
-          ));
-        }
-      },
-    },
-    {
-      id: 2,
-      label: "Media",
-      onClick: async () => {
-        setTab(2);
-        try {
-          const { data } = await TweetsMediaTrigger({ userId, skip: 0 });
-          console.log(data);
-        } catch (error) {
-          toast.error(() => (
-            <ToastMessage>Error in Fetching Media</ToastMessage>
-          ));
-        }
-      },
-    },
-    {
-      id: 3,
-      label: "Likes",
-      onClick: async () => {
-        setTab(3);
-        try {
-          const { data } = await TweetsLikesTrigger({ userId, skip: 0 });
-          console.log(data);
-        } catch (error) {
-          toast.error(() => (
-            <ToastMessage>Error in Fetching Likes</ToastMessage>
-          ));
-        }
-      },
-    },
-  ];
+const filterList = [
+  {
+    id: 0,
+    label: "Tweets",
+  },
+  {
+    id: 1,
+    label: "Tweets & Replies",
+  },
+  {
+    id: 2,
+    label: "Media",
+  },
+  {
+    id: 3,
+    label: "Likes",
+  },
+];
+
+const FilterBox = ({ tab, setTab }: FilterBoxProps) => {
   return (
     <AsideContainer>
       <Ul>
         {filterList.map((filter) => (
           <Li
             key={filter.id}
-            onClick={filter.onClick}
+            onClick={() => setTab(filter.id)}
             active={filter.id === tab}
           >
             {filter.id === tab && (

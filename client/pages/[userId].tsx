@@ -21,6 +21,7 @@ import {
 import EditProfile from "../Components/Common/EditProfile";
 import {
   api,
+  useGetProfileTweetsLikesQuery,
   useGetProfileTweetsQuery,
   useLazyGetFollowersQuery,
   useLazyGetFollowingQuery,
@@ -56,6 +57,10 @@ const Profile = ({ userId }: { userId: string }) => {
     { userId, skip: 0 }
     // { refetchOnMountOrArgChange: true }
   ); //Resets api cache on mount
+  const { data: TweetsLikesData } = useGetProfileTweetsLikesQuery({
+    userId,
+    skip: 0,
+  });
   const { name, profilePic, coverPic, username, followers, following, bio } =
     profileData;
   const token = useAppSelector((state) => state.auth.token);
@@ -68,8 +73,7 @@ const Profile = ({ userId }: { userId: string }) => {
   const [GetProfileTweetsAndRepliesTrigger] =
     useLazyGetProfileTweetsAndRepliesQuery();
   const [GetProfileTweetsMediaTrigger] = useLazyGetProfileTweetsMediaQuery();
-  const [GetProfileTweetsLikesTrigger, { data: TweetsLikesData }] =
-    useLazyGetProfileTweetsLikesQuery();
+  const [GetProfileTweetsLikesTrigger] = useLazyGetProfileTweetsLikesQuery();
   const [tab, setTab] = useState(0);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
 
@@ -162,7 +166,9 @@ const Profile = ({ userId }: { userId: string }) => {
               "getProfileTweetsLikes",
               { userId, skip: 0 },
               (tweetData) => {
-                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+                newTweetData.map((newTweet) => {
+                  tweetData.data.push(newTweet);
+                });
               }
             )
           );
@@ -280,15 +286,7 @@ const Profile = ({ userId }: { userId: string }) => {
         />
       </CustomModal>
       <ContentContainer>
-        <FilterBox
-          tab={tab}
-          setTab={setTab}
-          userId={userId}
-          TweetsTrigger={GetProfileTweetsTrigger}
-          TweetsAndRepliesTrigger={GetProfileTweetsAndRepliesTrigger}
-          TweetsMediaTrigger={GetProfileTweetsMediaTrigger}
-          TweetsLikesTrigger={GetProfileTweetsLikesTrigger}
-        />
+        <FilterBox tab={tab} setTab={setTab} />
         <div>
           {tab === 0 ? (
             TweetsData !== undefined && (

@@ -137,4 +137,5 @@ export const {
   useLazyGetProfileTweetsAndRepliesQuery,
   useLazyGetProfileTweetsMediaQuery,
   useLazyGetProfileTweetsLikesQuery,
+  useGetProfileTweetsLikesQuery
 } = api;
