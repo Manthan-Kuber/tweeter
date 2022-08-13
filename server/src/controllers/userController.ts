@@ -2,13 +2,13 @@ import { Response } from "express";
 import { IRequest } from "../types/types";
 import { ObjectId } from "mongodb";
 import User from "../models/users";
-import streamifier from "streamifier";
 import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 
 export const getProfile = async (req: IRequest, res: Response) => {
-  const id = req.params.userId;
+  const id: any = req.params.userId;
 
   try {
+    const authuser = await User.findById(req.user?._id);
     const user = await User.aggregate([
       {
         $match: { _id: new ObjectId(id) },
@@ -21,6 +21,13 @@ export const getProfile = async (req: IRequest, res: Response) => {
           profilePic: 1,
           coverPic: 1,
           bio: 1,
+          followed: {
+            $cond: {
+              if: authuser?.following?.includes(id),
+              then: true,
+              else: false,
+            },
+          },
           following: {
             $cond: {
               if: { $isArray: "$following" },
