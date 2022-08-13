@@ -33,6 +33,7 @@ import {
 import { TweetBox } from "../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../Components/Common/TweetsDataList";
+import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 
 var tweetLimit = 10;
 
@@ -184,6 +185,7 @@ const Profile = ({ userId }: { userId: string }) => {
     <FullScreenLoader />
   ) : (
     <>
+      <ScrollToTopButton/>
       {!editProfileModalIsOpen && <Toaster />}
       {coverPic !== undefined && (
         // <BannerWrapper>

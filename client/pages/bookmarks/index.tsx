@@ -9,6 +9,7 @@ import {
 } from "../../app/services/api";
 import { Loader } from "../../Components/Common/FullScreenLoader";
 import NoTweetsToShow from "../../Components/Common/NoTweetsToShow";
+import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import Tweet from "../../Components/Common/Tweet";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
@@ -51,6 +52,7 @@ function Bookmarks() {
 
   return (
     <Container>
+      <ScrollToTopButton/>
       {BookmarksData !== undefined && (
         <InfiniteScroll
           dataLength={BookmarksData.data.length}

@@ -56,10 +56,12 @@ const ReplyContainer = styled.div`
 
 const UserName = styled.span`
   font: 500 1.2rem var(--ff-noto);
-  color: hsla(0, 0%, 74%, 1);
+  color: hsla(0, 0%, 51%, 1);
 `;
 
-const ReplyWrapper = styled.div``;
+const ReplyWrapper = styled.div`
+  flex: 1;
+`;
 
 const AnotherReplyWrapper = styled.div`
   border-radius: 6px;
@@ -84,8 +86,9 @@ const AuthorWrapper = styled.div`
 
 const TweetText = styled.span`
   display: block;
-  font: 400 1.4rem var(--ff-noto);
+  font: 400 1.6rem var(--ff-noto);
   color: hsla(0, 0%, 31%, 1);
+  margin-top: 1rem;
 `;
 
 const RepliesImageWrapper = styled.div`
