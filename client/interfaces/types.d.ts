@@ -121,6 +121,7 @@ interface ProfileBoxProps
   setFollowingModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editProfileModalIsOpen: boolean;
   setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userId:string;
   GetFollowersTrigger: LazyQueryTrigger<
     QueryDefinition<
       string,
@@ -151,6 +152,8 @@ interface ProfileBoxProps
       "api"
     >
   >;
+  isFollowing:boolean;
+  getProfile: () => Promise<void>
 }
 
 interface ProfileInfoProps {
@@ -182,6 +185,7 @@ interface TrendProps {
   }[];
   getHashtags: () => Promise<void>;
   hasMore: boolean;
+  setHasMoreTrends: Dispatch<SetStateAction<boolean>>
 }
 
 interface CreateTweetProps {
@@ -240,6 +244,7 @@ interface EditProfileProps {
       username: string;
       followers: number;
       following: number;
+      followed:boolean;
       bio: string;
     }>
   >;
@@ -273,6 +278,7 @@ interface SuggestedFollowProps {
   suggestedFollowList: Array<SuggestedFollowListElement>;
   getSuggestedFollowers: () => Promise<void>;
   hasMore: boolean;
+  setHasMoreSuggestions: Dispatch<SetStateAction<boolean>>
 }
 
 interface TweetOptionsProps {
@@ -359,6 +365,7 @@ interface GetFollowingAndFollowersResponse {
 
 interface FollowerInfoProps {
   RawData: GetFollowingAndFollowersResponse;
+  setModalIsOpen:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface NoTweetsToShowProps {

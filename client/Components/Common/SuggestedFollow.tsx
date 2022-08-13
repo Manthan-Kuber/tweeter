@@ -4,6 +4,7 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { AsideContainer } from "./FilterBox";
+import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
@@ -21,33 +22,39 @@ const SuggestedFollow = ({
         hasMore={props.hasMore}
         loader={<p>Loading...</p>} //Change Later
         scrollableTarget="suggestedFollowerScroll"
-        endMessage={<p>You've reached the end</p>} //Change Later
+        endMessage={
+          suggestedFollowList.length !== 0 && <p>You've reached the end</p>
+        } //Change Later
       >
-        {suggestedFollowList.map((item, index) => (
-          // Key might be error prone
-          <FollowerContainer
-            key={item.id}
-            onClick={() => router.push(`/${item.id}`)}
-          >
-            <hr />
-            <ProfileInfoWrapper>
-              <ProfileInfo
-                name={item.name}
-                username={item.username}
-                profilePic={item.profilePic}
-                followerCount={item.followerCount}
-              />
-              <MoreStyledFollowButton
-                as={motion.button}
-                whileTap={{ scale: 0.9 }}
-              >
-                <BsFillPersonPlusFill />
-                Follow
-              </MoreStyledFollowButton>
-            </ProfileInfoWrapper>
-            <p>{item.bio}</p>
-          </FollowerContainer>
-        ))}
+        {suggestedFollowList.length === 0 ? (
+          <NoTweetsToShow message="No More Suggestions to show" />
+        ) : (
+          suggestedFollowList.map((item, index) => (
+            // Key might be error prone
+            <FollowerContainer
+              key={item.id}
+              onClick={() => router.push(`/${item.id}`)}
+            >
+              <hr />
+              <ProfileInfoWrapper>
+                <ProfileInfo
+                  name={item.name}
+                  username={item.username}
+                  profilePic={item.profilePic}
+                  followerCount={item.followerCount}
+                />
+                <MoreStyledFollowButton
+                  as={motion.button}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <BsFillPersonPlusFill />
+                  Follow
+                </MoreStyledFollowButton>
+              </ProfileInfoWrapper>
+              <p>{item.bio}</p>
+            </FollowerContainer>
+          ))
+        )}
       </InfiniteScroll>
     </Article>
   );
