@@ -90,7 +90,7 @@ export const unfollowUser = async (req: IRequest, res: Response) => {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetid);
     if (
-      !user?.following?.includes(targetid) &&
+      user?.following?.includes(targetid) &&
       id.toString() !== targetid.toString()
     ) {
       const updatedUser = await User.findByIdAndUpdate(id, {
@@ -101,7 +101,7 @@ export const unfollowUser = async (req: IRequest, res: Response) => {
       });
       res.status(200).json({ message: "Successfully unfollowed the user" });
     } else if (
-      user?.following?.includes(targetid) &&
+      !user?.following?.includes(targetid) &&
       id.toString() !== targetid.toString()
     ) {
       res.status(200).json({ message: "You already don't follow the user" });
