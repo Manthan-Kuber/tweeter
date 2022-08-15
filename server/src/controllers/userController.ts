@@ -112,14 +112,26 @@ export const getFollowers = async (req: IRequest, res: Response) => {
   const id = req.params.userid;
 
   try {
-    const user = await User.findById(id)
-      .skip(skip * 10)
-      .limit(10)
-      .populate({
-        path: "followers",
-        select: { name: 1, username: 1, profilePic: 1, bio: 1 },
-      });
-    res.status(200).json({ data: user?.followers });
+    const user = await User.findById(id);
+    const users = await User.aggregate([
+      { $match: { _id: { $in: user?.followers } } },
+      {
+        $project: {
+          name: 1,
+          username: 1,
+          profilePic: 1,
+          bio: 1,
+          followed: {
+            $filter: {
+              input: "$following",
+              as: "user",
+              cond: { $eq: [id, "$$user"] },
+            },
+          },
+        },
+      },
+    ]);
+    res.status(200).json({ data: users });
   } catch (err) {
     res.status(400).json({ error: err });
   }
@@ -127,17 +139,29 @@ export const getFollowers = async (req: IRequest, res: Response) => {
 
 export const getFollowing = async (req: IRequest, res: Response) => {
   const skip = parseInt(req.params.skip);
-  const id = req.params.userid;
+  const id = new ObjectId(req.params.userid);
 
   try {
-    const user = await User.findById(id)
-      .skip(skip * 10)
-      .limit(10)
-      .populate({
-        path: "following",
-        select: { name: 1, username: 1, profilePic: 1, bio: 1 },
-      });
-    res.status(200).json({ data: user?.following });
+    const user = await User.findById(id);
+    const users = await User.aggregate([
+      { $match: { _id: { $in: user?.following } } },
+      {
+        $project: {
+          name: 1,
+          username: 1,
+          profilePic: 1,
+          bio: 1,
+          followed: {
+            $filter: {
+              input: "$followers",
+              as: "user",
+              cond: { $eq: [id, "$$user"] },
+            },
+          },
+        },
+      },
+    ]);
+    res.status(200).json({ data: users });
   } catch (err) {
     res.status(400).json({ error: err });
   }
