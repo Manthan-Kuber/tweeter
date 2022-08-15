@@ -89,7 +89,10 @@ export const unfollowUser = async (req: IRequest, res: Response) => {
   try {
     const user = await User.findById(id);
     const targetUser = await User.findById(targetid);
-    if (!user?.following?.includes(targetid) && id !== targetid) {
+    if (
+      !user?.following?.includes(targetid) &&
+      id.toString() !== targetid.toString()
+    ) {
       const updatedUser = await User.findByIdAndUpdate(id, {
         $pull: { following: targetid },
       });
@@ -97,7 +100,10 @@ export const unfollowUser = async (req: IRequest, res: Response) => {
         $pull: { followers: id },
       });
       res.status(200).json({ message: "Successfully unfollowed the user" });
-    } else if (user?.following?.includes(targetid) && id !== targetid) {
+    } else if (
+      user?.following?.includes(targetid) &&
+      id.toString() !== targetid.toString()
+    ) {
       res.status(200).json({ message: "You already don't follow the user" });
     } else {
       res.status(400).json({ message: "You cannot unfollow yourself" });
