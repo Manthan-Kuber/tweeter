@@ -115,10 +115,12 @@ export const unfollowUser = async (req: IRequest, res: Response) => {
 
 export const getFollowers = async (req: IRequest, res: Response) => {
   const skip = parseInt(req.params.skip);
-  const id = req.params.userid;
+  const id = new ObjectId(req.params.userid);
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id, {
+      followers: { $slice: [skip * 10, skip * 10 + 10] },
+    });
     const users = await User.aggregate([
       { $match: { _id: { $in: user?.followers } } },
       {
@@ -128,10 +130,10 @@ export const getFollowers = async (req: IRequest, res: Response) => {
           profilePic: 1,
           bio: 1,
           followed: {
-            $filter: {
-              input: "$following",
-              as: "user",
-              cond: { $eq: [id, "$$user"] },
+            $cond: {
+              if: { $in: ["$_id", user?.following] },
+              then: [id],
+              else: [],
             },
           },
         },
@@ -148,7 +150,9 @@ export const getFollowing = async (req: IRequest, res: Response) => {
   const id = new ObjectId(req.params.userid);
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id, {
+      following: { $slice: [skip * 10, skip * 10 + 10] },
+    });
     const users = await User.aggregate([
       { $match: { _id: { $in: user?.following } } },
       {
