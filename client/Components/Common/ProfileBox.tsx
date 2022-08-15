@@ -5,10 +5,14 @@ import styled from "styled-components";
 import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import { useAppSelector } from "../../Hooks/store";
-import { useRouter } from "next/router";
 import { MdEdit } from "react-icons/md";
 import { useState } from "react";
 import { ToastMessage } from "../../styles/Toast.styles";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "../../app/services/api";
+import toast from "react-hot-toast";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
@@ -20,13 +24,44 @@ const ProfileBox = ({
   username,
   bio,
   profilePic,
+  isFollowing,
+  userId,
+  getProfile,
   ...props
 }: ProfileBoxProps) => {
   const { width } = useWindowSize();
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
-  const router = useRouter();
-  const { userId } = router.query;
   const [isLoading, setIsLoading] = useState(false);
+  const [followUser] = useFollowUserMutation();
+  const [unfollowUser] = useUnfollowUserMutation();
+
+  const handleFollow = async () => {
+    try {
+      console.log(userId); //remove
+      await followUser(userId).unwrap();
+      toast.success(() => (
+        <ToastMessage>Followed User Successfully</ToastMessage>
+        ));
+      // getProfile();
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Following User</ToastMessage>);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      console.log(userId); //remove
+      await unfollowUser(userId).unwrap();
+      toast.success(() => (
+        <ToastMessage>Unfollowed User Successfully</ToastMessage>
+      ));
+      // getProfile();
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Unfollowing User</ToastMessage>);
+    }
+  };
 
   return (
     <ProfileContainer>
@@ -96,9 +131,10 @@ const ProfileBox = ({
             as={motion.button}
             whileTap={{ scale: 0.9 }}
             disabled={userId === currentUserId}
+            onClick={isFollowing ? handleUnfollow : handleFollow}
           >
             <BsFillPersonPlusFill />
-            Follow
+            {isFollowing ? "Unfollow" : "Follow"}
           </FollowButton>
         )}
       </ContentWrapper>
@@ -121,6 +157,7 @@ const EditProfileButton = styled(Button)`
   align-items: center;
   gap: 1rem;
   width: fit-content;
+  white-space: nowrap;
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);

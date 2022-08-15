@@ -52,6 +52,7 @@ const Profile = ({ userId }: { userId: string }) => {
     username: "",
     followers: 0,
     following: 0,
+    followed: false,
     bio: "",
   });
   const { data: TweetsData } = useGetProfileTweetsQuery(
@@ -62,8 +63,16 @@ const Profile = ({ userId }: { userId: string }) => {
     userId,
     skip: 0,
   });
-  const { name, profilePic, coverPic, username, followers, following, bio } =
-    profileData;
+  const {
+    name,
+    profilePic,
+    coverPic,
+    username,
+    followers,
+    following,
+    bio,
+    followed,
+  } = profileData;
   const token = useAppSelector((state) => state.auth.token);
   const [GetFollowersTrigger, { data: GetFollowersData }] =
     useLazyGetFollowersQuery();
@@ -77,17 +86,6 @@ const Profile = ({ userId }: { userId: string }) => {
   const [GetProfileTweetsLikesTrigger] = useLazyGetProfileTweetsLikesQuery();
   const [tab, setTab] = useState(0);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
-
-  // useEffect(() => {
-  //   if (TweetsData !== undefined) {
-  //     setCurrentData(TweetsData);
-  //     // if (currentData !== undefined)
-  //     //   if (currentData.data. length <= tweetLimit && !hasMoreTweets) {
-  //     //     setHasMoreTweets(true);
-  //     //     window.scrollTo({ top: 0, behavior: "auto" });
-  //     //   }
-  //   }
-  // }, [TweetsData]);
 
   const getProfile = async () => {
     try {
@@ -185,7 +183,7 @@ const Profile = ({ userId }: { userId: string }) => {
     <FullScreenLoader />
   ) : (
     <>
-      <ScrollToTopButton/>
+      <ScrollToTopButton />
       {!editProfileModalIsOpen && <Toaster />}
       {coverPic !== undefined && (
         // <BannerWrapper>
@@ -214,6 +212,9 @@ const Profile = ({ userId }: { userId: string }) => {
         bio={bio}
         GetFollowersTrigger={GetFollowersTrigger}
         GetFollowingTrigger={GetFollowingTrigger}
+        isFollowing={followed}
+        userId={userId}
+        getProfile={getProfile}
       />
       {/* Extact into a separate component */}
       <CustomModal
@@ -226,7 +227,10 @@ const Profile = ({ userId }: { userId: string }) => {
         modalTitle={`${name} is Followed By`}
       >
         {GetFollowersData !== undefined && (
-          <FollowerInfo RawData={GetFollowersData} />
+          <FollowerInfo
+            RawData={GetFollowersData}
+            setModalIsOpen={setFollowerModalIsOpen} //Remove if not needed
+          />
         )}
       </CustomModal>
       <CustomModal
@@ -239,7 +243,10 @@ const Profile = ({ userId }: { userId: string }) => {
         modalTitle={`${name} is Following`}
       >
         {GetFollowingData !== undefined && (
-          <FollowerInfo RawData={GetFollowingData} />
+          <FollowerInfo
+            RawData={GetFollowingData}
+            setModalIsOpen={setFollowingModalIsOpen} //Remove if not needed
+          />
         )}
       </CustomModal>
       <CustomModal

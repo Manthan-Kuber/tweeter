@@ -91,7 +91,7 @@ interface NavProps {
 
 interface FilterBoxProps {
   setTab: Dispatch<SetStateAction<number>>;
-  tab:number;
+  tab: number;
 }
 
 interface ProfileDropDownProps {
@@ -121,7 +121,7 @@ interface ProfileBoxProps
   setFollowingModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editProfileModalIsOpen: boolean;
   setEditProfileModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  userId:string;
+  userId: string;
   GetFollowersTrigger: LazyQueryTrigger<
     QueryDefinition<
       string,
@@ -152,8 +152,8 @@ interface ProfileBoxProps
       "api"
     >
   >;
-  isFollowing:boolean;
-  getProfile: () => Promise<void>
+  isFollowing: boolean;
+  getProfile: () => Promise<void>;
 }
 
 interface ProfileInfoProps {
@@ -185,7 +185,7 @@ interface TrendProps {
   }[];
   getHashtags: () => Promise<void>;
   hasMore: boolean;
-  setHasMoreTrends: Dispatch<SetStateAction<boolean>>
+  setHasMoreTrends: Dispatch<SetStateAction<boolean>>;
 }
 
 interface CreateTweetProps {
@@ -244,7 +244,7 @@ interface EditProfileProps {
       username: string;
       followers: number;
       following: number;
-      followed:boolean;
+      followed: boolean;
       bio: string;
     }>
   >;
@@ -278,7 +278,7 @@ interface SuggestedFollowProps {
   suggestedFollowList: Array<SuggestedFollowListElement>;
   getSuggestedFollowers: () => Promise<void>;
   hasMore: boolean;
-  setHasMoreSuggestions: Dispatch<SetStateAction<boolean>>
+  setHasMoreSuggestions: Dispatch<SetStateAction<boolean>>;
 }
 
 interface TweetOptionsProps {
@@ -357,6 +357,7 @@ interface GetFollowingAndFollowersElement {
   username: string;
   profilePic: string;
   bio: string;
+  followed: string[];
 }
 
 interface GetFollowingAndFollowersResponse {
@@ -365,17 +366,17 @@ interface GetFollowingAndFollowersResponse {
 
 interface FollowerInfoProps {
   RawData: GetFollowingAndFollowersResponse;
-  setModalIsOpen:React.Dispatch<React.SetStateAction<boolean>>;
+  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface NoTweetsToShowProps {
   message: string;
 }
 
-interface TweetsDataListProps{
-  userId:string;
+interface TweetsDataListProps {
+  userId: string;
   TweetsData: GetTweetsResponse;
   getMoreTweets: () => Promise<void>;
-  hasMoreTweets:boolean;
-  setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>
+  hasMoreTweets: boolean;
+  setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>;
 }

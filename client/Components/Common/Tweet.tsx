@@ -100,14 +100,12 @@ const Tweet = (props: TweetProps) => {
 
   return (
     <TweetWrapper>
-      <RetweetWrapper>
-        {props.isRetweeted && (
-          <>
-            <AiOutlineRetweet size={14} />{" "}
-            <span>{props.authorName} Retweeted</span>
-          </>
-        )}
-      </RetweetWrapper>
+      {props.isRetweeted && (
+        <RetweetWrapper>
+          <AiOutlineRetweet size={14} />{" "}
+          <span>{props.authorName} Retweeted</span>
+        </RetweetWrapper>
+      )}
       <TweetBox>
         <ProfileInfoWrapper>
           <ProfileInfo

@@ -33,7 +33,7 @@ const TweetOptions = ({
     {
       id: 1,
       name: "Comments",
-      icon: <MdOutlineModeComment />,
+      icon: <MdOutlineModeComment size={16} />,
       activeColor: "black",
       onClick: async () => {
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
@@ -52,7 +52,7 @@ const TweetOptions = ({
     {
       id: 2,
       name: "Retweet",
-      icon: <AiOutlineRetweet />,
+      icon: <AiOutlineRetweet size={16} />,
       activeColor: "hsla(145, 63%, 42%, 1)",
       onClick: async () => {
         try {
@@ -69,7 +69,7 @@ const TweetOptions = ({
     {
       id: 3,
       name: "Like",
-      icon: <AiOutlineHeart />,
+      icon: <AiOutlineHeart size={16} />,
       activeColor: "hsla(0, 79%, 63%, 1)",
       onClick: async () => {
         try {
@@ -84,7 +84,7 @@ const TweetOptions = ({
     {
       id: 4,
       name: "Saved",
-      icon: <BsBookmark />,
+      icon: <BsBookmark size={16} />,
       activeColor: "hsla(202, 71%, 52%, 1)",
       onClick: async () => {
         await saveTweet(props.tweetId).unwrap();
@@ -144,9 +144,12 @@ const OptionWrapper = styled.div<{
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-
+  transition: all 0.4s;
   &:hover {
-    background-color: hsla(0, 0%, 95%, 1);
+    background-color: rgba(130, 130, 130, 0.2);
+  }
+  &:active {
+    background-color: rgba(130, 130, 130, 0.7);
   }
 
   span {
