@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
+import { useFollowUserMutation } from "../../app/services/api";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
@@ -13,6 +14,7 @@ const SuggestedFollow = ({
   ...props
 }: SuggestedFollowProps) => {
   const router = useRouter();
+  const [followUser] = useFollowUserMutation();
   return (
     <Article as="article" id="suggestedFollowerScroll">
       <h5>Whom to follow</h5>
@@ -29,23 +31,22 @@ const SuggestedFollow = ({
         {suggestedFollowList.length === 0 ? (
           <NoTweetsToShow message="No More Suggestions to show" />
         ) : (
-          suggestedFollowList.map((item, index) => (
-            // Key might be error prone
-            <FollowerContainer
-              key={item.id}
-              onClick={() => router.push(`/${item.id}`)}
-            >
+          suggestedFollowList.map((item) => (
+            <FollowerContainer key={item.id}>
               <hr />
               <ProfileInfoWrapper>
-                <ProfileInfo
-                  name={item.name}
-                  username={item.username}
-                  profilePic={item.profilePic}
-                  followerCount={item.followerCount}
-                />
+                <div onClick={() => router.push(`/${item.id}`)}>
+                  <ProfileInfo
+                    name={item.name}
+                    username={item.username}
+                    profilePic={item.profilePic}
+                    followerCount={item.followerCount}
+                  />
+                </div>
                 <MoreStyledFollowButton
                   as={motion.button}
                   whileTap={{ scale: 0.9 }}
+                  onClick={async () => await followUser(item.id)}
                 >
                   <BsFillPersonPlusFill />
                   Follow
@@ -72,7 +73,6 @@ const Article = styled(AsideContainer)`
 `;
 
 const FollowerContainer = styled.div`
-  cursor: pointer;
   hr {
     margin-bottom: 2rem;
     color: hsla(0, 0%, 88%, 1);
@@ -104,6 +104,10 @@ const MoreStyledFollowButton = styled(FollowButton)`
 const ProfileInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+
+  & > div {
+    cursor: pointer;
+  }
 
   @media screen and (min-width: 25em) {
     display: revert;
