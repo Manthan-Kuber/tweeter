@@ -163,6 +163,7 @@ export const {
   useGetCommentsQuery,
   useGetBookmarksQuery,
   useGetHomeTweetsQuery,
+  useLazyGetHomeTweetsQuery,
   useLikeTweetMutation,
   useSaveTweetMutation,
   useRetweetTweetMutation,

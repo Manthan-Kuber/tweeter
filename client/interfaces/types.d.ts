@@ -374,7 +374,6 @@ interface NoTweetsToShowProps {
 }
 
 interface TweetsDataListProps {
-  userId: string;
   TweetsData: GetTweetsResponse;
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;

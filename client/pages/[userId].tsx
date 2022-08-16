@@ -78,7 +78,6 @@ const Profile = ({ userId }: { userId: string }) => {
     useLazyGetFollowersQuery();
   const [GetFollowingTrigger, { data: GetFollowingData }] =
     useLazyGetFollowingQuery();
-  // const [currentData, setCurrentData] = useState<GetTweetsResponse>();
   const [GetProfileTweetsTrigger] = useLazyGetProfileTweetsQuery();
   const [GetProfileTweetsAndRepliesTrigger] =
     useLazyGetProfileTweetsAndRepliesQuery();
@@ -109,7 +108,7 @@ const Profile = ({ userId }: { userId: string }) => {
       dispatch(logOut());
     }
     getProfile();
-  }, [userId,GetFollowingData,GetFollowersData]);
+  }, [userId, GetFollowingData, GetFollowersData]);
 
   useEffect(() => {
     if (followerModalIsOpen || editProfileModalIsOpen || followingModalIsOpen) {
@@ -300,7 +299,6 @@ const Profile = ({ userId }: { userId: string }) => {
           {tab === 0 ? (
             TweetsData !== undefined && (
               <TweetsDataList
-                userId={userId}
                 TweetsData={TweetsData}
                 getMoreTweets={getMoreTweets}
                 hasMoreTweets={hasMoreTweets}
@@ -314,7 +312,6 @@ const Profile = ({ userId }: { userId: string }) => {
           ) : (
             TweetsLikesData !== undefined && (
               <TweetsDataList
-                userId={userId}
                 TweetsData={TweetsLikesData}
                 getMoreTweets={getMoreTweetsLikes}
                 hasMoreTweets={hasMoreTweets}

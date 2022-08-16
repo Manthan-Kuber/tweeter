@@ -3,17 +3,24 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
-import { useCreateTweetMutation } from "../app/services/api";
+import {
+  api,
+  useCreateTweetMutation,
+  useGetHomeTweetsQuery,
+  useLazyGetHomeTweetsQuery,
+} from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
+import TweetsDataList from "../Components/Common/TweetsDataList";
 import { logOut } from "../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
+var tweetLimit = 10;
 
 const Home = ({
   initialTrendData = [],
@@ -59,11 +66,12 @@ const Home = ({
   const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
+  const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
-  // const {data} = useGetHomeTweetsQuery(0);
-
-  // console.log(data);
+  const userId = useAppSelector((state) => state.auth.user?.id);
+  const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
+  const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
 
   const requestConfig = {
     headers: {
@@ -118,6 +126,30 @@ const Home = ({
     }
   };
 
+  const getMoreHomeTweets = async () => {
+    try {
+      if (HomeTweetsData !== undefined) {
+        if (HomeTweetsData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetHomeTweetsTrigger(
+            HomeTweetsData.data.length / tweetLimit
+          ).unwrap();
+          if (newTweetData.length < HomeTweetsData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
+              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+            })
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isHashtagPresent = /#[a-z]+/gi;
@@ -154,17 +186,27 @@ const Home = ({
     <Container>
       <Toaster />
       <div>
-        <CreateTweet
-          isReplyImageVisible={false}
-          placeholder="Whats happening?"
-          btnText="Tweet"
-          variant="Home"
-          message={message}
-          setMessage={setMessage}
-          fileList={fileList}
-          setFileList={setFileList}
-          onSubmit={onSubmit}
-        />
+        <CreateTweetWrapper>
+          <CreateTweet
+            isReplyImageVisible={false}
+            placeholder="Whats happening?"
+            btnText="Tweet"
+            variant="Home"
+            message={message}
+            setMessage={setMessage}
+            fileList={fileList}
+            setFileList={setFileList}
+            onSubmit={onSubmit}
+          />
+        </CreateTweetWrapper>
+        {HomeTweetsData !== undefined && (
+          <TweetsDataList
+            TweetsData={HomeTweetsData}
+            hasMoreTweets={hasMoreTweets}
+            setHasMoreTweets={setHasMoreTweets}
+            getMoreTweets={getMoreHomeTweets}
+          />
+        )}
       </div>
       <aside>
         <Trends
@@ -221,6 +263,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {},
   };
 };
+
+const CreateTweetWrapper = styled.div`
+  margin-bottom: 4rem;
+`;
 
 const Container = styled.div`
   width: min(95%, 120rem);

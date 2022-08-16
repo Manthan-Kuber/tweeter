@@ -6,15 +6,13 @@ import NoTweetsToShow from "./NoTweetsToShow";
 import Tweet from "./Tweet";
 
 const TweetsDataList = ({
-  userId,
   TweetsData,
   getMoreTweets,
   hasMoreTweets,
   setHasMoreTweets,
 }: TweetsDataListProps) => {
-  
   useEffect(() => {
-    if(TweetsData.data.length === 10) setHasMoreTweets(true);
+    if (TweetsData.data.length === 10) setHasMoreTweets(true);
   }, [TweetsData]);
 
   return (
@@ -22,7 +20,11 @@ const TweetsDataList = ({
       dataLength={TweetsData.data.length}
       next={getMoreTweets}
       hasMore={hasMoreTweets}
-      loader={<ScrollerMessage>Loading...</ScrollerMessage>}
+      loader={
+        TweetsData.data.length !== 0 && (
+          <ScrollerMessage>Loading...</ScrollerMessage>
+        )
+      }
       endMessage={
         <ScrollerMessage>You have reached the end...</ScrollerMessage>
       }

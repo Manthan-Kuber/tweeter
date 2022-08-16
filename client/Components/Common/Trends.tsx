@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 
-const Trends = ({ trendList, ...props }: TrendProps) => {
+const  Trends = ({ trendList, ...props }: TrendProps) => {
   useEffect(() => {
     if (trendList.length === 6) props.setHasMoreTrends(true);
   }, [trendList]);
