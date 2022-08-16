@@ -37,12 +37,11 @@ const ProfileBox = ({
 
   const handleFollow = async () => {
     try {
-      console.log(userId); //remove
       await followUser(userId).unwrap();
       toast.success(() => (
         <ToastMessage>Followed User Successfully</ToastMessage>
-        ));
-      // getProfile();
+      ));
+      getProfile();
     } catch (error) {
       console.log(error);
       toast.error(() => <ToastMessage>Error in Following User</ToastMessage>);
@@ -51,12 +50,11 @@ const ProfileBox = ({
 
   const handleUnfollow = async () => {
     try {
-      console.log(userId); //remove
       await unfollowUser(userId).unwrap();
       toast.success(() => (
         <ToastMessage>Unfollowed User Successfully</ToastMessage>
       ));
-      // getProfile();
+      getProfile();
     } catch (error) {
       console.log(error);
       toast.error(() => <ToastMessage>Error in Unfollowing User</ToastMessage>);

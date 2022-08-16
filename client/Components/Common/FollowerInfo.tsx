@@ -19,9 +19,7 @@ const FollowerInfo = ({ RawData, setModalIsOpen }: FollowerInfoProps) => {
 
   const handleFollow = async (userId: string) => {
     try {
-      console.log(userId); //remove
       await followUser(userId).unwrap();
-      // setModalIsOpen(false);
       toast.success(() => (
         <ToastMessage>Followed User Successfully</ToastMessage>
       ));
@@ -30,12 +28,10 @@ const FollowerInfo = ({ RawData, setModalIsOpen }: FollowerInfoProps) => {
       toast.error(() => <ToastMessage>Error in Following User</ToastMessage>);
     }
   };
-  
+
   const handleUnfollow = async (userId: string) => {
     try {
-      console.log(userId); //remove
       await unfollowUser(userId).unwrap();
-      // setModalIsOpen(false);
       toast.success(() => (
         <ToastMessage>Unfollowed User Successfully</ToastMessage>
       ));
