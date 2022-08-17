@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { useFollowUserMutation } from "../../app/services/api";
+import { ToastMessage } from "../../styles/Toast.styles";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
@@ -46,7 +48,18 @@ const SuggestedFollow = ({
                 <MoreStyledFollowButton
                   as={motion.button}
                   whileTap={{ scale: 0.9 }}
-                  onClick={async () => await followUser(item.id)}
+                  onClick={async () => {
+                    try {
+                      await followUser(item.id);
+                      toast.success(() => (
+                        <ToastMessage>Followed User Successfully</ToastMessage>
+                      ));
+                    } catch (error) {
+                      toast.error(() => (
+                        <ToastMessage>Error in Following User</ToastMessage>
+                      ));
+                    }
+                  }}
                 >
                   <BsFillPersonPlusFill />
                   Follow
