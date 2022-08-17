@@ -20,6 +20,7 @@ export const api = createApi({
     "Bookmarks",
     "Followers",
     "Following",
+    "SuggestedFollowers"
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -139,7 +140,7 @@ export const api = createApi({
         method: "PUT",
         body: { targetid },
       }),
-      invalidatesTags: ["Following","Followers"],
+      invalidatesTags: ["Following","Followers","SuggestedFollowers"],
     }),
     unfollowUser: builder.mutation<void, string>({
       query: (targetid) => ({
@@ -149,6 +150,12 @@ export const api = createApi({
       }),
       invalidatesTags: ["Followers","Following"],
     }),
+    getSuggestedFollowers:builder.query<SuggestedFollowerResponse[],number>({
+      query: (skip) => ({
+        url:`home/people/${skip}/4`
+      }),
+      providesTags:["SuggestedFollowers"]
+    })
   }),
 });
 
@@ -177,4 +184,6 @@ export const {
   useGetProfileTweetsLikesQuery,
   useFollowUserMutation,
   useUnfollowUserMutation,
+  useLazyGetSuggestedFollowersQuery,
+  useGetSuggestedFollowersQuery,
 } = api;

@@ -270,8 +270,8 @@ interface SuggestedFollowerResponse {
 }
 
 interface SuggestedFollowListElement
-  extends Omit<SuggestedFollowerResponse, "_id"> {
-  id: string;
+  extends Omit<SuggestedFollowerResponse, "id"> {
+  _id: string;
 }
 
 interface SuggestedFollowProps {

@@ -34,10 +34,10 @@ const SuggestedFollow = ({
           <NoTweetsToShow message="No More Suggestions to show" />
         ) : (
           suggestedFollowList.map((item) => (
-            <FollowerContainer key={item.id}>
+            <FollowerContainer key={item._id}>
               <hr />
               <ProfileInfoWrapper>
-                <div onClick={() => router.push(`/${item.id}`)}>
+                <div onClick={() => router.push(`/${item._id}`)}>
                   <ProfileInfo
                     name={item.name}
                     username={item.username}
@@ -50,7 +50,7 @@ const SuggestedFollow = ({
                   whileTap={{ scale: 0.9 }}
                   onClick={async () => {
                     try {
-                      await followUser(item.id);
+                      await followUser(item._id);
                       toast.success(() => (
                         <ToastMessage>Followed User Successfully</ToastMessage>
                       ));

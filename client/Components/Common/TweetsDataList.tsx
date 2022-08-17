@@ -20,13 +20,11 @@ const TweetsDataList = ({
       dataLength={TweetsData.data.length}
       next={getMoreTweets}
       hasMore={hasMoreTweets}
-      loader={
-        TweetsData.data.length !== 0 && (
-          <ScrollerMessage>Loading...</ScrollerMessage>
-        )
-      }
+      loader={<ScrollerMessage>Loading...</ScrollerMessage>}
       endMessage={
-        <ScrollerMessage>You have reached the end...</ScrollerMessage>
+        TweetsData.data.length !== 0 && (
+          <ScrollerMessage>You have reached the end...</ScrollerMessage>
+        )
       }
     >
       {TweetsData.data.length === 0 ? (

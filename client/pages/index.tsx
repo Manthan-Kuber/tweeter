@@ -7,7 +7,9 @@ import {
   api,
   useCreateTweetMutation,
   useGetHomeTweetsQuery,
+  useGetSuggestedFollowersQuery,
   useLazyGetHomeTweetsQuery,
+  useLazyGetSuggestedFollowersQuery,
 } from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
@@ -52,26 +54,29 @@ const Home = ({
     }))
   );
 
-  const [suggestedFollowersArray, setSuggestedFollowersArray] = useState<
-    SuggestedFollowerResponse[]
-  >(
-    initialSuggestedFollowersData.map((item: SuggestedFollowerResponse) => ({
-      id: item._id,
-      bio: item.bio,
-      name: item.name,
-      username: item.username,
-      profilePic: item.profilePic,
-    }))
-  );
+  // const [suggestedFollowersArray, setSuggestedFollowersArray] = useState<
+  //   SuggestedFollowerResponse[]
+  // >(
+  //   initialSuggestedFollowersData.map((item: SuggestedFollowerResponse) => ({
+  //     id: item._id,
+  //     bio: item.bio,
+  //     name: item.name,
+  //     username: item.username,
+  //     profilePic: item.profilePic,
+  //   }))
+  // );
+
   const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
-  const userId = useAppSelector((state) => state.auth.user?.id);
+  // const userId = useAppSelector((state) => state.auth.user?.id);
   const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
   const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
+  const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
+  const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
 
   const requestConfig = {
     headers: {
@@ -103,26 +108,32 @@ const Home = ({
 
   const getSuggestedFollowers = async () => {
     try {
-      const response = await axiosApi.get(
-        `home/people/${suggestedFollowersArray.length}/${suggestedFollowerLimit}`,
-        requestConfig
-      );
-      if (response.data.length < suggestedFollowerLimit)
-        setHasMoreSuggestions(false);
-      response.data.map((item: typeof response.data) =>
-        setSuggestedFollowersArray((prev: typeof response.data) => [
-          ...prev,
-          {
-            id: item._id,
-            bio: item.bio,
-            name: item.name,
-            username: item.username,
-            profilePic: item.profilePic,
-          },
-        ])
-      );
+      if (suggestedFollowersArray !== undefined) {
+        if (suggestedFollowersArray.length < suggestedFollowerLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const newFollowerData = await GetSuggestedFollowersTrigger(
+            suggestedFollowersArray.length
+          ).unwrap();
+          console.log(newFollowerData);
+          if (newFollowerData.length < suggestedFollowersArray.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getSuggestedFollowers",
+              0,
+              (tweetData) => {
+                newFollowerData.map((newFollower) =>
+                  tweetData.push(newFollower)
+                );
+              }
+            )
+          );
+        }
+      }
     } catch (error) {
       console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
     }
   };
 
@@ -215,12 +226,14 @@ const Home = ({
           hasMore={hasMoreTrends}
           setHasMoreTrends={setHasMoreTrends}
         />
-        <SuggestedFollow
-          suggestedFollowList={suggestedFollowersArray}
-          getSuggestedFollowers={getSuggestedFollowers}
-          hasMore={hasMoreSuggestions}
-          setHasMoreSuggestions={setHasMoreSuggestions}
-        />
+        {suggestedFollowersArray !== undefined && (
+          <SuggestedFollow
+            suggestedFollowList={suggestedFollowersArray}
+            getSuggestedFollowers={getSuggestedFollowers}
+            hasMore={hasMoreSuggestions}
+            setHasMoreSuggestions={setHasMoreSuggestions}
+          />
+        )}
       </aside>
     </Container>
   );
