@@ -242,24 +242,16 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const endPoints = [
-    `home/hashtags/0/${hashtagLimit}`,
-    `home/people/0/${suggestedFollowerLimit}`,
-  ];
   const token = ctx.req.cookies.jwt;
   try {
-    const requests = endPoints.map((endP) =>
-      axiosApi.get(endP, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
-    );
-    const responses = await Promise.all(requests);
+    const response = await axiosApi.get(`home/hashtags/0/${hashtagLimit}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
     return {
       props: {
-        initialTrendData: responses[0].data,
-        initialSuggestedFollowersData: responses[1].data,
+        initialTrendData: response.data,
       },
     };
   } catch (err) {

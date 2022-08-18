@@ -257,7 +257,6 @@ interface ComponentLoaderProps {
 }
 
 interface SuggestedFollowerResponse {
-  id: string; //For Follower props
   _id: string;
   name: string;
   email: string;
@@ -269,13 +268,8 @@ interface SuggestedFollowerResponse {
   followerCount: number;
 }
 
-interface SuggestedFollowListElement
-  extends Omit<SuggestedFollowerResponse, "id"> {
-  _id: string;
-}
-
 interface SuggestedFollowProps {
-  suggestedFollowList: Array<SuggestedFollowListElement>;
+  suggestedFollowList: Array<SuggestedFollowerResponse>;
   getSuggestedFollowers: () => Promise<void>;
   hasMore: boolean;
   setHasMoreSuggestions: Dispatch<SetStateAction<boolean>>;

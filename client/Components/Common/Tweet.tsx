@@ -115,6 +115,7 @@ const Tweet = (props: TweetProps) => {
             followerCount={props.authorFollowers}
             profilePic={props.authorProfilePic}
           />
+          {/* Render Delete button only if currentUserId !== authorId  */}
           <DeleteIconWrapper onClick={() => onDeleteButtonClick(props.tweetId)}>
             <DeleteIcon size={24} />
           </DeleteIconWrapper>
