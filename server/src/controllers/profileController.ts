@@ -168,6 +168,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
+          
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
@@ -406,9 +407,11 @@ export const liked = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
+          "creator._id": 1,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
+          "author._id": 1,
           "author.name": 1,
           "author.username": 1,
           "author.profilePic": 1,
@@ -560,6 +563,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
+          "creator._id": 1,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
