@@ -240,12 +240,12 @@ export const likeComment = async (req: IRequest, res: Response) => {
     const user = await User.findById(id);
     const comment = await Comment.findById(commentId);
     if (!comment?.likes?.includes(id)) {
-      const updatedComment = await Comment.findByIdAndUpdate(id, {
+      const updatedComment = await Comment.findByIdAndUpdate(commentId, {
         $inc: { likes: 1 },
       });
       res.status(200).json({ message: "Comment liked successfully" });
     } else {
-      const updatedComment = await Comment.findByIdAndUpdate(id, {
+      const updatedComment = await Comment.findByIdAndUpdate(commentId, {
         $dec: { likes: 1 },
       });
       res.status(200).json({ message: "Comment unliked successfully" });
