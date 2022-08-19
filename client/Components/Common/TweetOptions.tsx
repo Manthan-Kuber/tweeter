@@ -87,10 +87,10 @@ const TweetOptions = ({
       icon: <BsBookmark size={16} />,
       activeColor: "hsla(202, 71%, 52%, 1)",
       onClick: async () => {
-        await saveTweet(props.tweetId).unwrap();
-        setIsActive({ ...isActive, Saved: !isActive.Saved });
-        setIsSaved(!props.isSaved);
         try {
+          await saveTweet(props.tweetId).unwrap();
+          setIsActive({ ...isActive, Saved: !isActive.Saved });
+          setIsSaved(!props.isSaved);
         } catch (error) {
           toast.error(() => <ToastMessage>Error in Saving Tweet</ToastMessage>);
         }
@@ -118,7 +118,7 @@ const TweetOptions = ({
 };
 export default TweetOptions;
 
-const OptionsWrapper = styled.div`
+export const OptionsWrapper = styled.div`
   border-block: 1px solid hsla(0, 0%, 95%, 1);
   display: flex;
   align-items: center;
@@ -126,7 +126,7 @@ const OptionsWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const OptionWrapper = styled.div<{
+export const OptionWrapper = styled.div<{
   activeColor: string;
   isActive: boolean;
 }>`

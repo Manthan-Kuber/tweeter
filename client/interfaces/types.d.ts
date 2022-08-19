@@ -326,7 +326,7 @@ interface GetCommentsArrayElement {
   createdAt: Date;
   comment: string;
   likes: number;
-  replyCount: [];
+  replyCount: string[];
 }
 
 interface GetCommentsResponse {
@@ -343,6 +343,8 @@ interface TweetRepliesProps
   commentText: string;
   likesCount: number;
   commentCreationDate: Date;
+  commentId:string;
+  replyCount:string[];
 }
 
 interface GetFollowingAndFollowersElement {

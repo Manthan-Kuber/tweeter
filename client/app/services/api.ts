@@ -20,7 +20,7 @@ export const api = createApi({
     "Bookmarks",
     "Followers",
     "Following",
-    "SuggestedFollowers"
+    "SuggestedFollowers",
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -140,7 +140,7 @@ export const api = createApi({
         method: "PUT",
         body: { targetid },
       }),
-      invalidatesTags: ["Following","Followers","SuggestedFollowers"],
+      invalidatesTags: ["Following", "Followers", "SuggestedFollowers"],
     }),
     unfollowUser: builder.mutation<void, string>({
       query: (targetid) => ({
@@ -148,14 +148,21 @@ export const api = createApi({
         method: "PUT",
         body: { targetid },
       }),
-      invalidatesTags: ["Followers","Following"],
+      invalidatesTags: ["Followers", "Following"],
     }),
-    getSuggestedFollowers:builder.query<SuggestedFollowerResponse[],number>({
+    getSuggestedFollowers: builder.query<SuggestedFollowerResponse[], number>({
       query: (skip) => ({
-        url:`home/people/${skip}/4`
+        url: `home/people/${skip}/4`,
       }),
-      providesTags:["SuggestedFollowers"]
-    })
+      providesTags: ["SuggestedFollowers"],
+    }),
+    likeComment: builder.mutation<void, string>({
+      query: (commentId) => ({
+        url: `comment/like`,
+        method: "PUT",
+        body: { commentId },
+      }),
+    }),
   }),
 });
 
@@ -186,4 +193,5 @@ export const {
   useUnfollowUserMutation,
   useLazyGetSuggestedFollowersQuery,
   useGetSuggestedFollowersQuery,
+  useLikeCommentMutation,
 } = api;

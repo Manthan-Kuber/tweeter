@@ -18,6 +18,7 @@ import {
   useDeleteTweetMutation,
   useLazyGetCommentsQuery,
 } from "../../app/services/api";
+import { useAppSelector } from "../../Hooks/store";
 
 const Tweet = (props: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -33,6 +34,7 @@ const Tweet = (props: TweetProps) => {
   const [isLiked, setIsLiked] = useState(props.isLiked);
   const [isSaved, setIsSaved] = useState(props.isSaved);
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
+  const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
@@ -158,19 +160,21 @@ const Tweet = (props: TweetProps) => {
             fileList={fileList}
             setFileList={setFileList}
             onSubmit={(e) => onSubmit(e, props.tweetId)}
-            replyImageUrl={props.authorProfilePic}
+            replyImageUrl={currentUserPfp}
           />
         )}
         {isCommentButtonClicked &&
           commentsData?.data.comments.map((comment) => (
             <TweetReplies
               key={comment._id}
+              commentId={comment._id}
               commentText={comment.comment}
               likesCount={comment.likes}
               authorName={comment.author[0].name}
               authorUserName={comment.author[0].username}
               authorProfilePic={comment.author[0].profilePic}
               commentCreationDate={comment.createdAt}
+              replyCount={comment.replyCount}
             />
           ))}
       </TweetBox>
