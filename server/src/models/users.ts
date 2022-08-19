@@ -56,16 +56,17 @@ const userSchema = new Schema<IUser, IUserModel>(
 );
 
 //https://mongoosejs.com/docs/middleware.html
-userSchema.post("save", (doc, next: NextFunction) => {
-  console.log("New user created and saved", doc);
-  next();
-});
 
 userSchema.pre("save", async function (next) {
   //this refers to 'user' in authController
   console.log("New user about to be created and saved", this); //remove later
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+userSchema.post("save", (doc, next) => {
+  console.log("New user created and saved", doc);
   next();
 });
 
