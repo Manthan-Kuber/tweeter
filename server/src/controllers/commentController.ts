@@ -125,12 +125,12 @@ export const createComment = async (req: IRequest, res: Response) => {
       hashtags: hashtags ? hashtags : [],
     });
     if (hashtags) {
-      for (var hashtag in hashtags) {
+      for (var i = 0; i < hashtags.length; i++) {
         await Hashtag.findOneAndUpdate(
-          { hashtag: hashtag.toLowerCase() },
+          { hashtag: hashtags[i].toLowerCase() },
           {
             $set: {
-              hashtag: hashtag.toLowerCase(),
+              hashtag: hashtags[i].toLowerCase(),
               lastUsed: new Date(Date.now()),
             },
             $inc: { tweets: 1 },
@@ -185,12 +185,12 @@ export const createReply = async (req: IRequest, res: Response) => {
       hashtags: hashtags ? hashtags : [],
     });
     if (hashtags) {
-      for (var hashtag in hashtags) {
+      for (var i = 0; i < hashtags.length; i++) {
         await Hashtag.findOneAndUpdate(
-          { hashtag: hashtag.toLowerCase() },
+          { hashtag: hashtags[i].toLowerCase() },
           {
             $set: {
-              hashtag: hashtag.toLowerCase(),
+              hashtag: hashtags[i].toLowerCase(),
               lastUsed: new Date(Date.now()),
             },
             $inc: { tweets: 1 },
