@@ -43,6 +43,7 @@ export const fetchComments = async (req: IRequest, res: Response) => {
           "author.username": 1,
           "author.profilePic": 1,
           comment: 1,
+          media: 1,
           likes: {
             $cond: {
               if: { $isArray: "$likes" },
@@ -72,6 +73,7 @@ export const fetchReplies = async (req: IRequest, res: Response) => {
       {
         author: 1,
         comment: 1,
+        media: 1,
         likes: {
           $cond: {
             if: { $isArray: "$likes" },
@@ -100,7 +102,6 @@ export const getCommentById = async (req: IRequest, res: Response) => {
   const commentId = req.params.commentId;
 
   try {
-    const user = User.findById(id);
     const comment = await Comment.findById(commentId).populate({
       path: "author",
       select: { name: 1, username: 1, profilePic: 1 },
@@ -117,7 +118,6 @@ export const createComment = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
 
   try {
-    const user = await User.findById(id);
     const newComment = await Comment.create({
       author: id,
       tweetId: tweetId,
@@ -178,7 +178,6 @@ export const createReply = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
 
   try {
-    const user = await User.findById(id);
     const newReply = await Comment.create({
       author: id,
       commentId: commentId,
@@ -237,7 +236,6 @@ export const likeComment = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
 
   try {
-    const user = await User.findById(id);
     const comment = await Comment.findById(commentId);
     if (!comment?.likes?.includes(id)) {
       const updatedComment = await Comment.findByIdAndUpdate(commentId, {
