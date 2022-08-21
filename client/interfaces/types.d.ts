@@ -212,6 +212,7 @@ interface CreateTweetProps {
 }
 
 interface TweetProps {
+  authorId: string;
   authorName: string;
   authorUserName: string;
   authorFollowers: number;
@@ -302,7 +303,7 @@ interface TweetOptionsProps {
 }
 
 interface GetTweetsResponseElement {
-  creator: { username: string; profilePic: string; name: string }[];
+  creator: { _id: string; username: string; profilePic: string; name: string }[];
   tweet: string;
   media: string[];
   likes: number;
@@ -390,10 +391,10 @@ interface GetCommentRepliesResponse {
 interface CommentReplyProps {
   replyId: string;
   reply: string;
-  replyCreationDate:Date;
-  authorId:string;
-  authorName:string;
-  authorUsername:string;
-  authorProfilePic:string;
-  likesCount:number;
+  replyCreationDate: Date;
+  authorId: string;
+  authorName: string;
+  authorUsername: string;
+  authorProfilePic: string;
+  likesCount: number;
 }

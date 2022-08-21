@@ -35,6 +35,7 @@ const Tweet = (props: TweetProps) => {
   const [isSaved, setIsSaved] = useState(props.isSaved);
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
@@ -126,10 +127,13 @@ const Tweet = (props: TweetProps) => {
             followerCount={props.authorFollowers}
             profilePic={props.authorProfilePic}
           />
-          {/* Render Delete button only if currentUserId !== authorId  */}
-          <DeleteIconWrapper onClick={() => onDeleteButtonClick(props.tweetId)}>
-            <DeleteIcon size={24} />
-          </DeleteIconWrapper>
+          {currentUserId === props.authorId && (
+            <DeleteIconWrapper
+              onClick={() => onDeleteButtonClick(props.tweetId)}
+            >
+              <DeleteIcon size={24} />
+            </DeleteIconWrapper>
+          )}
         </ProfileInfoWrapper>
         <TweetText>{props.authorTweet}</TweetText>
         <ImageWrapper numOfImages={props.mediaList.length}>

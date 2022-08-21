@@ -26,11 +26,9 @@ var tweetLimit = 10;
 
 const Home = ({
   initialTrendData = [],
-  initialSuggestedFollowersData = [],
   isAuthenticated = true,
 }: {
   initialTrendData: any;
-  initialSuggestedFollowersData: any;
   isAuthenticated: boolean;
 }) => {
   const [message, setMessage] = useState<string>("");
@@ -54,29 +52,17 @@ const Home = ({
     }))
   );
 
-  // const [suggestedFollowersArray, setSuggestedFollowersArray] = useState<
-  //   SuggestedFollowerResponse[]
-  // >(
-  //   initialSuggestedFollowersData.map((item: SuggestedFollowerResponse) => ({
-  //     id: item._id,
-  //     bio: item.bio,
-  //     name: item.name,
-  //     username: item.username,
-  //     profilePic: item.profilePic,
-  //   }))
-  // );
-
   const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
-  // const userId = useAppSelector((state) => state.auth.user?.id);
   const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
   const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
   const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
   const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
+
 
   const requestConfig = {
     headers: {
