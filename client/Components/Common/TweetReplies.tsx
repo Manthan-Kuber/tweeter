@@ -5,6 +5,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
 import {
+  useCreateReplyMutation,
   useLazyGetCommentRepliesQuery,
   useLikeCommentMutation,
 } from "../../app/services/api";
@@ -19,6 +20,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
   const commentCreationDate = new Date(props.commentCreationDate);
   const [isCommentActive, setIsCommentActive] = useState(false);
   const [likeComment] = useLikeCommentMutation();
+  const [createReply] = useCreateReplyMutation();
   const [GetCommentRepliesTrigger, { data: CommentRepliesData }] =
     useLazyGetCommentRepliesQuery();
   const [message, setMessage] = useState<string>("");
@@ -27,7 +29,35 @@ const TweetReplies = (props: TweetRepliesProps) => {
   );
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
 
-  console.log(CommentRepliesData);
+  const onSubmit = async (e: React.FormEvent, commentId: string) => {
+    e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
+    const fileArray = fileList.map((item) => item.file);
+    setFileList([]);
+    setMessage("");
+    const formData = new FormData();
+    formData.append("comment", message);
+    formData.append("commentId", commentId);
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+    }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
+    }
+    try {
+      await createReply(formData).unwrap();
+      toast.success(() => (
+        <ToastMessage>Created Reply Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      toast.error(() => <ToastMessage>Error in Creating Reply</ToastMessage>);
+    }
+  };
 
   const optionsList = [
     {
@@ -59,7 +89,9 @@ const TweetReplies = (props: TweetRepliesProps) => {
           await likeComment(props.commentId).unwrap();
           setIsLikeActive((prev) => !prev);
         } catch (error) {
-          toast.error(() => <ToastMessage>Error in Liking Comment</ToastMessage>);
+          toast.error(() => (
+            <ToastMessage>Error in Liking Comment</ToastMessage>
+          ));
         }
       },
     },
@@ -109,9 +141,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
                 setMessage={setMessage}
                 fileList={fileList}
                 setFileList={setFileList}
-                onSubmit={function (e: React.FormEvent<Element>): void {
-                  throw new Error("Function not implemented.");
-                }}
+                onSubmit={(e) => onSubmit(e, props.commentId)}
                 replyImageUrl={currentUserPfp}
               />
               {CommentRepliesData?.data.map((reply) => (
@@ -203,27 +233,3 @@ export const ModifiedOptionWrapper = styled(OptionWrapper)`
   padding: 0.75rem;
   margin-top: 1rem;
 `;
-
-// const LikesWrapper = styled.div`
-//   display: flex;
-//   align-items: center;
-//   line-height: 14px;
-//   gap: 1rem;
-//   font: 600 1.4rem var(--ff-noto);
-//   color: hsla(0, 0%, 74%, 1);
-//   margin-top: 1rem;
-//   -moz-user-select: none;
-//   -khtml-user-select: none;
-//   -webkit-user-select: none;
-//   user-select: none;
-// `;
-
-// const LikesContainer = styled.div<{ isLiked: boolean }>`
-//   display: flex;
-//   align-items: center;
-//   line-height: 14px;
-//   gap: 0.25rem;
-//   cursor: pointer;
-//   color: ${(props) =>
-//     props.isLiked ? "hsla(0, 79%, 63%, 1)" : "hsla(0, 0%, 74%, 1)"};
-// `;

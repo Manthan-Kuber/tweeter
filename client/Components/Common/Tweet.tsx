@@ -38,6 +38,7 @@ const Tweet = (props: TweetProps) => {
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
     setFileList([]);
     setMessage("");
@@ -46,6 +47,14 @@ const Tweet = (props: TweetProps) => {
     formData.append("tweetId", tweetId);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("media", fileArray[i]);
+    }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
     }
     try {
       await createComment(formData).unwrap();
