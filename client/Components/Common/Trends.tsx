@@ -27,7 +27,7 @@ const  Trends = ({ trendList, ...props }: TrendProps) => {
             trendList.map((item, index) => (
               // Add onclick function later
               <li key={`${item.id}${index}`}>
-                <h3>#{item.tagName}</h3>
+                <h3>{item.tagName}</h3>
                 <span>{item.tweetCount}</span>
               </li>
             ))

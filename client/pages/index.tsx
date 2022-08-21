@@ -175,8 +175,10 @@ const Home = ({
     }
     if (isHashtagPresent.test(message)) {
       const hashtagArray = message.match(isHashtagPresent);
-      for (let i = 0; i < hashtagArray!.length; i++) {
-        formData.append("hashtags", hashtagArray![i]);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
       }
     }
     try {
