@@ -10,6 +10,7 @@ import { cloud as cloudinary } from "../utils/cloudinaryConfig";
 export const fetchComments = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const tweetId = req.params.tweetId;
+  const id = req.user?._id;
   if (!skip) skip = 0;
   try {
     const comments = await Comment.aggregate([
@@ -38,6 +39,19 @@ export const fetchComments = async (req: IRequest, res: Response) => {
         },
       },
       {
+        $addFields: {
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
         $project: {
           "author.name": 1,
           "author.username": 1,
@@ -51,6 +65,7 @@ export const fetchComments = async (req: IRequest, res: Response) => {
               else: 0,
             },
           },
+          liked: 1,
           createdAt: 1,
           replyCount: "$count.count",
         },
@@ -65,32 +80,55 @@ export const fetchComments = async (req: IRequest, res: Response) => {
 export const fetchReplies = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const commentId = req.params.commentId;
+  const id = req.user?._id;
   if (!skip) skip = 0;
 
   try {
-    const replies = await Comment.find(
-      { commentId: commentId },
+    const replies = await Comment.aggregate([
+      { $match: { commentId: new ObjectId(commentId) } },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip * 10 },
+      { $limit: 10 },
       {
-        author: 1,
-        comment: 1,
-        media: 1,
-        likes: {
-          $cond: {
-            if: { $isArray: "$likes" },
-            then: { $size: "$likes" },
-            else: 0,
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $addFields: {
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
           },
         },
-        createdAt: 1,
-      }
-    )
-      .sort({ createdAt: -1 })
-      .skip(skip * 10)
-      .limit(10)
-      .populate({
-        path: "author",
-        select: { name: 1, username: 1, profilePic: 1 },
-      });
+      },
+      {
+        $project: {
+          "author.name": 1,
+          "author.username": 1,
+          "author.profilePic": 1,
+          comment: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          liked: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
     res.status(200).json({ data: replies });
   } catch (err) {
     res.status(400).json({ error: err });
