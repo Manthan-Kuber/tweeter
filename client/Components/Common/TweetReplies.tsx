@@ -4,8 +4,14 @@ import toast from "react-hot-toast";
 import { AiOutlineHeart } from "react-icons/ai";
 import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
-import { useLikeCommentMutation } from "../../app/services/api";
+import {
+  useLazyGetCommentRepliesQuery,
+  useLikeCommentMutation,
+} from "../../app/services/api";
+import { useAppSelector } from "../../Hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
+import CommentReply from "./CommentReply";
+import CreateTweet from "./CreateTweet";
 import { OptionsWrapper, OptionWrapper } from "./TweetOptions";
 
 const TweetReplies = (props: TweetRepliesProps) => {
@@ -13,6 +19,15 @@ const TweetReplies = (props: TweetRepliesProps) => {
   const commentCreationDate = new Date(props.commentCreationDate);
   const [isCommentActive, setIsCommentActive] = useState(false);
   const [likeComment] = useLikeCommentMutation();
+  const [GetCommentRepliesTrigger, { data: CommentRepliesData }] =
+    useLazyGetCommentRepliesQuery();
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+  const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
+
+  console.log(CommentRepliesData);
 
   const optionsList = [
     {
@@ -21,8 +36,16 @@ const TweetReplies = (props: TweetRepliesProps) => {
       icon: <MdOutlineModeComment size={16} />,
       isActive: isCommentActive,
       activeColor: "black",
-      onClick: () => {
-        setIsCommentActive((prev) => !prev);
+      onClick: async () => {
+        if (isCommentActive) setIsCommentActive((prev) => !prev);
+        else {
+          try {
+            await GetCommentRepliesTrigger(props.commentId).unwrap();
+            setIsCommentActive((prev) => !prev);
+          } catch (error) {
+            <ToastMessage>Error in Fetching Comment</ToastMessage>;
+          }
+        }
       },
     },
     {
@@ -32,10 +55,10 @@ const TweetReplies = (props: TweetRepliesProps) => {
       isActive: isLikeActive,
       activeColor: "hsla(0, 79%, 63%, 1)",
       onClick: async () => {
-        try{
+        try {
           await likeComment(props.commentId).unwrap();
           setIsLikeActive((prev) => !prev);
-        }catch (error) {
+        } catch (error) {
           toast.error(() => <ToastMessage>Error in Liking Comment</ToastMessage>);
         }
       },
@@ -68,18 +91,42 @@ const TweetReplies = (props: TweetRepliesProps) => {
                   {option.name === "Like" && props.likesCount !== 0 && (
                     <span>{props.likesCount}</span>
                   )}
-                  {option.name === "Comments" && props.replyCount.length !== 0 && (
-                    <span>{props.replyCount.length}</span>
-                  )}
+                  {option.name === "Comments" &&
+                    props.replyCount.length !== 0 && (
+                      <span>{props.replyCount[0]}</span>
+                    )}
                 </ModifiedOptionWrapper>
               ))}
             </ModifiedOptionsWrapper>
           </AnotherReplyWrapper>
           {isCommentActive && (
-            <p>
-              Map and Display Comment Replies here (New component
-              TweetCommentReplies)
-            </p>
+            <>
+              <CreateTweet
+                isReplyImageVisible={true}
+                placeholder={"Tweet your reply"}
+                btnText={"Reply"}
+                message={message}
+                setMessage={setMessage}
+                fileList={fileList}
+                setFileList={setFileList}
+                onSubmit={function (e: React.FormEvent<Element>): void {
+                  throw new Error("Function not implemented.");
+                }}
+                replyImageUrl={currentUserPfp}
+              />
+              {CommentRepliesData?.data.map((reply) => (
+                <CommentReply
+                  replyId={reply._id}
+                  reply={reply.comment}
+                  replyCreationDate={reply.createdAt}
+                  authorId={reply.author._id}
+                  authorName={reply.author.name}
+                  authorUsername={reply.author.username}
+                  authorProfilePic={currentUserPfp ?? ""} //Change to author pfp later
+                  likesCount={0} //change to likescount later
+                />
+              ))}
+            </>
           )}
         </ReplyWrapper>
       </ReplyContainer>
@@ -88,41 +135,37 @@ const TweetReplies = (props: TweetRepliesProps) => {
 };
 export default TweetReplies;
 
-const CommentReplyContainer = styled.div`
-  
-`
-
-const RepliesContainer = styled.div`
+export const RepliesContainer = styled.div`
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid hsla(0, 0%, 95%, 1);
 `;
 
-const RepliesImage = styled(Image)`
+export const RepliesImage = styled(Image)`
   border-radius: 6px;
 `;
 
-const ReplyContainer = styled.div`
+export const ReplyContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
 `;
 
-const UserName = styled.span`
+export const UserName = styled.span`
   font: 500 1.2rem var(--ff-noto);
   color: hsla(0, 0%, 51%, 1);
 `;
 
-const ReplyWrapper = styled.div`
+export const ReplyWrapper = styled.div`
   flex: 1;
 `;
 
-const AnotherReplyWrapper = styled.div`
+export const AnotherReplyWrapper = styled.div`
   border-radius: 6px;
   padding: 0.5rem 1rem;
 `;
 
-const AuthorWrapper = styled.div`
+export const AuthorWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -137,18 +180,18 @@ const AuthorWrapper = styled.div`
   }
 `;
 
-const TweetText = styled.span`
+export const TweetText = styled.span`
   display: block;
   font: 400 1.6rem var(--ff-noto);
   color: hsla(0, 0%, 31%, 1);
   margin-top: 1rem;
 `;
 
-const RepliesImageWrapper = styled.div`
+export const RepliesImageWrapper = styled.div`
   align-self: flex-start;
 `;
 
-const ModifiedOptionsWrapper = styled(OptionsWrapper)`
+export const ModifiedOptionsWrapper = styled(OptionsWrapper)`
   justify-content: revert;
   border-block: revert;
   gap: 3rem;
@@ -156,7 +199,7 @@ const ModifiedOptionsWrapper = styled(OptionsWrapper)`
   margin-left: -0.75rem;
 `;
 
-const ModifiedOptionWrapper = styled(OptionWrapper)`
+export const ModifiedOptionWrapper = styled(OptionWrapper)`
   padding: 0.75rem;
   margin-top: 1rem;
 `;

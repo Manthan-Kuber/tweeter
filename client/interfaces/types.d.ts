@@ -343,8 +343,8 @@ interface TweetRepliesProps
   commentText: string;
   likesCount: number;
   commentCreationDate: Date;
-  commentId:string;
-  replyCount:string[];
+  commentId: string;
+  replyCount: string[];
 }
 
 interface GetFollowingAndFollowersElement {
@@ -374,4 +374,26 @@ interface TweetsDataListProps {
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface GetCommentRepliesElement {
+  _id: string;
+  author: { _id: string; name: string; username: string }; //profile pic
+  comment: string;
+  createdAt: Date; //likesCount and likes boolean
+}
+
+interface GetCommentRepliesResponse {
+  data: GetCommentRepliesElement[];
+}
+
+interface CommentReplyProps {
+  replyId: string;
+  reply: string;
+  replyCreationDate:Date;
+  authorId:string;
+  authorName:string;
+  authorUsername:string;
+  authorProfilePic:string;
+  likesCount:number;
 }

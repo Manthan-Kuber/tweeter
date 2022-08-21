@@ -153,8 +153,8 @@ const Tweet = (props: TweetProps) => {
         {isCommentButtonClicked && (
           <CreateTweet
             isReplyImageVisible={true}
-            placeholder="Tweet your reply"
-            btnText="Reply"
+            placeholder="Tweet your Comment"
+            btnText="Comment"
             message={message}
             setMessage={setMessage}
             fileList={fileList}

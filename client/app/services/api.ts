@@ -163,6 +163,11 @@ export const api = createApi({
         body: { commentId },
       }),
     }),
+    getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
+      query: (commentId) => ({
+        url: `comment/replies/${commentId}/0`,
+      }),
+    }),
   }),
 });
 
@@ -194,4 +199,5 @@ export const {
   useLazyGetSuggestedFollowersQuery,
   useGetSuggestedFollowersQuery,
   useLikeCommentMutation,
+  useLazyGetCommentRepliesQuery,
 } = api;
