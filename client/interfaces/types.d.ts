@@ -334,6 +334,7 @@ interface GetCommentsArrayElement {
   likes: number;
   replyCount: string[];
   media?: string[];
+  liked: string[];
 }
 
 interface GetCommentsResponse {
@@ -351,6 +352,7 @@ interface TweetRepliesProps
   likesCount: number;
   commentCreationDate: Date;
   commentId: string;
+  isLiked:boolean;
   replyCount: string[];
   mediaList?: string[];
 }
@@ -386,9 +388,11 @@ interface TweetsDataListProps {
 
 interface GetCommentRepliesElement {
   _id: string;
-  author: { _id: string; name: string; username: string }; //profile pic
+  author: { _id: string; name: string; username: string; profilePic: string }[];
   comment: string;
-  createdAt: Date; //likesCount and likes boolean
+  createdAt: Date;
+  likes: number;
+  liked: string[];
 }
 
 interface GetCommentRepliesResponse {
@@ -404,4 +408,5 @@ interface CommentReplyProps {
   authorUsername: string;
   authorProfilePic: string;
   likesCount: number;
+  isLiked: boolean;
 }

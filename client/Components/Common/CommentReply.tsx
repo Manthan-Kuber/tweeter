@@ -19,7 +19,7 @@ import {
 
 const CommentReply = (props: CommentReplyProps) => {
   const commentCreationDate = new Date(props.replyCreationDate);
-  const [isLikeActive, setIsLikeActive] = useState(false);
+  const [isLikeActive, setIsLikeActive] = useState(props.isLiked);
   const [likeComment] = useLikeCommentMutation();
 
   const handleLike = async () => {

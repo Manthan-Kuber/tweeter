@@ -16,7 +16,7 @@ import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
 import { OptionsWrapper, OptionWrapper } from "./TweetOptions";
 
 const TweetReplies = (props: TweetRepliesProps) => {
-  const [isLikeActive, setIsLikeActive] = useState(false);
+  const [isLikeActive, setIsLikeActive] = useState(props.isLiked);
   const commentCreationDate = new Date(props.commentCreationDate);
   const [isCommentActive, setIsCommentActive] = useState(false);
   const [likeComment] = useLikeCommentMutation();
@@ -97,6 +97,8 @@ const TweetReplies = (props: TweetRepliesProps) => {
     },
   ];
 
+  console.log(CommentRepliesData);
+
   return (
     <RepliesContainer>
       <ReplyContainer>
@@ -160,11 +162,12 @@ const TweetReplies = (props: TweetRepliesProps) => {
                   replyId={reply._id}
                   reply={reply.comment}
                   replyCreationDate={reply.createdAt}
-                  authorId={reply.author._id}
-                  authorName={reply.author.name}
-                  authorUsername={reply.author.username}
-                  authorProfilePic={currentUserPfp ?? ""} //Change to author pfp later
-                  likesCount={0} //change to likescount later
+                  authorId={reply.author[0]._id}
+                  authorName={reply.author[0].name}
+                  authorUsername={reply.author[0].username}
+                  authorProfilePic={reply.author[0].profilePic}
+                  likesCount={reply.likes}
+                  isLiked={reply.liked.length === 0 ? false : true}
                 />
               ))}
             </>
