@@ -50,7 +50,7 @@ const Home = ({
     initialTrendData.map((item: typeof initialTrendData) => ({
       id: item._id,
       tagName: item.hashtag,
-      tweetCount: `${item.tweets}k tweets`,
+      tweetCount: `${item.tweets}`,
     }))
   );
 
@@ -97,7 +97,7 @@ const Home = ({
           {
             id: item._id,
             tagName: item.hashtag,
-            tweetCount: `${item.tweets}k tweets`,
+            tweetCount: `${item.tweets}`,
           },
         ])
       );
