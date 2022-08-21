@@ -303,7 +303,12 @@ interface TweetOptionsProps {
 }
 
 interface GetTweetsResponseElement {
-  creator: { _id: string; username: string; profilePic: string; name: string }[];
+  creator: {
+    _id: string;
+    username: string;
+    profilePic: string;
+    name: string;
+  }[];
   tweet: string;
   media: string[];
   likes: number;
@@ -328,6 +333,7 @@ interface GetCommentsArrayElement {
   comment: string;
   likes: number;
   replyCount: string[];
+  media?: string[];
 }
 
 interface GetCommentsResponse {
@@ -346,6 +352,7 @@ interface TweetRepliesProps
   commentCreationDate: Date;
   commentId: string;
   replyCount: string[];
+  mediaList?: string[];
 }
 
 interface GetFollowingAndFollowersElement {

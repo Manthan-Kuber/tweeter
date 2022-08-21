@@ -15,8 +15,6 @@ const TweetsDataList = ({
     if (TweetsData.data.length === 10) setHasMoreTweets(true);
   }, [TweetsData]);
 
-  console.log(TweetsData.data[0].creator[0]);
-
   return (
     <InfiniteScroll
       dataLength={TweetsData.data.length}

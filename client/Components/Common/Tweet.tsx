@@ -188,6 +188,7 @@ const Tweet = (props: TweetProps) => {
               authorProfilePic={comment.author[0].profilePic}
               commentCreationDate={comment.createdAt}
               replyCount={comment.replyCount}
+              mediaList={comment.media}
             />
           ))}
       </TweetBox>

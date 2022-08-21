@@ -12,7 +12,7 @@ import {
 import { useAppSelector } from "../../Hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
 import CommentReply from "./CommentReply";
-import CreateTweet from "./CreateTweet";
+import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
 import { OptionsWrapper, OptionWrapper } from "./TweetOptions";
 
 const TweetReplies = (props: TweetRepliesProps) => {
@@ -111,6 +111,17 @@ const TweetReplies = (props: TweetRepliesProps) => {
             </AuthorWrapper>
             <UserName>@ {props.authorUserName}</UserName>
             <TweetText>{props.commentText}</TweetText>
+            <ImageWrapper numOfImages={props.mediaList?.length ?? 0}>
+              {props.mediaList?.map((mediaItemUrl, index) => (
+                <TweetImage
+                  key={`${mediaItemUrl} ${index}`}
+                  src={mediaItemUrl}
+                  layout="responsive"
+                  width={100}
+                  height={30}
+                />
+              ))}
+            </ImageWrapper>
             <ModifiedOptionsWrapper>
               {optionsList.map((option) => (
                 <ModifiedOptionWrapper
@@ -164,6 +175,15 @@ const TweetReplies = (props: TweetRepliesProps) => {
   );
 };
 export default TweetReplies;
+
+const TweetImage = styled(Image)`
+  border-radius: 6px;
+`;
+
+const ImageWrapper = styled(TweetImageArrayWrapper)`
+  width: 100%;
+  margin-top: revert;
+`;
 
 export const RepliesContainer = styled.div`
   margin-top: 1rem;
