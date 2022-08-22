@@ -212,6 +212,7 @@ interface CreateTweetProps {
 }
 
 interface TweetProps {
+  authorId: string;
   authorName: string;
   authorUserName: string;
   authorFollowers: number;
@@ -302,7 +303,12 @@ interface TweetOptionsProps {
 }
 
 interface GetTweetsResponseElement {
-  creator: { username: string; profilePic: string; name: string }[];
+  creator: {
+    _id: string;
+    username: string;
+    profilePic: string;
+    name: string;
+  }[];
   tweet: string;
   media: string[];
   likes: number;
@@ -327,6 +333,8 @@ interface GetCommentsArrayElement {
   comment: string;
   likes: number;
   replyCount: string[];
+  media?: string[];
+  liked: string[];
 }
 
 interface GetCommentsResponse {
@@ -343,8 +351,10 @@ interface TweetRepliesProps
   commentText: string;
   likesCount: number;
   commentCreationDate: Date;
-  commentId:string;
-  replyCount:string[];
+  commentId: string;
+  isLiked:boolean;
+  replyCount: string[];
+  mediaList?: string[];
 }
 
 interface GetFollowingAndFollowersElement {
@@ -374,4 +384,29 @@ interface TweetsDataListProps {
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface GetCommentRepliesElement {
+  _id: string;
+  author: { _id: string; name: string; username: string; profilePic: string }[];
+  comment: string;
+  createdAt: Date;
+  likes: number;
+  liked: string[];
+}
+
+interface GetCommentRepliesResponse {
+  data: GetCommentRepliesElement[];
+}
+
+interface CommentReplyProps {
+  replyId: string;
+  reply: string;
+  replyCreationDate: Date;
+  authorId: string;
+  authorName: string;
+  authorUsername: string;
+  authorProfilePic: string;
+  likesCount: number;
+  isLiked: boolean;
 }

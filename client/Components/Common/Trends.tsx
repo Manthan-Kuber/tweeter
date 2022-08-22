@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 
-const  Trends = ({ trendList, ...props }: TrendProps) => {
+const Trends = ({ trendList, ...props }: TrendProps) => {
   useEffect(() => {
     if (trendList.length === 6) props.setHasMoreTrends(true);
   }, [trendList]);
@@ -25,10 +25,12 @@ const  Trends = ({ trendList, ...props }: TrendProps) => {
             <NoTweetsToShow message={"No More Trends to show"} />
           ) : (
             trendList.map((item, index) => (
-              // Add onclick function later
+              // Add onclick function later if req
               <li key={`${item.id}${index}`}>
-                <h3>#{item.tagName}</h3>
-                <span>{item.tweetCount}</span>
+                <h3>{item.tagName}</h3>
+                <span>{`${item.tweetCount} ${
+                  parseInt(item.tweetCount) > 1 ? "tweets" : "tweet"
+                }`}</span>
               </li>
             ))
           )}

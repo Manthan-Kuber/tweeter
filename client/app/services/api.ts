@@ -21,6 +21,7 @@ export const api = createApi({
     "Followers",
     "Following",
     "SuggestedFollowers",
+    "CommentsReplies",
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -163,6 +164,16 @@ export const api = createApi({
         body: { commentId },
       }),
     }),
+    getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
+      query: (commentId) => ({
+        url: `comment/replies/${commentId}/0`,
+      }),
+      providesTags: ["CommentsReplies"],
+    }),
+    createReply: builder.mutation({
+      query: (body) => ({ url: "comment/reply", method: "POST", body }),
+      invalidatesTags: ["CommentsReplies"],
+    }),
   }),
 });
 
@@ -194,4 +205,6 @@ export const {
   useLazyGetSuggestedFollowersQuery,
   useGetSuggestedFollowersQuery,
   useLikeCommentMutation,
+  useLazyGetCommentRepliesQuery,
+  useCreateReplyMutation,
 } = api;

@@ -39,28 +39,31 @@ const TweetsDataList = ({
             //     <Skeleton count={5} />
             //   </TweetBox>
             // </TweetWrapper>
-            <Tweet
-              key={tweet._id}
-              authorName={tweet.creator[0].name}
-              authorUserName={tweet.creator[0].username}
-              authorFollowers={6969} //Change
-              authorProfilePic={tweet.creator[0].profilePic}
-              mediaList={tweet.media}
-              authorTweet={tweet.tweet}
-              tweetId={tweet._id}
-              tweetCreationDate={tweet.createdAt}
-              isSaved={tweet.saved.length === 0 ? false : true}
-              isLiked={
-                tweet.liked !== undefined && tweet.liked.length === 0
-                  ? false
-                  : true
-              }
-              isRetweeted={tweet.retweeted.length === 0 ? false : true}
-              commentCount={tweet.commentCount[0]}
-              likes={tweet.likes}
-              retweetedUsers={tweet.retweetedUsers}
-              savedBy={tweet.savedBy}
-            />
+            <>
+              <Tweet
+                key={tweet._id}
+                authorName={tweet.creator[0].name}
+                authorId={tweet.creator[0]._id}
+                authorUserName={tweet.creator[0].username}
+                authorFollowers={6969} //Change
+                authorProfilePic={tweet.creator[0].profilePic}
+                mediaList={tweet.media}
+                authorTweet={tweet.tweet}
+                tweetId={tweet._id}
+                tweetCreationDate={tweet.createdAt}
+                isSaved={tweet.saved.length === 0 ? false : true}
+                isLiked={
+                  tweet.liked !== undefined && tweet.liked.length === 0
+                    ? false
+                    : true
+                }
+                isRetweeted={tweet.retweeted.length === 0 ? false : true}
+                commentCount={tweet.commentCount[0]}
+                likes={tweet.likes}
+                retweetedUsers={tweet.retweetedUsers}
+                savedBy={tweet.savedBy}
+              />
+            </>
           )
         )
       )}

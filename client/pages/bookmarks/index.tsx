@@ -77,6 +77,7 @@ function Bookmarks() {
                 // </TweetWrapper>
                 <Tweet
                   key={tweet._id}
+                  authorId={tweet.creator[0]._id}
                   authorName={tweet.creator[0].name}
                   authorUserName={tweet.creator[0].username}
                   authorFollowers={6969} //Change

@@ -35,9 +35,11 @@ const Tweet = (props: TweetProps) => {
   const [isSaved, setIsSaved] = useState(props.isSaved);
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
 
   const onSubmit = async (e: React.FormEvent, tweetId: string) => {
     e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
     setFileList([]);
     setMessage("");
@@ -46,6 +48,14 @@ const Tweet = (props: TweetProps) => {
     formData.append("tweetId", tweetId);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("media", fileArray[i]);
+    }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
     }
     try {
       await createComment(formData).unwrap();
@@ -117,10 +127,13 @@ const Tweet = (props: TweetProps) => {
             followerCount={props.authorFollowers}
             profilePic={props.authorProfilePic}
           />
-          {/* Render Delete button only if currentUserId !== authorId  */}
-          <DeleteIconWrapper onClick={() => onDeleteButtonClick(props.tweetId)}>
-            <DeleteIcon size={24} />
-          </DeleteIconWrapper>
+          {currentUserId === props.authorId && (
+            <DeleteIconWrapper
+              onClick={() => onDeleteButtonClick(props.tweetId)}
+            >
+              <DeleteIcon size={24} />
+            </DeleteIconWrapper>
+          )}
         </ProfileInfoWrapper>
         <TweetText>{props.authorTweet}</TweetText>
         <ImageWrapper numOfImages={props.mediaList.length}>
@@ -153,8 +166,8 @@ const Tweet = (props: TweetProps) => {
         {isCommentButtonClicked && (
           <CreateTweet
             isReplyImageVisible={true}
-            placeholder="Tweet your reply"
-            btnText="Reply"
+            placeholder="Tweet your Comment"
+            btnText="Comment"
             message={message}
             setMessage={setMessage}
             fileList={fileList}
@@ -175,6 +188,8 @@ const Tweet = (props: TweetProps) => {
               authorProfilePic={comment.author[0].profilePic}
               commentCreationDate={comment.createdAt}
               replyCount={comment.replyCount}
+              mediaList={comment.media}
+              isLiked={comment.liked.length === 0 ? false : true}
             />
           ))}
       </TweetBox>
