@@ -168,7 +168,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
-          
+          "creator._id": 1,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
