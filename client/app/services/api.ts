@@ -80,7 +80,7 @@ export const api = createApi({
         method: "DELETE",
         body: { tweetId },
       }),
-      invalidatesTags: ["Tweets", "Bookmarks"],
+      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
     }),
     //Needs tweetid and skip
     getComments: builder.query<GetCommentsResponse, string>({
@@ -94,7 +94,7 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Comments"],
+      invalidatesTags: ["Comments","Tweets"],
     }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/bookmarks/${skip}`,
@@ -117,7 +117,7 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId }, //invalidate tags for liked tweets fetch
       }),
-      // invalidatesTags: ["Tweets"],
+      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
     }),
     saveTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -125,7 +125,7 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId },
       }),
-      invalidatesTags: ["Bookmarks"],
+      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
     }),
     retweetTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -133,7 +133,7 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId },
       }),
-      // invalidatesTags: ["Tweets"],
+      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
     }),
     followUser: builder.mutation<void, string>({
       query: (targetid) => ({
@@ -157,12 +157,13 @@ export const api = createApi({
       }),
       providesTags: ["SuggestedFollowers"],
     }),
-    likeComment: builder.mutation<void, string>({
+    likeComment: builder.mutation<void, string>({ //same api for likeReply
       query: (commentId) => ({
         url: `comment/like`,
         method: "PUT",
         body: { commentId },
       }),
+      invalidatesTags:["CommentsReplies","Comments"]
     }),
     getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
       query: (commentId) => ({

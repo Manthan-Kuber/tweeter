@@ -352,7 +352,7 @@ interface TweetRepliesProps
   likesCount: number;
   commentCreationDate: Date;
   commentId: string;
-  isLiked:boolean;
+  isLiked: boolean;
   replyCount: string[];
   mediaList?: string[];
 }
