@@ -1,29 +1,7 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { ToastMessage } from "../../styles/Toast.styles";
-import toast from "react-hot-toast";
 
-const filterList = [
-  {
-    id: 0,
-    label: "Tweets",
-  },
-  {
-    id: 1,
-    label: "Tweets & Replies",
-  },
-  {
-    id: 2,
-    label: "Media",
-  },
-  {
-    id: 3,
-    label: "Likes",
-  },
-];
-
-const FilterBox = ({ tab, setTab }: FilterBoxProps) => {
+const FilterBox = ({ tab, setTab, filterList }: FilterBoxProps) => {
   return (
     <AsideContainer>
       <Ul>

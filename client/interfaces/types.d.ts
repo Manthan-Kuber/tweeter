@@ -92,6 +92,10 @@ interface NavProps {
 interface FilterBoxProps {
   setTab: Dispatch<SetStateAction<number>>;
   tab: number;
+  filterList: {
+    id: number;
+    label: string;
+  }[];
 }
 
 interface ProfileDropDownProps {

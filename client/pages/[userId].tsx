@@ -35,7 +35,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 
-var tweetLimit = 10;
+
 
 const Profile = ({ userId }: { userId: string }) => {
   const dispatch = useAppDispatch();
@@ -85,6 +85,27 @@ const Profile = ({ userId }: { userId: string }) => {
   const [GetProfileTweetsLikesTrigger] = useLazyGetProfileTweetsLikesQuery();
   const [tab, setTab] = useState(0);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
+
+  var tweetLimit = 10;
+
+const filterList = [
+  {
+    id: 0,
+    label: "Tweets",
+  },
+  {
+    id: 1,
+    label: "Tweets & Replies",
+  },
+  {
+    id: 2,
+    label: "Media",
+  },
+  {
+    id: 3,
+    label: "Likes",
+  },
+];
 
   const getProfile = async () => {
     try {
@@ -294,7 +315,7 @@ const Profile = ({ userId }: { userId: string }) => {
         />
       </CustomModal>
       <ContentContainer>
-        <FilterBox tab={tab} setTab={setTab} />
+        <FilterBox filterList={filterList} tab={tab} setTab={setTab} />
         <div>
           {tab === 0 ? (
             TweetsData !== undefined && (
