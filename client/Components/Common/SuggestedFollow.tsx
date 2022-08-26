@@ -27,7 +27,7 @@ const SuggestedFollow = ({
         loader={<p>Loading...</p>} //Change Later
         scrollableTarget="suggestedFollowerScroll"
         endMessage={
-          suggestedFollowList.length !== 0 && <p>You've reached the end</p>
+          suggestedFollowList.length !== 0 && <p>You have reached the end...</p>
         } //Change Later
       >
         {suggestedFollowList.length === 0 ? (

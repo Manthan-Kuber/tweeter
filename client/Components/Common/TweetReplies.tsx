@@ -159,6 +159,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
               />
               {CommentRepliesData?.data.map((reply) => (
                 <CommentReply
+                  key={reply._id}
                   replyId={reply._id}
                   reply={reply.comment}
                   replyCreationDate={reply.createdAt}

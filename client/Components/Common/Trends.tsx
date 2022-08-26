@@ -19,7 +19,7 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
           hasMore={props.hasMore}
           loader={<p>Loading...</p>} //Change Later
           scrollableTarget="trendScroll"
-          endMessage={trendList.length !== 0 && <p>You've reached the end</p>} //Change Later
+          endMessage={trendList.length !== 0 && <p>You have reached the end...</p>} //Change Later
         >
           {trendList.length === 0 ? (
             <NoTweetsToShow message={"No More Trends to show"} />
