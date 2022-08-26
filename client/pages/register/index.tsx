@@ -133,7 +133,7 @@ function Register() {
       ) : (
         <Container>
           <SignUpBox>
-            <Image src="/tweeter.svg" height={30} width="100%" />
+            <Image src="/tweeter.svg" alt="Tweeter Logo" height={30} width="100%" />
             <FormTabUl>
               {TabList.map((item) => (
                 <FormLi

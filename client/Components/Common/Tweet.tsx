@@ -136,17 +136,19 @@ const Tweet = (props: TweetProps) => {
           )}
         </ProfileInfoWrapper>
         <TweetText>{props.authorTweet}</TweetText>
-        <ImageWrapper numOfImages={props.mediaList.length}>
+        <ImagesWrapper numOfImages={props.mediaList.length}>
           {props.mediaList.map((mediaItemUrl, index) => (
-            <TweetImage
-              key={`${mediaItemUrl} ${index}`}
-              src={mediaItemUrl}
-              layout="responsive"
-              width={100}
-              height={30}
-            />
+            <ImageWrapper>
+              <Image
+                key={`${mediaItemUrl} ${index}`}
+                src={mediaItemUrl}
+                alt="Tweet Image"
+                layout="fill"
+                objectFit="contain"
+              />
+            </ImageWrapper>
           ))}
-        </ImageWrapper>
+        </ImagesWrapper>
         <TweetInfo>
           <span>{props.commentCount || 0} Comments</span>
           <span>{props.retweetedUsers || 0} Retweets</span>
@@ -197,6 +199,14 @@ const Tweet = (props: TweetProps) => {
   );
 };
 export default Tweet;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 30rem;
+  border:1px solid lightgray;
+  border-radius: 8px;
+`;
 
 const ProfileInfoWrapper = styled.div`
   display: flex;
@@ -267,11 +277,8 @@ const TweetInfo = styled.span`
   }
 `;
 
-const ImageWrapper = styled(TweetImageArrayWrapper)`
+const ImagesWrapper = styled(TweetImageArrayWrapper)`
   width: 100%;
   margin-top: revert;
 `;
 
-const TweetImage = styled(Image)`
-  border-radius: 6px;
-`;

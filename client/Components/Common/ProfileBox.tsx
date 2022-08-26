@@ -175,7 +175,7 @@ const ProfileContainer = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
   margin-inline: auto;
-  margin-top: -10%;
+  margin-top: 0%;
   position: relative;
   padding-inline: 3rem;
   text-align: center;
@@ -187,7 +187,7 @@ const ProfileContainer = styled.div`
   @media screen and (min-width: 55em) {
     text-align: revert;
     flex-direction: row;
-    margin-top: -5%;
+    margin-top: 0%;
   }
 `;
 

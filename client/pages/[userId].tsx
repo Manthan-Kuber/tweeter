@@ -35,8 +35,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 
-
-
 const Profile = ({ userId }: { userId: string }) => {
   const dispatch = useAppDispatch();
   const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
@@ -85,27 +83,28 @@ const Profile = ({ userId }: { userId: string }) => {
   const [GetProfileTweetsLikesTrigger] = useLazyGetProfileTweetsLikesQuery();
   const [tab, setTab] = useState(0);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
+  const { width: WindowWidth } = useWindowSize();
 
   var tweetLimit = 10;
 
-const filterList = [
-  {
-    id: 0,
-    label: "Tweets",
-  },
-  {
-    id: 1,
-    label: "Tweets & Replies",
-  },
-  {
-    id: 2,
-    label: "Media",
-  },
-  {
-    id: 3,
-    label: "Likes",
-  },
-];
+  const filterList = [
+    {
+      id: 0,
+      label: "Tweets",
+    },
+    {
+      id: 1,
+      label: "Tweets & Replies",
+    },
+    {
+      id: 2,
+      label: "Media",
+    },
+    {
+      id: 3,
+      label: "Likes",
+    },
+  ];
 
   const getProfile = async () => {
     try {
@@ -205,17 +204,16 @@ const filterList = [
     <>
       <ScrollToTopButton />
       {!editProfileModalIsOpen && <Toaster />}
-      {coverPic !== undefined && (
-        // <BannerWrapper>
-        <Image
-          src={coverPic}
-          className="banner-image"
-          alt="banner"
-          layout="responsive"
-          width={100}
-          height={width! > 880 ? 15 : 45}
-        />
-        /* </BannerWrapper> */
+      {coverPic !== undefined && WindowWidth !== undefined && (
+        <BannerWrapper>
+          <StyledImage
+            src={coverPic}
+            className="banner-image"
+            alt="banner"
+            layout="fill"
+            objectFit={WindowWidth < 880 ? "contain" : undefined }
+          />
+        </BannerWrapper>
       )}
       <ProfileBox
         followerModalIsOpen={followerModalIsOpen}
@@ -281,7 +279,7 @@ const filterList = [
               <span>
                 <ToastMessage>Discard changes?</ToastMessage>
                 <SubToastMessage>
-                  This can’t be undone and you’ll lose your changes.
+                  This cannot be undone and you will lose your changes.
                 </SubToastMessage>
                 <DiscardButton
                   onClick={() => {
@@ -369,9 +367,23 @@ export const getStaticProps: GetStaticProps = (context) => {
   };
 };
 
+const StyledImage = styled(Image)`
+  border-radius: 8px;
+`;
+
 const BannerWrapper = styled.div`
-  max-width: 120rem;
+  position: relative;
+  width: min(102.4rem, 95%);
   margin-inline: auto;
+  height: 25rem;
+  border-radius: 8px;
+  border: 1px solid lightgray;
+  
+  @media screen and (min-width: 50em){
+    border: revert;
+    height: 30rem;
+  }
+
 `;
 
 const PlaceholderTweetBox = styled(TweetBox)`

@@ -63,7 +63,6 @@ const Home = ({
   const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
   const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
 
-
   const requestConfig = {
     headers: {
       authorization: `Bearer ${token}`,
