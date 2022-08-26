@@ -7,8 +7,9 @@ import { AiFillHome } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
-import { useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import FullScreenLoader from "./FullScreenLoader";
+import { logOut } from "../../features/auth/authSlice";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -24,20 +25,15 @@ const NavList = [
 function Layout({ children }: { children: React.ReactElement }) {
   const router = useRouter();
   const username = useAppSelector((state) => state.auth.user?.username);
-  const pathName =
-    router.pathname.split("/")[1].toUpperCase()[0] +
-    router.pathname.split("/")[1].substring(1);
-  const [activeTab, setActiveTab] = useState(
-    router.pathname.split("/")[1] === "" ? "Home" : pathName
-  );
+  const [activeTab, setActiveTab] = useState(router.route);
   const [isLoading, setIsLoading] = useState(true);
   const token = useAppSelector((state) => state.auth.token);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!token) {
-     
-        setIsLoading((prev) => !prev);
-     
+      setIsLoading((prev) => !prev);
+      dispatch(logOut());
       router.replace("/register");
     } else if (token) {
       setIsLoading(false);
@@ -50,11 +46,12 @@ function Layout({ children }: { children: React.ReactElement }) {
     <>
       <Head>
         <title>
-          {router.pathname.split("/")[1] === ""
+          {router.route === "/"
             ? "Home"
-            : pathName === "[userId]"
+            : router.route === "/[userId]"
             ? `${username}`
-            : pathName}{" "}
+            : router.route.split("/")[1].charAt(0).toUpperCase() +
+              router.route.split("/")[1].substring(1)}{" "}
           / Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
