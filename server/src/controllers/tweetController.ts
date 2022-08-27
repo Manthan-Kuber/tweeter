@@ -99,17 +99,102 @@ export const getTweet = async (req: IRequest, res: Response) => {
   }
 };
 
+export const fetchTweets = async (req: IRequest, res: Response) => {
+  let skip = parseInt(req.params.skip);
+  const tweetId = req.params.tweetId;
+  const id = req.user?._id;
+  if (!skip) skip = 0;
+  try {
+    const tweets = await Tweet.aggregate([
+      {
+        $match: {
+          tweetId: new ObjectId(tweetId),
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip * 10 },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "tweets",
+          let: { tweetid: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { _id: 0, count: 1 } },
+          ],
+          as: "count",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $addFields: {
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          "creator.name": 1,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          comment: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          liked: 1,
+          createdAt: 1,
+          replyCount: "$count.count",
+        },
+      },
+    ]);
+    res.status(200).json({ data: { tweets: tweets } });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
 export const createTweet = async (req: IRequest, res: Response) => {
-  const { tweet, shared, hashtags } = req.body;
+  const { tweet, shared, hashtags, tweetId } = req.body;
   const id = req.user?._id;
   const files = req.files as Express.Multer.File[];
   try {
-    const newTweet = await Tweet.create({
-      creator: id,
-      tweet: tweet,
-      shared: shared ? shared : true,
-      hashtags: hashtags ? hashtags : [],
-    });
+    let newTweet: any;
+    if (tweetId) {
+      newTweet = await Tweet.create({
+        creator: id,
+        tweetId: tweetId,
+        tweet: tweet,
+        shared: shared ? shared : true,
+        hashtags: hashtags ? hashtags : [],
+      });
+    } else {
+      newTweet = await Tweet.create({
+        creator: id,
+        tweet: tweet,
+        shared: shared ? shared : true,
+        hashtags: hashtags ? hashtags : [],
+      });
+    }
     if (hashtags) {
       for (var i = 0; i < hashtags.length; i++) {
         await Hashtag.findOneAndUpdate(
