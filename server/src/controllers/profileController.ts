@@ -448,14 +448,14 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
 
   try {
     const user = await User.findById(id);
-    const replies = await Comment.aggregate([
+    const comments = await Comment.aggregate([
       {
         $match: {
           author: new ObjectId(id),
           tweetId: { $exists: true },
         },
       },
-      { $group: { _id: "$tweetId", comments: { $push: "$$ROOT" } } },
+      { $group: { _id: "$tweetId", comment: { $last: "$$ROOT" } } },
       {
         $lookup: {
           from: "tweets",
@@ -464,49 +464,36 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
           as: "_id",
         },
       },
-      {
-        $unionWith: {
-          coll: "comments",
-          pipeline: [
-            {
-              $match: {
-                author: new ObjectId(id),
-                commentId: { $exists: true },
-              },
-            },
-            { $group: { _id: "$commentId", replies: { $push: "$$ROOT" } } },
-            {
-              $lookup: {
-                from: "comments",
-                localField: "_id",
-                foreignField: "_id",
-                as: "_id",
-              },
-            },
-            {
-              $lookup: {
-                from: "tweets",
-                localField: "_id.tweetId",
-                foreignField: "_id",
-                as: "_id",
-              },
-            },
-          ],
-        },
-      },
-      { $group: { _id: "$_id._id", data: { $push: "$$ROOT" } } },
-      {
-        $lookup: {
-          from: "tweets",
-          localField: "_id",
-          foreignField: "_id",
-          as: "_id",
-        },
-      },
-      { $addFields: { createdAt: "$_id.createdAt" } },
-      { $project: { "data.comments": 1, "data.replies": 1, createdAt: 1 } },
     ]);
-    const tweetIds = replies.map((item) => item._id[0]._id);
+    let tweetIds = comments.map((item) => item._id[0]._id);
+    const replies = await Comment.aggregate([
+      {
+        $match: {
+          author: new ObjectId(id),
+          tweetId: { $nin: tweetIds },
+          commentId: { $exists: true },
+        },
+      },
+      { $group: { _id: "$tweetId", reply: { $last: "$$ROOT" } } },
+      {
+        $lookup: {
+          from: "comments",
+          localField: "reply.commentId",
+          foreignField: "_id",
+          as: "comment",
+        },
+      },
+      {
+        $lookup: {
+          from: "tweets",
+          localField: "_id",
+          foreignField: "_id",
+          as: "_id",
+        },
+      },
+    ]);
+    console.log(replies);
+    tweetIds.push(replies.map((item) => item._id[0]._id));
     const tweets = await Tweet.aggregate([
       {
         $match: {
@@ -585,7 +572,8 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
         },
       },
     ]);
-    let tweetandreplies = replies;
+    let tweetandreplies = comments;
+    tweetandreplies.push(replies);
     tweetandreplies.push(tweets);
     tweetandreplies.sort((a, b) => {
       return a.createdAt - b.createdAt;
@@ -594,6 +582,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       .status(200)
       .json({ data: tweetandreplies.slice(skip * 10, skip * 10 + 10) });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err });
   }
 };

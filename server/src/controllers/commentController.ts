@@ -14,7 +14,12 @@ export const fetchComments = async (req: IRequest, res: Response) => {
   if (!skip) skip = 0;
   try {
     const comments = await Comment.aggregate([
-      { $match: { tweetId: new ObjectId(tweetId) } },
+      {
+        $match: {
+          tweetId: new ObjectId(tweetId),
+          commentId: { $exists: false },
+        },
+      },
       { $sort: { createdAt: -1 } },
       { $skip: skip * 10 },
       { $limit: 10 },
@@ -211,7 +216,7 @@ export const createComment = async (req: IRequest, res: Response) => {
 };
 
 export const createReply = async (req: IRequest, res: Response) => {
-  const { comment, commentId, hashtags } = req.body;
+  const { comment, commentId, tweetId, hashtags } = req.body;
   const files = req.files as Express.Multer.File[];
   const id = req.user?._id;
 
@@ -219,6 +224,7 @@ export const createReply = async (req: IRequest, res: Response) => {
     const newReply = await Comment.create({
       author: id,
       commentId: commentId,
+      tweetId: tweetId,
       comment: comment,
       hashtags: hashtags ? hashtags : [],
     });
