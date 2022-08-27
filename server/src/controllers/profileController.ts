@@ -468,13 +468,13 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
           from: "tweets",
           localField: "_id",
           foreignField: "_id",
-          as: "_id",
+          as: "tweet",
         },
       },
       {
         $lookup: {
           from: "users",
-          localField: "_id.creator",
+          localField: "tweet.creator",
           foreignField: "_id",
           as: "creator",
         },
@@ -482,7 +482,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       {
         $lookup: {
           from: "comments",
-          let: { tweetid: "$_id._id" },
+          let: { tweetid: "$tweet._id" },
           pipeline: [
             { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
             { $group: { _id: null, count: { $sum: 1 } } },
@@ -493,27 +493,27 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       },
       {
         $addFields: {
-          "_id.retweeted": {
+          "tweet.retweeted": {
             $filter: {
-              input: "$_id.retweetedUsers",
+              input: "$tweet.retweetedUsers",
               as: "user",
               cond: {
                 $eq: ["$$user", new ObjectId(id)],
               },
             },
           },
-          "_id.saved": {
+          "tweet.saved": {
             $filter: {
-              input: "$_id.savedBy",
+              input: "$tweet.savedBy",
               as: "user",
               cond: {
                 $eq: ["$$user", new ObjectId(id)],
               },
             },
           },
-          "_id.liked": {
+          "tweet.liked": {
             $filter: {
-              input: "$_id.likes",
+              input: "$tweet.likes",
               as: "user",
               cond: {
                 $eq: ["$$user", new ObjectId(id)],
@@ -533,26 +533,27 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       },
       {
         $project: {
+          "creator._id": 1,
           "creator.name": 1,
           "creator.username": 1,
           "creator.profilePic": 1,
-          "_id._id": 1,
-          "_id.tweet": 1,
-          "_id.retweeted": 1,
-          "_id.saved": 1,
-          "_id.savedBy": { $size: "$_id.savedBy" },
-          "_id.retweetedUsers": { $size: "$_id.retweetedUsers" },
-          "_id.media": 1,
-          "_id.createdAt": 1,
-          "_id.commentCount": "$count.count",
-          "_id.likes": {
+          "tweet._id": 1,
+          "tweet.tweet": 1,
+          "tweet.retweeted": 1,
+          "tweet.saved": 1,
+          "tweet.savedBy": { $size: "$tweet.savedBy" },
+          "tweet.retweetedUsers": { $size: "$tweet.retweetedUsers" },
+          "tweet.media": 1,
+          "tweet.createdAt": 1,
+          "tweet.commentCount": "$count.count",
+          "tweet.likes": {
             $cond: {
-              if: { $isArray: "$_id.likes" },
-              then: { $size: "$_id.likes" },
+              if: { $isArray: "$tweet.likes" },
+              then: { $size: "$tweet.likes" },
               else: 0,
             },
           },
-          "_id.liked": 1,
+          "tweet.liked": 1,
           "comment._id": 1,
           "comment.comment": 1,
           "comment.liked": 1,
@@ -560,7 +561,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
         },
       },
     ]);
-    let tweetIds = comments.map((item) => item._id[0]._id);
+    let tweetIds = comments.map((item) => item.tweet[0]._id);
     const tweets = await Tweet.aggregate([
       {
         $match: {
@@ -650,7 +651,6 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       },
     ]);
     let tweetandreplies = comments;
-    // tweetandreplies.push(replies);
     tweetandreplies.push(tweets);
     tweetandreplies.sort((a, b) => {
       return a.createdAt - b.createdAt;
