@@ -213,6 +213,7 @@ interface CreateTweetProps {
   >;
   onSubmit: (e: React.FormEvent) => void;
   replyImageUrl?: string;
+  isMediaInputVisible?:boolean;
 }
 
 interface TweetProps {

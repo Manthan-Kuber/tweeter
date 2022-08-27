@@ -113,7 +113,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
             </AuthorWrapper>
             <UserName>@ {props.authorUserName}</UserName>
             <TweetText>{props.commentText}</TweetText>
-            <ImageWrapper numOfImages={props.mediaList?.length ?? 0}>
+            <ImagesWrapper numOfImages={props.mediaList?.length ?? 0}>
               {props.mediaList?.map((mediaItemUrl, index) => (
                 <TweetImage
                   key={`${mediaItemUrl} ${index}`}
@@ -123,7 +123,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
                   height={30}
                 />
               ))}
-            </ImageWrapper>
+            </ImagesWrapper>
             <ModifiedOptionsWrapper>
               {optionsList.map((option) => (
                 <ModifiedOptionWrapper
@@ -156,6 +156,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
                 setFileList={setFileList}
                 onSubmit={(e) => onSubmit(e, props.commentId)}
                 replyImageUrl={currentUserPfp}
+                isMediaInputVisible={false}
               />
               {CommentRepliesData?.data.map((reply) => (
                 <CommentReply
@@ -184,7 +185,7 @@ const TweetImage = styled(Image)`
   border-radius: 6px;
 `;
 
-const ImageWrapper = styled(TweetImageArrayWrapper)`
+const ImagesWrapper = styled(TweetImageArrayWrapper)`
   width: 100%;
   margin-top: revert;
 `;

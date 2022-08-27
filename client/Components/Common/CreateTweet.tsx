@@ -12,6 +12,7 @@ const CreateTweet = ({
   setMessage,
   setFileList,
   onSubmit,
+  isMediaInputVisible = true,
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,11 +50,7 @@ const CreateTweet = ({
     <ReplyContainer>
       {props.isReplyImageVisible && (
         <ReplyImageWrapper>
-          <ReplyImage
-            src={props.replyImageUrl!}
-            width={42}
-            height={45}
-          />
+          <ReplyImage src={props.replyImageUrl!} width={42} height={45} />
         </ReplyImageWrapper>
       )}
       <InputFormWrapper id="formWrapper" variant={props.variant}>
@@ -105,16 +102,18 @@ const CreateTweet = ({
             </TweetImageArrayWrapper>
           )}
           {props.variant !== "Home" && <hr />}
-          <OptionsWrapper>
-            <MediaIcon
-              as={MdOutlineImage}
-              size={28}
-              color={"var(--clr-primary)"}
-              $cursorPointer
-              onClick={(e: React.SyntheticEvent) =>
-                fileInputRef.current && fileInputRef.current.click()
-              }
-            />
+          <OptionsWrapper isMediaInputVisible={isMediaInputVisible} >
+            {isMediaInputVisible && (
+              <MediaIcon
+                as={MdOutlineImage}
+                size={28}
+                color={"var(--clr-primary)"}
+                $cursorPointer
+                onClick={(e: React.SyntheticEvent) =>
+                  fileInputRef.current && fileInputRef.current.click()
+                }
+              />
+            )}
             <TweetButton disabled={isDisabled}>{props.btnText}</TweetButton>
           </OptionsWrapper>
         </form>
@@ -130,9 +129,9 @@ const HomeVariantContainer = styled.div`
   }
 `;
 
-const OptionsWrapper = styled.div`
+const OptionsWrapper = styled.div<{isMediaInputVisible:boolean}>`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({isMediaInputVisible}) => !isMediaInputVisible ? "flex-end" :"space-between"};
   align-items: center;
   margin-top: 1rem;
 `;
