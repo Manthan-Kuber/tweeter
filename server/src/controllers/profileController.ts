@@ -453,6 +453,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
         $match: {
           author: new ObjectId(id),
           tweetId: { $exists: true },
+          commentId: { $exists: false },
         },
       },
       { $group: { _id: "$tweetId", comment: { $last: "$$ROOT" } } },
