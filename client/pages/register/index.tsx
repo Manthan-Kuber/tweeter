@@ -174,11 +174,11 @@ function Register() {
               />
             )}
 
-            <SignInIconsWrapper>
+            {/* <SignInIconsWrapper>
               {IconArray.map((icon) => (
                 <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />
               ))}
-            </SignInIconsWrapper>
+            </SignInIconsWrapper> */}
           </SignUpBox>
         </Container>
       )}

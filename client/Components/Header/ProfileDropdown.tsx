@@ -47,22 +47,22 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
         push(`/${userId}`);
       },
     },
-    {
-      id: 2,
-      icon: <HiUserGroup size={20} />,
-      name: "Group Chat",
-      onClick: () => {
-        setVisible((prev) => !prev);
-      },
-    },
-    {
-      id: 3,
-      icon: <IoMdSettings size={20} />,
-      name: "Settings",
-      onClick: () => {
-        setVisible((prev) => !prev);
-      },
-    },
+    // {
+    //   id: 2,
+    //   icon: <HiUserGroup size={20} />,
+    //   name: "Group Chat",
+    //   onClick: () => {
+    //     setVisible((prev) => !prev);
+    //   },
+    // },
+    // {
+    //   id: 3,
+    //   icon: <IoMdSettings size={20} />,
+    //   name: "Settings",
+    //   onClick: () => {
+    //     setVisible((prev) => !prev);
+    //   },
+    // },
     {
       id: 4,
       icon: <HiOutlineLogout size={20} />,
@@ -94,7 +94,7 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
             {option.icon}
             <h4>{option.name}</h4>
           </div>
-          {option.id === 3 && <hr />}
+          {option.id === 1 && <hr />}
         </OptionWrapper>
       ))}
     </Container>
@@ -104,7 +104,7 @@ export default ProfileDropdown;
 
 const Container = styled.div`
   position: absolute;
-  bottom: -28rem;
+  bottom: -16.5rem;
   right: 0;
   background-color: white;
   padding: 1.5rem 1.3rem;
