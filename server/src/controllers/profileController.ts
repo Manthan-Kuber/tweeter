@@ -452,34 +452,13 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       {
         $match: {
           author: new ObjectId(id),
-          tweetId: { $exists: true },
-          commentId: { $exists: false },
         },
       },
       { $group: { _id: "$tweetId", comment: { $last: "$$ROOT" } } },
       {
         $lookup: {
-          from: "tweets",
-          localField: "_id",
-          foreignField: "_id",
-          as: "_id",
-        },
-      },
-    ]);
-    let tweetIds = comments.map((item) => item._id[0]._id);
-    const replies = await Comment.aggregate([
-      {
-        $match: {
-          author: new ObjectId(id),
-          tweetId: { $nin: tweetIds },
-          commentId: { $exists: true },
-        },
-      },
-      { $group: { _id: "$tweetId", reply: { $last: "$$ROOT" } } },
-      {
-        $lookup: {
           from: "comments",
-          localField: "reply.commentId",
+          localField: "comment.commentId",
           foreignField: "_id",
           as: "comment",
         },
@@ -492,9 +471,96 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
           as: "_id",
         },
       },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id.creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          let: { tweetid: "$_id._id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { _id: 0, count: 1 } },
+          ],
+          as: "count",
+        },
+      },
+      {
+        $addFields: {
+          "_id.retweeted": {
+            $filter: {
+              input: "$_id.retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          "_id.saved": {
+            $filter: {
+              input: "$_id.savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          "_id.liked": {
+            $filter: {
+              input: "$_id.likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          "comment.liked": {
+            $filter: {
+              input: "$comment.likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          "creator.name": 1,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          "_id._id": 1,
+          "_id.tweet": 1,
+          "_id.retweeted": 1,
+          "_id.saved": 1,
+          "_id.savedBy": { $size: "$_id.savedBy" },
+          "_id.retweetedUsers": { $size: "$_id.retweetedUsers" },
+          "_id.media": 1,
+          "_id.createdAt": 1,
+          "_id.commentCount": "$count.count",
+          "_id.likes": {
+            $cond: {
+              if: { $isArray: "$_id.likes" },
+              then: { $size: "$_id.likes" },
+              else: 0,
+            },
+          },
+          "_id.liked": 1,
+          "comment._id": 1,
+          "comment.comment": 1,
+          "comment.liked": 1,
+          "comment.createdAt": 1,
+        },
+      },
     ]);
-    console.log(replies);
-    tweetIds.push(replies.map((item) => item._id[0]._id));
+    let tweetIds = comments.map((item) => item._id[0]._id);
     const tweets = await Tweet.aggregate([
       {
         $match: {
@@ -521,6 +587,15 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
           saved: {
             $filter: {
               input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          liked: {
+            $filter: {
+              input: "$likes",
               as: "user",
               cond: {
                 $eq: ["$$user", new ObjectId(id)],
@@ -566,6 +641,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
           },
           retweeted: 1,
           saved: 1,
+          liked: 1,
           savedBy: { $size: "$savedBy" },
           commentCount: "$count.count",
           retweetedUsers: { $size: "$retweetedUsers" },
@@ -574,7 +650,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       },
     ]);
     let tweetandreplies = comments;
-    tweetandreplies.push(replies);
+    // tweetandreplies.push(replies);
     tweetandreplies.push(tweets);
     tweetandreplies.sort((a, b) => {
       return a.createdAt - b.createdAt;
