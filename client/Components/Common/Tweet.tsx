@@ -192,6 +192,7 @@ const Tweet = (props: TweetProps) => {
               replyCount={comment.replyCount}
               mediaList={comment.media}
               isLiked={comment.liked.length === 0 ? false : true}
+              tweetId={props.tweetId}
             />
           ))}
       </TweetBox>

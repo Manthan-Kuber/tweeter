@@ -37,6 +37,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
     setMessage("");
     const formData = new FormData();
     formData.append("comment", message);
+    formData.append("tweetId", props.tweetId);
     formData.append("commentId", commentId);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("media", fileArray[i]);

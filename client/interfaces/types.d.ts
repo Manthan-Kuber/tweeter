@@ -360,6 +360,7 @@ interface TweetRepliesProps
   isLiked: boolean;
   replyCount: string[];
   mediaList?: string[];
+  tweetId:string;
 }
 
 interface GetFollowingAndFollowersElement {
