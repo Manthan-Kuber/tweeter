@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -6,6 +7,7 @@ import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
 import {
   useCreateReplyMutation,
+  useCreateTweetMutation,
   useLazyGetCommentRepliesQuery,
   useLikeCommentMutation,
 } from "../../app/services/api";
@@ -19,6 +21,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
   const [isLikeActive, setIsLikeActive] = useState(props.isLiked);
   const commentCreationDate = new Date(props.commentCreationDate);
   const [isCommentActive, setIsCommentActive] = useState(false);
+  const [createTweet] = useCreateTweetMutation();
   const [likeComment] = useLikeCommentMutation();
   const [createReply] = useCreateReplyMutation();
   const [GetCommentRepliesTrigger, { data: CommentRepliesData }] =
@@ -29,16 +32,47 @@ const TweetReplies = (props: TweetRepliesProps) => {
   );
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
 
-  const onSubmit = async (e: React.FormEvent, commentId: string) => {
+  // const onSubmit = async (e: React.FormEvent, commentId: string) => {
+  //   e.preventDefault();
+  //   const isHashtagPresent = /#[a-z]+/gi;
+  //   const fileArray = fileList.map((item) => item.file);
+  //   setFileList([]);
+  //   setMessage("");
+  //   const formData = new FormData();
+  //   formData.append("comment", message);
+  //   formData.append("tweetId", props.tweetId);
+  //   formData.append("commentId", commentId);
+  //   for (let i = 0; i < fileList.length; i++) {
+  //     formData.append("media", fileArray[i]);
+  //   }
+  //   if (isHashtagPresent.test(message)) {
+  //     const hashtagArray = message.match(isHashtagPresent);
+  //     if (hashtagArray !== null) {
+  //       for (let i = 0; i < hashtagArray.length; i++) {
+  //         formData.append("hashtags", hashtagArray[i]);
+  //       }
+  //     }
+  //   }
+  //   try {
+  //     await createReply(formData).unwrap();
+  //     toast.success(() => (
+  //       <ToastMessage>Created Reply Successfully</ToastMessage>
+  //     ));
+  //   } catch (error) {
+  //     toast.error(() => <ToastMessage>Error in Creating Reply</ToastMessage>);
+  //   }
+  // };
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
     setFileList([]);
     setMessage("");
     const formData = new FormData();
-    formData.append("comment", message);
     formData.append("tweetId", props.tweetId);
-    formData.append("commentId", commentId);
+    formData.append("shared", "true");
+    formData.append("tweet", message);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("media", fileArray[i]);
     }
@@ -51,12 +85,12 @@ const TweetReplies = (props: TweetRepliesProps) => {
       }
     }
     try {
-      await createReply(formData).unwrap();
+      await createTweet(formData).unwrap();
       toast.success(() => (
-        <ToastMessage>Created Reply Successfully</ToastMessage>
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
       ));
     } catch (error) {
-      toast.error(() => <ToastMessage>Error in Creating Reply</ToastMessage>);
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
     }
   };
 
@@ -155,7 +189,7 @@ const TweetReplies = (props: TweetRepliesProps) => {
                 setMessage={setMessage}
                 fileList={fileList}
                 setFileList={setFileList}
-                onSubmit={(e) => onSubmit(e, props.commentId)}
+                onSubmit={onSubmit}
                 replyImageUrl={currentUserPfp}
                 isMediaInputVisible={false}
               />

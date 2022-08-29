@@ -172,11 +172,7 @@ const Home = ({
         <ToastMessage>Created Tweet Successfully</ToastMessage>
       ));
     } catch (error) {
-      toast.error(() => (
-        <ToastMessage>
-          Error in creating Tweet: <br /> {(error as AxiosError).message}
-        </ToastMessage>
-      ));
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
     }
   };
 
