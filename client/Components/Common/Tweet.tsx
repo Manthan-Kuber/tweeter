@@ -291,6 +291,11 @@ export const TweetBox = styled.div`
   font-family: var(--ff-noto);
   background-color: white;
   padding: 2rem;
+  cursor: pointer;
+  transition: background-color 0.4s;
+  &:hover {
+    background-color: rgb(255, 255, 255, 0.7);
+  }
 `;
 
 const TweetText = styled.span`

@@ -10,7 +10,7 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
   }, [trendList]);
   return (
     <Article as="article" id="trendScroll">
-      <h5>Trends for you</h5>
+      <h3>Trends for you</h3>
       <hr />
       <ul>
         <InfiniteScroll
@@ -19,7 +19,9 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
           hasMore={props.hasMore}
           loader={<p>Loading...</p>} //Change Later
           scrollableTarget="trendScroll"
-          endMessage={trendList.length !== 0 && <p>You have reached the end...</p>} //Change Later
+          endMessage={
+            trendList.length !== 0 && <p>You have reached the end...</p>
+          } //Change Later
         >
           {trendList.length === 0 ? (
             <NoTweetsToShow message={"No More Trends to show"} />
@@ -59,6 +61,10 @@ const Article = styled(AsideContainer)`
     color: #333;
     margin-bottom: 1rem;
     letter-spacing: -0.035em;
+  }
+  & > h3 {
+    color: #333;
+    font: revert
   }
   span {
     color: #828282;

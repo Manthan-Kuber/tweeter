@@ -19,7 +19,7 @@ const SuggestedFollow = ({
   const [followUser] = useFollowUserMutation();
   return (
     <Article as="article" id="suggestedFollowerScroll">
-      <h5>Whom to follow</h5>
+      <h3>Whom to follow</h3>
       <InfiniteScroll
         dataLength={suggestedFollowList.length}
         next={props.getSuggestedFollowers}
@@ -80,6 +80,10 @@ const Article = styled(AsideContainer)`
   color: #4f4f4f;
   max-height: 35rem;
   overflow-y: scroll;
+  & > h3 {
+    color: #333;
+    font: revert
+  }
   h5 {
     margin-bottom: 1rem;
   }
