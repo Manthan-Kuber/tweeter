@@ -213,7 +213,7 @@ interface CreateTweetProps {
   >;
   onSubmit: (e: React.FormEvent) => void;
   replyImageUrl?: string;
-  isMediaInputVisible?:boolean;
+  isMediaInputVisible?: boolean;
 }
 
 interface TweetProps {
@@ -233,6 +233,7 @@ interface TweetProps {
   likes: number;
   retweetedUsers: number;
   savedBy: number;
+  variant?: "inTweet";
 }
 
 interface EditProfileProps {
@@ -305,6 +306,7 @@ interface TweetOptionsProps {
   setIsSaved: React.Dispatch<SetStateAction<boolean>>;
   setIsLiked: React.Dispatch<SetStateAction<boolean>>;
   setIsRetweeted: React.Dispatch<SetStateAction<boolean>>;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 interface GetTweetsResponseElement {
@@ -360,7 +362,7 @@ interface TweetRepliesProps
   isLiked: boolean;
   replyCount: string[];
   mediaList?: string[];
-  tweetId:string;
+  tweetId: string;
 }
 
 interface GetFollowingAndFollowersElement {

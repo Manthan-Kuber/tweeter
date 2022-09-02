@@ -37,6 +37,7 @@ const TweetOptions = ({
       activeColor: "black",
       onClick: async () => {
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
+        props.setIsModalOpen((prev: boolean) => !prev);
         if (isActive.Comments === false) {
           try {
             await props.commentFetchTrigger(props.tweetId).unwrap();
@@ -46,7 +47,7 @@ const TweetOptions = ({
             ));
           }
         }
-        setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
+        // setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
       },
     },
     {

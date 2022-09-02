@@ -14,7 +14,7 @@ const CustomModal = ({
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={() => setModalIsOpen(false)}
-      contentLabel="Followers & Following Modal"
+      contentLabel={`${props.modalTitle} Modal`}
       shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick ? true : false}
       style={{
         overlay: {
