@@ -35,18 +35,9 @@ const TweetOptions = ({
       name: "Comments",
       icon: <MdOutlineModeComment size={16} />,
       activeColor: "black",
-      onClick: async () => {
+      onClick: () => {
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
         props.setIsModalOpen((prev: boolean) => !prev);
-        if (isActive.Comments === false) {
-          try {
-            await props.commentFetchTrigger(props.tweetId).unwrap();
-          } catch (error) {
-            toast.error(() => (
-              <ToastMessage>Error in Creating Comment</ToastMessage>
-            ));
-          }
-        }
         // setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
       },
     },

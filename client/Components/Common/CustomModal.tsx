@@ -37,8 +37,8 @@ const CustomModal = ({
           WebkitOverflowScrolling: "touch",
           borderRadius: "8px",
           outline: "none",
-          maxHeight: "80vh",
-          height: "650px",
+          maxHeight: `${props.maxModalHeight || "80vh"}`,
+          height: `${props.modalHeight || "650px"}`,
           padding: "2rem",
         },
       }}

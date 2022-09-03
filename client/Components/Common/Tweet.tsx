@@ -117,7 +117,12 @@ const Tweet = (props: TweetProps) => {
 
   return (
     <>
-      <CustomModal setModalIsOpen={setIsModalOpen} modalIsOpen={isModalOpen}>
+      <CustomModal
+        setModalIsOpen={setIsModalOpen}
+        modalIsOpen={isModalOpen}
+        modalHeight="fit-content"
+        modalTitle={`Reply to ${props.authorUserName}'s Tweet`}
+      >
         <Tweet
           authorId={props.authorId}
           authorName={props.authorName}

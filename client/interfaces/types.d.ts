@@ -115,6 +115,9 @@ interface ModalProps {
   modalTitle?: string;
   shouldCloseOnOverlayClick?: boolean;
   closeIconOnClick?: MouseEventHandler<SVGElement>;
+  modalWidth?:string;
+  modalHeight?:string;
+  maxModalHeight?:string;
 }
 
 interface ProfileBoxProps
