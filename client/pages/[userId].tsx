@@ -235,6 +235,7 @@ const Profile = ({ userId }: { userId: string }) => {
         followers={followers}
         following={following}
         modalTitle={`${name} is Followed By`}
+        shouldCloseOnOverlayClick={true}
       >
         {GetFollowersData !== undefined && (
           <FollowerInfo
@@ -251,6 +252,7 @@ const Profile = ({ userId }: { userId: string }) => {
         followers={followers}
         following={following}
         modalTitle={`${name} is Following`}
+        shouldCloseOnOverlayClick={true}
       >
         {GetFollowingData !== undefined && (
           <FollowerInfo

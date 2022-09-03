@@ -122,6 +122,7 @@ const Tweet = (props: TweetProps) => {
         modalIsOpen={isModalOpen}
         modalHeight="fit-content"
         modalTitle={`Reply to ${props.authorUserName}'s Tweet`}
+        shouldCloseOnOverlayClick={true}
       >
         <Tweet
           authorId={props.authorId}
