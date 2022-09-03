@@ -1,6 +1,7 @@
 import Modal from "react-modal";
 import styled from "styled-components";
 import { GrClose } from "react-icons/gr";
+import { useEffect } from "react";
 
 Modal.setAppElement("#__next");
 
@@ -10,12 +11,17 @@ const CustomModal = ({
   children,
   ...props
 }: ModalProps) => {
+  useEffect(() => {
+    if (modalIsOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "unset";
+  }, [modalIsOpen]);
+
   return (
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={() => setModalIsOpen(false)}
       contentLabel={`${props.modalTitle} Modal`}
-      shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick ? true : false}
+      shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick || false}
       style={{
         overlay: {
           position: "fixed",

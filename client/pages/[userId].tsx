@@ -130,14 +130,6 @@ const Profile = ({ userId }: { userId: string }) => {
     getProfile();
   }, [userId, GetFollowingData, GetFollowersData]);
 
-  useEffect(() => {
-    if (followerModalIsOpen || editProfileModalIsOpen || followingModalIsOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [followerModalIsOpen, editProfileModalIsOpen, followingModalIsOpen]);
-
   const getMoreTweets = async () => {
     try {
       if (TweetsData !== undefined) {
@@ -211,7 +203,7 @@ const Profile = ({ userId }: { userId: string }) => {
             className="banner-image"
             alt="banner"
             layout="fill"
-            objectFit={WindowWidth < 880 ? "contain" : undefined }
+            objectFit={WindowWidth < 880 ? "contain" : undefined}
           />
         </BannerWrapper>
       )}
@@ -378,12 +370,11 @@ const BannerWrapper = styled.div`
   height: 25rem;
   border-radius: 8px;
   border: 1px solid lightgray;
-  
-  @media screen and (min-width: 50em){
+
+  @media screen and (min-width: 50em) {
     border: revert;
     height: 30rem;
   }
-
 `;
 
 const PlaceholderTweetBox = styled(TweetBox)`

@@ -20,7 +20,7 @@ const TweetOptions = ({
 }: TweetOptionsProps) => {
   const { width } = useWindowSize();
   const [isActive, setIsActive] = useState({
-    Comments: false,
+    Reply: false,
     Retweet: props.isRetweeted,
     Like: props.isLiked,
     Saved: props.isSaved,
@@ -32,13 +32,12 @@ const TweetOptions = ({
   const optionsList = [
     {
       id: 1,
-      name: "Comments",
+      name: "Reply",
       icon: <MdOutlineModeComment size={16} />,
       activeColor: "black",
       onClick: () => {
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
-        props.setIsModalOpen((prev: boolean) => !prev);
-        // setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
+        props.setIsModalOpen(true);
       },
     },
     {
