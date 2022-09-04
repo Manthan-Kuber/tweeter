@@ -34,7 +34,9 @@ const TweetOptions = ({
       id: 1,
       name: "Reply",
       icon: <MdOutlineModeComment size={16} />,
-      activeColor: "black",
+      activeColor: "rgba(47, 128, 237,1)",
+      hoverColor: "rgba(47, 128, 237,0.2)",
+      onActiveColor: "rgba(47, 128, 237,0.7)",
       onClick: (e: MouseEvent) => {
         e.stopPropagation();
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
@@ -45,7 +47,9 @@ const TweetOptions = ({
       id: 2,
       name: "Retweet",
       icon: <AiOutlineRetweet size={16} />,
-      activeColor: "hsla(145, 63%, 42%, 1)",
+      activeColor: "rgba(40, 175, 96,1)",
+      hoverColor: "rgba(40, 175, 96,0.2)",
+      onActiveColor: "rgba(40, 175, 96,0.7)",
       onClick: async (e: MouseEvent) => {
         e.stopPropagation();
         try {
@@ -63,7 +67,9 @@ const TweetOptions = ({
       id: 3,
       name: "Like",
       icon: <AiOutlineHeart size={16} />,
-      activeColor: "hsla(0, 79%, 63%, 1)",
+      activeColor: "rgba(235, 86, 86,1)",
+      hoverColor: "rgba(235, 86, 86,0.2)",
+      onActiveColor: "rgba(235, 86, 86,0.7)",
       onClick: async (e: MouseEvent) => {
         e.stopPropagation();
         try {
@@ -79,7 +85,9 @@ const TweetOptions = ({
       id: 4,
       name: "Saved",
       icon: <BsBookmark size={16} />,
-      activeColor: "hsla(202, 71%, 52%, 1)",
+      activeColor: "rgba(46, 156, 220,1)",
+      hoverColor: "rgba(46, 156, 220,0.2)",
+      onActiveColor: "rgba(46, 156, 220,0.7)",
       onClick: async (e: MouseEvent) => {
         e.stopPropagation();
         try {
@@ -102,9 +110,11 @@ const TweetOptions = ({
             onClick={option.onClick}
             isActive={(isActive as any)[option.name]}
             activeColor={option.activeColor}
+            hoverColor={option.hoverColor}
+            onActiveColor={option.onActiveColor}
           >
             {option.icon}
-            {width !== undefined && width > 880 && <span>{option.name}</span>}
+            {/* {width !== undefined && width > 880 && <span>{option.name}</span>} */}
           </OptionWrapper>
         ))}
       </OptionsWrapper>
@@ -123,6 +133,8 @@ export const OptionsWrapper = styled.div`
 
 export const OptionWrapper = styled.div<{
   activeColor: string;
+  onActiveColor: string;
+  hoverColor: string;
   isActive: boolean;
 }>`
   display: flex;
@@ -132,7 +144,7 @@ export const OptionWrapper = styled.div<{
   font: 500 1.4rem var(--ff-noto);
   color: ${(props) =>
     props.isActive ? props.activeColor : "hsla(0, 0%, 31%, 1)"};
-  padding: 1.5rem 3rem;
+  padding: 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   -moz-user-select: none;
@@ -141,10 +153,10 @@ export const OptionWrapper = styled.div<{
   user-select: none;
   transition: all 0.4s;
   &:hover {
-    background-color: rgba(130, 130, 130, 0.2);
+    background-color: ${({ hoverColor }) => hoverColor};
   }
   &:active {
-    background-color: rgba(130, 130, 130, 0.7);
+    background-color: ${({ onActiveColor }) => onActiveColor};
   }
 
   span {
