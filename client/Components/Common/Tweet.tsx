@@ -3,7 +3,6 @@ import { AiOutlineDelete, AiOutlineRetweet } from "react-icons/ai";
 import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
-import TweetReplies from "./TweetReplies";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
 import { useState } from "react";
 import {
@@ -14,13 +13,13 @@ import {
 } from "../../styles/Toast.styles";
 import toast from "react-hot-toast";
 import {
-  useCreateCommentMutation,
   useCreateTweetMutation,
   useDeleteTweetMutation,
-  useLazyGetCommentsQuery,
+  useGetTweetRepliesQuery,
 } from "../../app/services/api";
 import { useAppSelector } from "../../Hooks/store";
 import CustomModal from "./CustomModal";
+import { useRouter } from "next/router";
 
 const Tweet = (props: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -30,7 +29,6 @@ const Tweet = (props: TweetProps) => {
   const [isCommentButtonClicked, setIsCommentButtonClicked] = useState(false);
   const [createTweet] = useCreateTweetMutation();
   const [deleteTweet] = useDeleteTweetMutation();
-  const [createComment] = useCreateCommentMutation();
   const tweetCreationDate = new Date(props.tweetCreationDate);
   const [isLiked, setIsLiked] = useState(props.isLiked);
   const [isSaved, setIsSaved] = useState(props.isSaved);
@@ -38,6 +36,13 @@ const Tweet = (props: TweetProps) => {
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data } = useGetTweetRepliesQuery({
+    tweetId: props.tweetId,
+    skip: 0,
+  });
+  const { push } = useRouter();
+
+  console.log(props.tweetId);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,7 +165,13 @@ const Tweet = (props: TweetProps) => {
             <span>{props.authorName} Retweeted</span>
           </RetweetWrapper>
         )}
-        <TweetBox variant={props.variant}>
+        <TweetBox
+          variant={props.variant}
+          onClick={(e) => {
+            e.stopPropagation();
+            push(`tweet/${props.tweetId}`);
+          }}
+        >
           <ProfileInfoWrapper>
             <ProfileInfo
               name={props.authorName}
@@ -195,6 +206,7 @@ const Tweet = (props: TweetProps) => {
             <TweetInfo>
               <span>{props.commentCount || 0} Comments</span>
               <span>{props.retweetedUsers || 0} Retweets</span>
+              <span>{props.likes || 0} Likes</span>
               <span>{props.savedBy || 0} Saved</span>
             </TweetInfo>
           )}

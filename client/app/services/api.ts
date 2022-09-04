@@ -22,6 +22,7 @@ export const api = createApi({
     "Following",
     "SuggestedFollowers",
     "CommentsReplies",
+    "Tweet",
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -72,7 +73,7 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: ["Tweets","Tweet"],
     }),
     deleteTweet: builder.mutation({
       query: (tweetId: string) => ({
@@ -129,6 +130,7 @@ export const api = createApi({
         "TweetsAndReplies",
         "TweetsLikes",
         "TweetsMedia",
+        "Tweet",
       ],
     }),
     saveTweet: builder.mutation<string, string>({
@@ -143,6 +145,7 @@ export const api = createApi({
         "TweetsAndReplies",
         "TweetsLikes",
         "TweetsMedia",
+        "Tweet",
       ],
     }),
     retweetTweet: builder.mutation<string, string>({
@@ -157,6 +160,7 @@ export const api = createApi({
         "TweetsAndReplies",
         "TweetsLikes",
         "TweetsMedia",
+        "Tweet",
       ],
     }),
     followUser: builder.mutation<void, string>({
@@ -203,6 +207,13 @@ export const api = createApi({
     getTweet: builder.query<GetTweetsResponse, string>({
       query: (tweetId) => `tweets/${tweetId}`,
     }),
+    getTweetReplies: builder.query<
+      GetTweetsResponse,
+      { tweetId: string; skip: number }
+    >({
+      query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
+      providesTags: ["Tweet"],
+    }),
   }),
 });
 
@@ -237,4 +248,6 @@ export const {
   useLazyGetCommentRepliesQuery,
   useCreateReplyMutation,
   useGetTweetQuery,
+  useGetTweetRepliesQuery,
+  useLazyGetTweetRepliesQuery,
 } = api;

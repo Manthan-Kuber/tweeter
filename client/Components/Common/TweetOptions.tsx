@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
 import { BsBookmark } from "react-icons/bs";
@@ -35,7 +35,8 @@ const TweetOptions = ({
       name: "Reply",
       icon: <MdOutlineModeComment size={16} />,
       activeColor: "black",
-      onClick: () => {
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation();
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
         props.setIsModalOpen(true);
       },
@@ -45,7 +46,8 @@ const TweetOptions = ({
       name: "Retweet",
       icon: <AiOutlineRetweet size={16} />,
       activeColor: "hsla(145, 63%, 42%, 1)",
-      onClick: async () => {
+      onClick: async (e: MouseEvent) => {
+        e.stopPropagation();
         try {
           await retweetTweet(props.tweetId).unwrap();
           setIsActive({ ...isActive, Retweet: !isActive.Retweet });
@@ -62,7 +64,8 @@ const TweetOptions = ({
       name: "Like",
       icon: <AiOutlineHeart size={16} />,
       activeColor: "hsla(0, 79%, 63%, 1)",
-      onClick: async () => {
+      onClick: async (e: MouseEvent) => {
+        e.stopPropagation();
         try {
           await likeTweet(props.tweetId).unwrap();
           setIsActive({ ...isActive, Like: !isActive.Like });
@@ -77,7 +80,8 @@ const TweetOptions = ({
       name: "Saved",
       icon: <BsBookmark size={16} />,
       activeColor: "hsla(202, 71%, 52%, 1)",
-      onClick: async () => {
+      onClick: async (e: MouseEvent) => {
+        e.stopPropagation();
         try {
           await saveTweet(props.tweetId).unwrap();
           setIsActive({ ...isActive, Saved: !isActive.Saved });
