@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import FullScreenLoader from "./FullScreenLoader";
 import { logOut } from "../../features/auth/authSlice";
+import axiosApi from "../../app/services/axiosApi";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -33,6 +34,7 @@ function Layout({ children }: { children: React.ReactElement }) {
   useEffect(() => {
     if (!token) {
       setIsLoading((prev) => !prev);
+      async () => await axiosApi.get("clearcookie");
       dispatch(logOut());
       router.replace("/register");
     } else if (token) {

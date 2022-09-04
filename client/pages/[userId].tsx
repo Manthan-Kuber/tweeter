@@ -123,10 +123,6 @@ const Profile = ({ userId }: { userId: string }) => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      async () => await axiosApi.get("clearcookie");
-      dispatch(logOut());
-    }
     getProfile();
   }, [userId, GetFollowingData, GetFollowersData]);
 
