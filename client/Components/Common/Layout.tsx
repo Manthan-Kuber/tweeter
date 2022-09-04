@@ -14,7 +14,7 @@ import axiosApi from "../../app/services/axiosApi";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
-  { id: 2, name: "Explore", url: "/explore", icon: <FaCompass size={24} /> },
+  // { id: 2, name: "Explore", url: "/explore", icon: <FaCompass size={24} /> },
   {
     id: 3,
     name: "Bookmarks",

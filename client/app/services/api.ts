@@ -80,7 +80,13 @@ export const api = createApi({
         method: "DELETE",
         body: { tweetId },
       }),
-      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+      ],
     }),
     //Needs tweetid and skip
     getComments: builder.query<GetCommentsResponse, string>({
@@ -94,7 +100,7 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Comments","Tweets"],
+      invalidatesTags: ["Comments", "Tweets"],
     }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/bookmarks/${skip}`,
@@ -117,7 +123,13 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId }, //invalidate tags for liked tweets fetch
       }),
-      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+      ],
     }),
     saveTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -125,7 +137,13 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId },
       }),
-      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+      ],
     }),
     retweetTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -133,7 +151,13 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId },
       }),
-      invalidatesTags: ["Tweets", "Bookmarks","TweetsAndReplies","TweetsLikes","TweetsMedia"],
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+      ],
     }),
     followUser: builder.mutation<void, string>({
       query: (targetid) => ({
@@ -157,13 +181,14 @@ export const api = createApi({
       }),
       providesTags: ["SuggestedFollowers"],
     }),
-    likeComment: builder.mutation<void, string>({ //same api for likeReply
+    likeComment: builder.mutation<void, string>({
+      //same api for likeReply
       query: (commentId) => ({
         url: `comment/like`,
         method: "PUT",
         body: { commentId },
       }),
-      invalidatesTags:["CommentsReplies","Comments"]
+      invalidatesTags: ["CommentsReplies", "Comments"],
     }),
     getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
       query: (commentId) => ({
@@ -174,6 +199,9 @@ export const api = createApi({
     createReply: builder.mutation({
       query: (body) => ({ url: "comment/reply", method: "POST", body }),
       invalidatesTags: ["CommentsReplies"],
+    }),
+    getTweet: builder.query<GetTweetsResponse, string>({
+      query: (tweetId) => `tweets/${tweetId}`,
     }),
   }),
 });
@@ -208,4 +236,5 @@ export const {
   useLikeCommentMutation,
   useLazyGetCommentRepliesQuery,
   useCreateReplyMutation,
+  useGetTweetQuery,
 } = api;
