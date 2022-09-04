@@ -31,8 +31,6 @@ const Tweet = (props: TweetProps) => {
   const [createTweet] = useCreateTweetMutation();
   const [deleteTweet] = useDeleteTweetMutation();
   const [createComment] = useCreateCommentMutation();
-  const [commentFetchTrigger, { data: commentsData }] =
-    useLazyGetCommentsQuery();
   const tweetCreationDate = new Date(props.tweetCreationDate);
   const [isLiked, setIsLiked] = useState(props.isLiked);
   const [isSaved, setIsSaved] = useState(props.isSaved);
@@ -205,7 +203,6 @@ const Tweet = (props: TweetProps) => {
               setIsModalOpen={setIsModalOpen}
               setIsCommentButtonClicked={setIsCommentButtonClicked}
               tweetId={props.tweetId}
-              commentFetchTrigger={commentFetchTrigger}
               isLiked={isLiked}
               isSaved={isSaved}
               isRetweeted={isRetweeted}

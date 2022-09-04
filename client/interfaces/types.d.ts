@@ -236,7 +236,7 @@ interface TweetProps {
   likes: number;
   retweetedUsers: number;
   savedBy: number;
-  variant?: "inTweet";
+  variant?: "inTweet" | "tweetPage";
 }
 
 interface EditProfileProps {
@@ -288,21 +288,6 @@ interface SuggestedFollowProps {
 interface TweetOptionsProps {
   setIsCommentButtonClicked: Dispatch<SetStateAction<boolean>>;
   tweetId: string;
-  commentFetchTrigger: LazyQueryTrigger<
-    QueryDefinition<
-      string,
-      BaseQueryFn<
-        string | FetchArgs,
-        unknown,
-        FetchBaseQueryError,
-        {},
-        FetchBaseQueryMeta
-      >,
-      "Tweets" | "Comments",
-      GetCommentsResponse,
-      "api"
-    >
-  >;
   isSaved: boolean;
   isLiked: boolean;
   isRetweeted: boolean;
@@ -421,5 +406,3 @@ interface CommentReplyProps {
   likesCount: number;
   isLiked: boolean;
 }
-
-
