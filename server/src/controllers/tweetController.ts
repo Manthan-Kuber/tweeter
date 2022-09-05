@@ -171,6 +171,7 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
           "creator.username": 1,
           "creator.profilePic": 1,
           comment: 1,
+          tweet:1,
           media: 1,
           likes: {
             $cond: {
@@ -185,7 +186,7 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
           savedBy: { $size: "$savedBy" },
           retweetedUsers: { $size: "$retweetedUsers" },
           createdAt: 1,
-          replyCount: "$count.count",
+          commentCount: "$count.count",
         },
       },
     ]);
