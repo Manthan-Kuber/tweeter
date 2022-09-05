@@ -189,7 +189,7 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
         },
       },
     ]);
-    res.status(200).json({ data: { tweets: tweets } });
+    res.status(200).json({ data: tweets });
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: err });
