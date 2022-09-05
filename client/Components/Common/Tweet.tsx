@@ -198,6 +198,7 @@ const Tweet = (props: TweetProps) => {
                   alt="Tweet Image"
                   layout="fill"
                   objectFit="contain"
+                  style={{ borderRadius: "16px" }}
                 />
               </ImageWrapper>
             ))}
@@ -249,10 +250,17 @@ export default Tweet;
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: 100%;
-  height: 30rem;
-  border: 1px solid lightgray;
-  border-radius: 8px;
+  width: min(40rem, 100%);
+  height: 15rem;
+  border-radius: 16px;
+  background-color: black;
+  margin-inline: auto;
+  @media screen and (min-width: 20em) {
+    height:20rem
+  }
+  @media screen and (min-width: 55em) {
+    height:40rem
+  }
 `;
 
 const ProfileInfoWrapper = styled.div`

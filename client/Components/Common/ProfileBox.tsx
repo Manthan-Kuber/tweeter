@@ -72,6 +72,7 @@ const ProfileBox = ({
               <ProfileImage
                 src={profilePic}
                 alt="profilePic"
+                priority
                 width={width! > 880 ? 160 : 120}
                 height={width! > 880 ? 160 : 120}
               />

@@ -199,6 +199,7 @@ const Profile = ({ userId }: { userId: string }) => {
             className="banner-image"
             alt="banner"
             layout="fill"
+            priority
             objectFit={WindowWidth < 880 ? "contain" : undefined}
           />
         </BannerWrapper>
