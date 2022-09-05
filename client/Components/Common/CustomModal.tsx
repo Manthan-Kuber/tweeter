@@ -52,13 +52,15 @@ const CustomModal = ({
       <MainWrapper>
         <CloseIconDivWrapper>
           <span>{props.modalTitle}</span>
-          <CloseIcon
+          <CloseIconWrapper
             onClick={
               props.closeIconOnClick
                 ? props.closeIconOnClick
                 : () => setModalIsOpen(false)
             }
-          />
+          >
+            <GrClose size={16} />
+          </CloseIconWrapper>
         </CloseIconDivWrapper>
         <hr />
         {children}
@@ -77,9 +79,19 @@ const MainWrapper = styled.div`
   }
 `;
 
-const CloseIcon = styled(GrClose)`
+const CloseIconWrapper = styled.div`
   cursor: pointer;
-  font-size: 1.4rem;
+  border-radius: 100%;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  transition: all 0.4s;
+  &:hover {
+    background-color: rgba(130, 130, 130, 0.2);
+  }
+  &:active {
+    background-color: rgba(130, 130, 130, 0.7);
+  }
 `;
 
 const CloseIconDivWrapper = styled.div`
