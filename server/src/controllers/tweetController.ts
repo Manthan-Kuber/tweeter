@@ -136,6 +136,24 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
       },
       {
         $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
           liked: {
             $filter: {
               input: "$likes",
@@ -161,7 +179,11 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
               else: 0,
             },
           },
+          retweeted: 1,
+          saved: 1,
           liked: 1,
+          savedBy: { $size: "$savedBy" },
+          retweetedUsers: { $size: "$retweetedUsers" },
           createdAt: 1,
           replyCount: "$count.count",
         },
@@ -169,6 +191,7 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
     ]);
     res.status(200).json({ data: { tweets: tweets } });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err });
   }
 };
