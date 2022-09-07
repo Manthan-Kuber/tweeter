@@ -271,10 +271,10 @@ const DeleteIconWrapper = styled.div`
   padding: 8px;
   transition: all 0.4s;
   &:hover {
-    background-color: rgba(130, 130, 130, 0.2);
+    background-color: rgba(255, 0, 0, 0.2);
   }
   &:active {
-    background-color: rgba(130, 130, 130, 0.7);
+    background-color: rgba(255, 0, 0, 0.7);
   }
   align-self: flex-start;
 `;
@@ -316,7 +316,9 @@ export const TweetBox = styled.div<{
   transition: all 0.4s;
   &:hover {
     box-shadow: ${({ variant }) =>
-      variant === "tweetReply" ? "none" : "0px 2px 4px 2px rgba(0, 0, 0, 0.1)"};
+      variant === "tweetReply" || variant === "inTweet"
+        ? "none"
+        : "0px 2px 4px 2px rgba(0, 0, 0, 0.1)"};
   }
 `;
 
