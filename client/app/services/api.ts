@@ -73,7 +73,7 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Tweets","Tweet"],
+      invalidatesTags: ["Tweets", "Tweet"],
     }),
     deleteTweet: builder.mutation({
       query: (tweetId: string) => ({

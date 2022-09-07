@@ -380,6 +380,7 @@ interface TweetsDataListProps {
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>;
+  variant?: "inTweet" | "tweetPage";
 }
 
 interface GetCommentRepliesElement {

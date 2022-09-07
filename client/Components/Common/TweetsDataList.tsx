@@ -10,6 +10,7 @@ const TweetsDataList = ({
   getMoreTweets,
   hasMoreTweets,
   setHasMoreTweets,
+  variant,
 }: TweetsDataListProps) => {
   useEffect(() => {
     if (TweetsData.data.length === 10) setHasMoreTweets(true);
@@ -62,6 +63,7 @@ const TweetsDataList = ({
                 likes={tweet.likes}
                 retweetedUsers={tweet.retweetedUsers}
                 savedBy={tweet.savedBy}
+                variant={variant}
               />
             </>
           )

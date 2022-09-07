@@ -1,8 +1,8 @@
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
-import { BsBookmark } from "react-icons/bs";
-import { MdOutlineModeComment } from "react-icons/md";
+import { AiFillHeart, AiOutlineRetweet } from "react-icons/ai";
+import { BsBookmarkFill } from "react-icons/bs";
+import { MdModeComment } from "react-icons/md";
 import styled from "styled-components";
 import {
   useLikeTweetMutation,
@@ -33,7 +33,7 @@ const TweetOptions = ({
     {
       id: 1,
       name: "Reply",
-      icon: <MdOutlineModeComment size={16} />,
+      icon: <MdModeComment size={16} />,
       activeColor: "rgba(47, 128, 237,1)",
       hoverColor: "rgba(47, 128, 237,0.2)",
       onActiveColor: "rgba(47, 128, 237,0.7)",
@@ -66,7 +66,7 @@ const TweetOptions = ({
     {
       id: 3,
       name: "Like",
-      icon: <AiOutlineHeart size={16} />,
+      icon: <AiFillHeart size={16} />,
       activeColor: "rgba(235, 86, 86,1)",
       hoverColor: "rgba(235, 86, 86,0.2)",
       onActiveColor: "rgba(235, 86, 86,0.7)",
@@ -84,7 +84,7 @@ const TweetOptions = ({
     {
       id: 4,
       name: "Saved",
-      icon: <BsBookmark size={16} />,
+      icon: <BsBookmarkFill size={16} />,
       activeColor: "rgba(46, 156, 220,1)",
       hoverColor: "rgba(46, 156, 220,0.2)",
       onActiveColor: "rgba(46, 156, 220,0.7)",
@@ -154,6 +154,7 @@ export const OptionWrapper = styled.div<{
   transition: all 0.4s;
   &:hover {
     background-color: ${({ hoverColor }) => hoverColor};
+    color: ${({ activeColor }) => activeColor};
   }
   &:active {
     background-color: ${({ onActiveColor }) => onActiveColor};

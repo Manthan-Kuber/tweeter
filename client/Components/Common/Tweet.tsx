@@ -13,13 +13,18 @@ import {
 } from "../../styles/Toast.styles";
 import toast from "react-hot-toast";
 import {
+  api,
   useCreateTweetMutation,
   useDeleteTweetMutation,
   useGetTweetRepliesQuery,
+  useLazyGetTweetRepliesQuery,
 } from "../../app/services/api";
-import { useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
+import TweetsDataList from "./TweetsDataList";
+
+var tweetLimit = 10;
 
 const Tweet = (props: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -36,14 +41,14 @@ const Tweet = (props: TweetProps) => {
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data } = useGetTweetRepliesQuery({
+  const { data: TweetReplyData } = useGetTweetRepliesQuery({
     tweetId: props.tweetId,
     skip: 0,
   });
+  const [GetTweetRepliesTrigger] = useLazyGetTweetRepliesQuery();
+  const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const { push } = useRouter();
-
-  console.log(props.tweetId);
-
+  const dispatch = useAppDispatch();
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isHashtagPresent = /#[a-z]+/gi;
@@ -118,6 +123,38 @@ const Tweet = (props: TweetProps) => {
     );
   };
 
+  const getMoreTweetReplies = async () => {
+    try {
+      if (TweetReplyData !== undefined) {
+        if (TweetReplyData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetTweetRepliesTrigger({
+            tweetId: props.tweetId,
+            skip: TweetReplyData.data.length / tweetLimit,
+          }).unwrap();
+          if (newTweetData.length < TweetReplyData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getTweetReplies",
+              {
+                tweetId: props.tweetId,
+                skip: 0,
+              },
+              (tweetData) => {
+                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+              }
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
+
   return (
     <>
       <CustomModal
@@ -168,8 +205,10 @@ const Tweet = (props: TweetProps) => {
         <TweetBox
           variant={props.variant}
           onClick={(e) => {
-            e.stopPropagation();
-            push(`tweet/${props.tweetId}`);
+            if (props.variant !== "inTweet") {
+              e.stopPropagation();
+              push(`tweet/${props.tweetId}`);
+            }
           }}
         >
           <ProfileInfoWrapper>
@@ -224,23 +263,15 @@ const Tweet = (props: TweetProps) => {
               setIsRetweeted={setIsRetweeted}
             />
           )}
-          {/* {isCommentButtonClicked &&
-            commentsData?.data.comments.map((comment) => (
-              <TweetReplies
-                key={comment._id}
-                commentId={comment._id}
-                commentText={comment.comment}
-                likesCount={comment.likes}
-                authorName={comment.author[0].name}
-                authorUserName={comment.author[0].username}
-                authorProfilePic={comment.author[0].profilePic}
-                commentCreationDate={comment.createdAt}
-                replyCount={comment.replyCount}
-                mediaList={comment.media}
-                isLiked={comment.liked.length === 0 ? false : true}
-                tweetId={props.tweetId}
-              />
-            ))} */}
+          {/* {TweetReplyData !== undefined && props.variant === "tweetPage" && (
+            <TweetsDataList
+              TweetsData={TweetReplyData}
+              hasMoreTweets={hasMoreTweets}
+              setHasMoreTweets={setHasMoreTweets}
+              getMoreTweets={getMoreTweetReplies}
+              variant="tweetPage"
+            />
+          )} */}
         </TweetBox>
       </TweetWrapper>
     </>
@@ -256,10 +287,10 @@ const ImageWrapper = styled.div`
   background-color: black;
   margin-inline: auto;
   @media screen and (min-width: 20em) {
-    height:20rem
+    height: 20rem;
   }
   @media screen and (min-width: 55em) {
-    height:40rem
+    height: 40rem;
   }
 `;
 
@@ -312,7 +343,8 @@ export const TweetBox = styled.div<{ variant: string | undefined }>`
   font-family: var(--ff-noto);
   background-color: white;
   padding: 2rem;
-  cursor: ${(props) => (props.variant !== "inTweet" ? "pointer" : "auto")};
+  /* cursor: ${(props) =>
+    props.variant !== "inTweet" ? "pointer" : "auto"}; */
   transition: background-color 0.4s;
   &:hover {
     background-color: rgb(255, 255, 255, 0.7);
