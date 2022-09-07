@@ -33,6 +33,7 @@ function TweetPage() {
           likes={tweet.likes}
           retweetedUsers={tweet.retweetedUsers}
           savedBy={tweet.savedBy}
+          variant="tweetPage"
         />
       </Container>
     );

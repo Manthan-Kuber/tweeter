@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
 import TweetsDataList from "./TweetsDataList";
+// import { GetStaticPaths, GetStaticProps } from "next";
 
 var tweetLimit = 10;
 
@@ -49,6 +50,7 @@ const Tweet = (props: TweetProps) => {
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const { push } = useRouter();
   const dispatch = useAppDispatch();
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isHashtagPresent = /#[a-z]+/gi;
@@ -205,8 +207,8 @@ const Tweet = (props: TweetProps) => {
         <TweetBox
           variant={props.variant}
           onClick={(e) => {
+            e.stopPropagation();
             if (props.variant !== "inTweet") {
-              e.stopPropagation();
               push(`tweet/${props.tweetId}`);
             }
           }}
@@ -263,21 +265,34 @@ const Tweet = (props: TweetProps) => {
               setIsRetweeted={setIsRetweeted}
             />
           )}
-          {/* {TweetReplyData !== undefined && props.variant === "tweetPage" && (
+          {props.variant === "tweetPage" && TweetReplyData !== undefined && (
             <TweetsDataList
               TweetsData={TweetReplyData}
               hasMoreTweets={hasMoreTweets}
               setHasMoreTweets={setHasMoreTweets}
               getMoreTweets={getMoreTweetReplies}
-              variant="tweetPage"
+              variant="tweetReply"
             />
-          )} */}
+          )}
         </TweetBox>
       </TweetWrapper>
     </>
   );
 };
 export default Tweet;
+
+// export const getStaticPaths: GetStaticPaths = () => {
+//   return {
+//     paths: [],
+//     fallback: "blocking",
+//   };
+// };
+
+// export const getStaticProps: GetStaticProps = () => {
+//   return {
+//     props: {},
+//   };
+// };
 
 const ImageWrapper = styled.div`
   position: relative;
@@ -336,15 +351,18 @@ const RetweetWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-export const TweetBox = styled.div<{ variant: string | undefined }>`
+export const TweetBox = styled.div<{
+  variant: "inTweet" | "tweetPage" | "tweetReply" | undefined;
+}>`
   box-shadow: ${(props) =>
-    props.variant !== "inTweet" ? "0px 2px 4px rgba(0, 0, 0, 0.05)" : "none"};
+    props.variant === "inTweet" || props.variant === "tweetReply"
+      ? "none"
+      : "0px 2px 4px rgba(0, 0, 0, 0.05)"};
   border-radius: 8px;
   font-family: var(--ff-noto);
-  background-color: white;
+  background-color: ${({ variant }) =>
+    variant === "tweetReply" ? "transparent" : "white"};
   padding: 2rem;
-  /* cursor: ${(props) =>
-    props.variant !== "inTweet" ? "pointer" : "auto"}; */
   transition: background-color 0.4s;
   &:hover {
     background-color: rgb(255, 255, 255, 0.7);

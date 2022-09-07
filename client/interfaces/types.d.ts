@@ -236,7 +236,11 @@ interface TweetProps {
   likes: number;
   retweetedUsers: number;
   savedBy: number;
-  variant?: "inTweet" | "tweetPage";
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
+  // TweetReplyData?:GetTweetsResponse;
+  // setHasMoreTweets?: Dispatch<SetStateAction<boolean>>
+  // hasMoreTweets?:boolean;
+  // getMoreTweets?: () => Promise<void>
 }
 
 interface EditProfileProps {
@@ -380,7 +384,7 @@ interface TweetsDataListProps {
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>;
-  variant?: "inTweet" | "tweetPage";
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
 }
 
 interface GetCommentRepliesElement {

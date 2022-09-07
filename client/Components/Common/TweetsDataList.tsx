@@ -31,7 +31,7 @@ const TweetsDataList = ({
       {TweetsData.data.length === 0 ? (
         <NoTweetsToShow message="No Tweets To Show !" />
       ) : (
-        TweetsData.data.map((tweet) =>
+        TweetsData.data.map((tweet,key) =>
           !TweetsData.data ? (
             <Loader size={32} color={"var(--clr-primary)"} />
           ) : (
@@ -41,6 +41,7 @@ const TweetsDataList = ({
             //   </TweetBox>
             // </TweetWrapper>
             <>
+            {variant === "tweetReply" && key !== 0 && <hr/>}
               <Tweet
                 key={tweet._id}
                 authorName={tweet.creator[0].name}
