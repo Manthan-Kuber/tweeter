@@ -237,10 +237,7 @@ interface TweetProps {
   retweetedUsers: number;
   savedBy: number;
   variant?: "inTweet" | "tweetPage" | "tweetReply";
-  // TweetReplyData?:GetTweetsResponse;
-  // setHasMoreTweets?: Dispatch<SetStateAction<boolean>>
-  // hasMoreTweets?:boolean;
-  // getMoreTweets?: () => Promise<void>
+  TweetReplyData?: GetTweetsResponse;
 }
 
 interface EditProfileProps {

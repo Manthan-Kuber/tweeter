@@ -16,7 +16,6 @@ import {
   api,
   useCreateTweetMutation,
   useDeleteTweetMutation,
-  useGetTweetRepliesQuery,
   useLazyGetTweetRepliesQuery,
 } from "../../app/services/api";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
@@ -27,7 +26,7 @@ import TweetsDataList from "./TweetsDataList";
 
 var tweetLimit = 10;
 
-const Tweet = (props: TweetProps) => {
+const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
@@ -42,10 +41,6 @@ const Tweet = (props: TweetProps) => {
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: TweetReplyData } = useGetTweetRepliesQuery({
-    tweetId: props.tweetId,
-    skip: 0,
-  });
   const [GetTweetRepliesTrigger] = useLazyGetTweetRepliesQuery();
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const { push } = useRouter();

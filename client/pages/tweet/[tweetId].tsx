@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { useGetTweetQuery } from "../../app/services/api";
+import { useGetTweetQuery, useGetTweetRepliesQuery } from "../../app/services/api";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import Tweet from "../../Components/Common/Tweet";
 
@@ -9,8 +9,12 @@ function TweetPage() {
     query: { tweetId },
   } = useRouter();
   const { data } = useGetTweetQuery(tweetId as string);
+  const { data: TweetReplyData } = useGetTweetRepliesQuery({
+    tweetId: data?.data[0]._id ?? "",
+    skip: 0,
+  });
   if (tweetId !== undefined && data !== undefined) {
-    const tweet = data.data[0];
+    const tweet = data?.data[0];
     return (
       <Container>
         <Tweet
@@ -34,6 +38,7 @@ function TweetPage() {
           retweetedUsers={tweet.retweetedUsers}
           savedBy={tweet.savedBy}
           variant="tweetPage"
+          TweetReplyData={TweetReplyData}
         />
       </Container>
     );
