@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import styled from "styled-components";
 import { ScrollerMessage } from "../../pages/[userId]";
 import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
@@ -22,55 +23,51 @@ const TweetsDataList = ({
       next={getMoreTweets}
       hasMore={hasMoreTweets}
       loader={<ScrollerMessage>Loading...</ScrollerMessage>}
-      endMessage={
-        TweetsData.data.length !== 0 && (
-          <ScrollerMessage>You have reached the end...</ScrollerMessage>
-        )
-      }
     >
       {TweetsData.data.length === 0 ? (
         <NoTweetsToShow message="No Tweets To Show !" />
       ) : (
-        TweetsData.data.map((tweet,key) =>
-          !TweetsData.data ? (
-            <Loader size={32} color={"var(--clr-primary)"} />
-          ) : (
-            // <TweetWrapper> Add loader or skeleton
-            //   <TweetBox>
-            //     <Skeleton count={5} />
-            //   </TweetBox>
-            // </TweetWrapper>
-            <>
-            {variant === "tweetReply" && key !== 0 && <hr/>}
-              <Tweet
-                key={tweet._id}
-                authorName={tweet.creator[0].name}
-                authorId={tweet.creator[0]._id}
-                authorUserName={tweet.creator[0].username}
-                authorFollowers={6969} //Change
-                authorProfilePic={tweet.creator[0].profilePic}
-                mediaList={tweet.media}
-                authorTweet={tweet.tweet}
-                tweetId={tweet._id}
-                tweetCreationDate={tweet.createdAt}
-                isSaved={tweet.saved.length === 0 ? false : true}
-                isLiked={
-                  tweet.liked !== undefined && tweet.liked.length === 0
-                    ? false
-                    : true
-                }
-                isRetweeted={tweet.retweeted.length === 0 ? false : true}
-                commentCount={tweet.commentCount[0]}
-                likes={tweet.likes}
-                retweetedUsers={tweet.retweetedUsers}
-                savedBy={tweet.savedBy}
-                variant={variant}
-              />
-            </>
-          )
-        )
+        TweetsData.data.map((tweet, key) => (
+          // <TweetWrapper> Add loader or skeleton
+          //   <TweetBox>
+          //     <Skeleton count={5} />
+          //   </TweetBox>
+          // </TweetWrapper>
+          <>
+            {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
+            <Tweet
+              key={tweet._id}
+              authorName={tweet.creator[0].name}
+              authorId={tweet.creator[0]._id}
+              authorUserName={tweet.creator[0].username}
+              authorFollowers={6969} //Change
+              authorProfilePic={tweet.creator[0].profilePic}
+              mediaList={tweet.media}
+              authorTweet={tweet.tweet}
+              tweetId={tweet._id}
+              tweetCreationDate={tweet.createdAt}
+              isSaved={tweet.saved.length === 0 ? false : true}
+              isLiked={
+                tweet.liked !== undefined && tweet.liked.length === 0
+                  ? false
+                  : true
+              }
+              isRetweeted={tweet.retweeted.length === 0 ? false : true}
+              commentCount={tweet.commentCount[0]}
+              likes={tweet.likes}
+              retweetedUsers={tweet.retweetedUsers}
+              savedBy={tweet.savedBy}
+              variant={variant}
+            />
+          </>
+        ))
       )}
     </InfiniteScroll>
   );
 };
 export default TweetsDataList;
+
+const TweetSeparator = styled.hr`
+  border: 1px solid hsla(0, 0%, 90%, 1);
+  margin-bottom: 2rem;
+`;

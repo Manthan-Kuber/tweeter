@@ -13,15 +13,12 @@ import {
 } from "../../styles/Toast.styles";
 import toast from "react-hot-toast";
 import {
-  api,
   useCreateTweetMutation,
   useDeleteTweetMutation,
-  useLazyGetTweetRepliesQuery,
 } from "../../app/services/api";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
-import TweetsDataList from "./TweetsDataList";
 // import { GetStaticPaths, GetStaticProps } from "next";
 
 var tweetLimit = 10;
@@ -41,8 +38,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [GetTweetRepliesTrigger] = useLazyGetTweetRepliesQuery();
-  const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const { push } = useRouter();
   const dispatch = useAppDispatch();
 
@@ -118,38 +113,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
         position: "top-center",
       }
     );
-  };
-
-  const getMoreTweetReplies = async () => {
-    try {
-      if (TweetReplyData !== undefined) {
-        if (TweetReplyData.data.length < tweetLimit) {
-          setHasMoreTweets(false);
-        } else {
-          const { data: newTweetData } = await GetTweetRepliesTrigger({
-            tweetId: props.tweetId,
-            skip: TweetReplyData.data.length / tweetLimit,
-          }).unwrap();
-          if (newTweetData.length < TweetReplyData.data.length)
-            setHasMoreTweets(false);
-          dispatch(
-            api.util.updateQueryData(
-              "getTweetReplies",
-              {
-                tweetId: props.tweetId,
-                skip: 0,
-              },
-              (tweetData) => {
-                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-              }
-            )
-          );
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
-    }
   };
 
   return (
@@ -260,15 +223,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               setIsRetweeted={setIsRetweeted}
             />
           )}
-          {props.variant === "tweetPage" && TweetReplyData !== undefined && (
-            <TweetsDataList
-              TweetsData={TweetReplyData}
-              hasMoreTweets={hasMoreTweets}
-              setHasMoreTweets={setHasMoreTweets}
-              getMoreTweets={getMoreTweetReplies}
-              variant="tweetReply"
-            />
-          )}
         </TweetBox>
       </TweetWrapper>
     </>
@@ -358,9 +312,11 @@ export const TweetBox = styled.div<{
   background-color: ${({ variant }) =>
     variant === "tweetReply" ? "transparent" : "white"};
   padding: 2rem;
-  transition: background-color 0.4s;
+  cursor: ${({ variant }) => variant !== "inTweet" && "pointer"};
+  transition: all 0.4s;
   &:hover {
-    background-color: rgb(255, 255, 255, 0.7);
+    box-shadow: ${({ variant }) =>
+      variant === "tweetReply" ? "none" : "0px 2px 4px 2px rgba(0, 0, 0, 0.1)"};
   }
 `;
 

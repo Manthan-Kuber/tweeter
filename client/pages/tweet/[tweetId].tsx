@@ -1,8 +1,22 @@
 import { useRouter } from "next/router";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import styled from "styled-components";
-import { useGetTweetQuery, useGetTweetRepliesQuery } from "../../app/services/api";
-import FullScreenLoader from "../../Components/Common/FullScreenLoader";
+import {
+  api,
+  useGetTweetQuery,
+  useGetTweetRepliesQuery,
+  useLazyGetTweetRepliesQuery,
+} from "../../app/services/api";
+import FullScreenLoader, {
+  Loader,
+} from "../../Components/Common/FullScreenLoader";
 import Tweet from "../../Components/Common/Tweet";
+import TweetsDataList from "../../Components/Common/TweetsDataList";
+import { useAppDispatch } from "../../Hooks/store";
+import { ToastMessage } from "../../styles/Toast.styles";
+
+var tweetLimit = 10;
 
 function TweetPage() {
   const {
@@ -13,6 +27,41 @@ function TweetPage() {
     tweetId: data?.data[0]._id ?? "",
     skip: 0,
   });
+  const [hasMoreTweets, setHasMoreTweets] = useState(false);
+  const dispatch = useAppDispatch();
+  const [GetTweetRepliesTrigger] = useLazyGetTweetRepliesQuery();
+
+  const getMoreTweetReplies = async () => {
+    try {
+      if (TweetReplyData !== undefined) {
+        if (TweetReplyData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetTweetRepliesTrigger({
+            tweetId: data?.data[0]._id ?? "",
+            skip: TweetReplyData.data.length / tweetLimit,
+          }).unwrap();
+          if (newTweetData.length < TweetReplyData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getTweetReplies",
+              {
+                tweetId: data?.data[0]._id ?? "",
+                skip: 0,
+              },
+              (tweetData) => {
+                newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+              }
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
   if (tweetId !== undefined && data !== undefined) {
     const tweet = data?.data[0];
     return (
@@ -40,6 +89,22 @@ function TweetPage() {
           variant="tweetPage"
           TweetReplyData={TweetReplyData}
         />
+        <TweetReplyHeading>Tweet Replies</TweetReplyHeading>
+        <TweetDataListWrapper>
+          {TweetReplyData !== undefined ? (
+            <TweetsDataList
+              TweetsData={TweetReplyData}
+              hasMoreTweets={hasMoreTweets}
+              setHasMoreTweets={setHasMoreTweets}
+              getMoreTweets={getMoreTweetReplies}
+              variant="tweetReply"
+            />
+          ) : (
+            <LoaderWrapper>
+              <Loader size={32} color={"var(--clr-primary)"} />
+            </LoaderWrapper>
+          )}
+        </TweetDataListWrapper>
       </Container>
     );
   }
@@ -50,5 +115,25 @@ export default TweetPage;
 const Container = styled.div`
   width: min(95%, 85.5rem);
   margin-inline: auto;
-  padding-block: 2rem;
+  padding-top: 1rem;
+`;
+
+const TweetReplyHeading = styled.h1`
+  font-weight: 600;
+  font-family: var(--ff-noto);
+  color: #333;
+`;
+
+const LoaderWrapper = styled.div`
+  width: fit-content;
+  margin-inline: auto;
+  margin-top: 2rem;
+`;
+
+const TweetDataListWrapper = styled.div`
+  background-color: white;
+  margin-top: 2rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding-top: 2rem;
 `;
