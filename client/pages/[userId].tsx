@@ -34,6 +34,7 @@ import { TweetBox } from "../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
+import { useRouter } from "next/router";
 
 const Profile = ({ userId }: { userId: string }) => {
   const dispatch = useAppDispatch();
@@ -84,6 +85,7 @@ const Profile = ({ userId }: { userId: string }) => {
   const [tab, setTab] = useState(0);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const { width: WindowWidth } = useWindowSize();
+  const { isFallback } = useRouter();
 
   var tweetLimit = 10;
 
@@ -177,7 +179,7 @@ const Profile = ({ userId }: { userId: string }) => {
                 });
               }
             )
-          );
+        );
         }
       }
     } catch (error) {
@@ -186,7 +188,7 @@ const Profile = ({ userId }: { userId: string }) => {
     }
   };
 
-  return isLoading ? (
+  return isFallback || isLoading ? (
     <FullScreenLoader />
   ) : (
     <>
@@ -340,7 +342,7 @@ export default Profile;
 export const getStaticPaths: GetStaticPaths = (context) => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 };
 
@@ -364,7 +366,7 @@ const StyledImage = styled(Image)`
 
 const BannerWrapper = styled.div`
   position: relative;
-  width: min(102.4rem, 95%);
+  width: min(95%, 120rem);
   margin-inline: auto;
   height: 25rem;
   border-radius: 8px;
@@ -384,7 +386,7 @@ const PlaceholderTweetBox = styled(TweetBox)`
 `;
 
 const ContentContainer = styled.div`
-  width: min(95%, 102.4rem);
+  width: min(95%, 120rem);
   margin-inline: auto;
   padding-block: 2rem;
 
