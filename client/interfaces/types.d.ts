@@ -316,6 +316,7 @@ interface GetTweetsResponseElement {
   saved: string[];
   liked: string[];
   savedBy: number;
+  // fetchReply: boolean;
 }
 
 interface GetTweetsResponse {
