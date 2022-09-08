@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import FilterBox from "../Components/Common/FilterBox";
+import FilterBox from "../../Components/Common/FilterBox";
 import Image from "next/image";
-import useWindowSize from "../Hooks/useWindowDimensions";
-import ProfileBox from "../Components/Common/ProfileBox";
-import CustomModal from "../Components/Common/CustomModal";
-import FollowerInfo from "../Components/Common/FollowerInfo";
-import axiosApi from "../app/services/axiosApi";
+import useWindowSize from "../../Hooks/useWindowDimensions";
+import ProfileBox from "../../Components/Common/ProfileBox";
+import CustomModal from "../../Components/Common/CustomModal";
+import FollowerInfo from "../../Components/Common/FollowerInfo";
+import axiosApi from "../../app/services/axiosApi";
 import { AxiosError } from "axios";
-import { useAppDispatch, useAppSelector } from "../Hooks/store";
-import { logOut } from "../features/auth/authSlice";
-import FullScreenLoader from "../Components/Common/FullScreenLoader";
+import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { logOut } from "../../features/auth/authSlice";
+import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import {
   CancelButton,
   DiscardButton,
   SubToastMessage,
   ToastMessage,
-} from "../styles/Toast.styles";
-import EditProfile from "../Components/Common/EditProfile";
+} from "../../styles/Toast.styles";
+import EditProfile from "../../Components/Common/EditProfile";
 import {
   api,
   useGetProfileTweetsLikesQuery,
@@ -29,11 +29,11 @@ import {
   useLazyGetProfileTweetsLikesQuery,
   useLazyGetProfileTweetsMediaQuery,
   useLazyGetProfileTweetsQuery,
-} from "../app/services/api";
-import { TweetBox } from "../Components/Common/Tweet";
+} from "../../app/services/api";
+import { TweetBox } from "../../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
-import TweetsDataList from "../Components/Common/TweetsDataList";
-import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
+import TweetsDataList from "../../Components/Common/TweetsDataList";
+import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
 
 const Profile = ({ userId }: { userId: string }) => {

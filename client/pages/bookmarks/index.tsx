@@ -13,7 +13,7 @@ import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import Tweet from "../../Components/Common/Tweet";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
-import { ScrollerMessage } from "../[userId]";
+import { ScrollerMessage } from "../profile/[userId]";
 
 var tweetLimit = 10;
 

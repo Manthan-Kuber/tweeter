@@ -39,7 +39,7 @@ const ScrollBtn = styled.button<{ visible: boolean }>`
   cursor: pointer;
   position: fixed;
   bottom: 6rem;
-  left: 3rem;
+  right: 3rem;
   display: ${(props) => (props.visible ? "inline-block" : "none")};
   background-color: var(--clr-primary);
   border: none;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
-import { ScrollerMessage } from "../../pages/[userId]";
+import { ScrollerMessage } from "../../pages/profile/[userId]";
 import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
 import Tweet from "./Tweet";

@@ -37,7 +37,7 @@ const SuggestedFollow = ({
             <FollowerContainer key={item._id}>
               <hr />
               <ProfileInfoWrapper>
-                <div onClick={() => router.push(`/${item._id}`)}>
+                <div onClick={() => router.push(`/profile/${item._id}`)}>
                   <ProfileInfo
                     name={item.name}
                     username={item.username}

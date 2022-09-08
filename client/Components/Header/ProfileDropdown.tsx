@@ -44,7 +44,7 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
       name: "My Profile",
       onClick: async () => {
         setVisible((prev) => !prev);
-        push(`/${userId}`);
+        push(`/profile/${userId}`);
       },
     },
     // {

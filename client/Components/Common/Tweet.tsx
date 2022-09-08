@@ -16,12 +16,10 @@ import {
   useCreateTweetMutation,
   useDeleteTweetMutation,
 } from "../../app/services/api";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppSelector } from "../../Hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
 // import { GetStaticPaths, GetStaticProps } from "next";
-
-var tweetLimit = 10;
 
 const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -39,7 +37,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { push } = useRouter();
-  const dispatch = useAppDispatch();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,11 +164,18 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           onClick={(e) => {
             e.stopPropagation();
             if (props.variant !== "inTweet") {
-              push(`tweet/${props.tweetId}`);
+              push(`/tweet/${props.tweetId}`);
             }
           }}
         >
-          <ProfileInfoWrapper>
+          <ProfileInfoWrapper
+            onClick={(e) => {
+              e.stopPropagation();
+              if (props.variant !== "inTweet") {
+                push(`/profile/${props.authorId}`);
+              }
+            }}
+          >
             <ProfileInfo
               name={props.authorName}
               username={props.authorUserName}
@@ -261,6 +265,10 @@ const ImageWrapper = styled.div`
 const ProfileInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  transition: opacity 0.4s;
+  &:hover {
+    opacity: 0.75;
+  }
 `;
 
 const DeleteIconWrapper = styled.div`
