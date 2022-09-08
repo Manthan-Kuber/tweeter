@@ -102,7 +102,7 @@ const CreateTweet = ({
             </TweetImageArrayWrapper>
           )}
           {props.variant !== "Home" && <hr />}
-          <OptionsWrapper isMediaInputVisible={isMediaInputVisible} >
+          <OptionsWrapper isMediaInputVisible={isMediaInputVisible}>
             {isMediaInputVisible && (
               <MediaIcon
                 as={MdOutlineImage}
@@ -127,11 +127,16 @@ const HomeVariantContainer = styled.div`
   hr {
     margin-block: 1rem;
   }
+  h3 {
+    font: 700 1.6rem var(--ff-noto);
+    color: #333;
+  }
 `;
 
-const OptionsWrapper = styled.div<{isMediaInputVisible:boolean}>`
+const OptionsWrapper = styled.div<{ isMediaInputVisible: boolean }>`
   display: flex;
-  justify-content: ${({isMediaInputVisible}) => !isMediaInputVisible ? "flex-end" :"space-between"};
+  justify-content: ${({ isMediaInputVisible }) =>
+    !isMediaInputVisible ? "flex-end" : "space-between"};
   align-items: center;
   margin-top: 1rem;
 `;

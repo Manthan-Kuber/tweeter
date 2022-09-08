@@ -169,7 +169,7 @@ const EditProfileButton = styled(Button)`
 `;
 
 const ProfileContainer = styled.div`
-  width: min(95%, 102.4rem);
+  width: min(95%, 120rem);
   background-color: white;
   padding-block: 2.5rem;
   font-family: var(--ff-poppins);

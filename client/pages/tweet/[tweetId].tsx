@@ -62,6 +62,7 @@ function TweetPage() {
       toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
     }
   };
+
   if (tweetId !== undefined && data !== undefined) {
     const tweet = data?.data[0];
     return (
@@ -101,7 +102,7 @@ function TweetPage() {
             />
           ) : (
             <LoaderWrapper>
-              <Loader size={32} color={"var(--clr-primary)"} />
+              <Loader size={32} color="var(--clr-primary)" />
             </LoaderWrapper>
           )}
         </TweetDataListWrapper>
@@ -119,7 +120,7 @@ const Container = styled.div`
 `;
 
 const TweetReplyHeading = styled.h1`
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--ff-noto);
   color: #333;
 `;

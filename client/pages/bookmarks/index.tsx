@@ -106,7 +106,7 @@ function Bookmarks() {
 export default Bookmarks;
 
 const Container = styled.div`
-  width: min(95%, 85.5rem);
+  width: min(95%, 95rem);
   margin-inline: auto;
   padding-block: 2rem;
 `;
