@@ -17,9 +17,9 @@ const NoTweetsToShow = ({ message, ...props }: NoTweetsToShowProps) => {
 export default NoTweetsToShow;
 
 const Container = styled.div`
-  width: fit-content;
-  margin-inline: auto;
-  margin-top: 1rem;
+  display:grid;
+  place-items: center;
+  margin-block: 2rem;
   text-align: center;
   font: 500 1.8rem var(--ff-montserrat);
   color: var(--clr-gray);

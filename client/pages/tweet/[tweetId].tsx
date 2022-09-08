@@ -136,5 +136,4 @@ const TweetDataListWrapper = styled.div`
   margin-top: 2rem;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
-  padding-top: 2rem;
 `;
