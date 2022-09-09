@@ -1,19 +1,15 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import {
   api,
   useGetBookmarksQuery,
   useLazyGetBookmarksQuery,
 } from "../../app/services/api";
-import { Loader } from "../../Components/Common/FullScreenLoader";
-import NoTweetsToShow from "../../Components/Common/NoTweetsToShow";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
-import Tweet from "../../Components/Common/Tweet";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import TweetsDataList from "../../Components/Common/TweetsDataList";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
-import { ScrollerMessage } from "../profile/[userId]";
 
 var tweetLimit = 10;
 
@@ -50,54 +46,18 @@ function Bookmarks() {
     }
   };
 
+  console.log(BookmarksData);
+
   return (
     <Container>
-      <ScrollToTopButton/>
+      <ScrollToTopButton />
       {BookmarksData !== undefined && (
-        <InfiniteScroll
-          dataLength={BookmarksData.data.length}
-          next={getMoreBookmarks}
-          hasMore={hasMoreTweets}
-          loader={<ScrollerMessage>Loading...</ScrollerMessage>}
-          endMessage={
-            <ScrollerMessage>You have reached the end...</ScrollerMessage>
-          }
-        >
-          {BookmarksData.data.length === 0 ? (
-            <NoTweetsToShow message="No Tweets To Show !" />
-          ) : (
-            BookmarksData.data.map((tweet) =>
-              !BookmarksData.data ? (
-                <Loader size={32} color={"var(--clr-primary)"} />
-              ) : (
-                // <TweetWrapper> Add loader or skeleton
-                //   <TweetBox>
-                //     <Skeleton count={5} />
-                //   </TweetBox>
-                // </TweetWrapper>
-                <Tweet
-                  key={tweet._id}
-                  authorId={tweet.creator[0]._id}
-                  authorName={tweet.creator[0].name}
-                  authorUserName={tweet.creator[0].username}
-                  authorFollowers={6969} //Change
-                  authorProfilePic={tweet.creator[0].profilePic}
-                  mediaList={tweet.media}
-                  authorTweet={tweet.tweet}
-                  tweetId={tweet._id}
-                  tweetCreationDate={tweet.createdAt}
-                  isSaved={tweet.saved.length === 0 ? false : true}
-                  isLiked={tweet.liked.length === 0 ? false : true}
-                  isRetweeted={tweet.retweeted.length === 0 ? false : true}
-                  commentCount={tweet.commentCount[0]}
-                  likes={tweet.likes}
-                  retweetedUsers={tweet.retweetedUsers}
-                  savedBy={tweet.savedBy}
-                />
-              )
-            )
-          )}
-        </InfiniteScroll>
+        <TweetsDataList
+          TweetsData={BookmarksData}
+          getMoreTweets={getMoreBookmarks}
+          hasMoreTweets={hasMoreTweets}
+          setHasMoreTweets={setHasMoreTweets}
+        />
       )}
     </Container>
   );

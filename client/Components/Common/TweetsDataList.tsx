@@ -28,11 +28,6 @@ const TweetsDataList = ({
         <NoTweetsToShow message="No Tweets To Show !" />
       ) : (
         TweetsData.data.map((tweet, key) => (
-          // <TweetWrapper> Add loader or skeleton
-          //   <TweetBox>
-          //     <Skeleton count={5} />
-          //   </TweetBox>
-          // </TweetWrapper>
           <>
             {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
             <Tweet

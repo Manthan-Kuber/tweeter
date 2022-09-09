@@ -16,7 +16,7 @@ import {
   useCreateTweetMutation,
   useDeleteTweetMutation,
 } from "../../app/services/api";
-import { useAppSelector } from "../../Hooks/store";
+import { useAppSelector } from "../../hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
 // import { GetStaticPaths, GetStaticProps } from "next";

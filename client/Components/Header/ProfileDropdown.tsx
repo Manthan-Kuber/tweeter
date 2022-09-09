@@ -3,7 +3,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { HiUserGroup, HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import { logOut } from "../../features/auth/authSlice";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";

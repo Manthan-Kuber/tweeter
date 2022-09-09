@@ -7,7 +7,7 @@ import { AiFillHome } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import FullScreenLoader from "./FullScreenLoader";
 import { logOut } from "../../features/auth/authSlice";
 import axiosApi from "../../app/services/axiosApi";

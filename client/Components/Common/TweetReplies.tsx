@@ -11,7 +11,7 @@ import {
   useLazyGetCommentRepliesQuery,
   useLikeCommentMutation,
 } from "../../app/services/api";
-import { useAppSelector } from "../../Hooks/store";
+import { useAppSelector } from "../../hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
 import CommentReply from "./CommentReply";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
