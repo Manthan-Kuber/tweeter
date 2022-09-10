@@ -374,6 +374,7 @@ export const media = async (req: IRequest, res: Response) => {
         $project: {
           _id: 0,
           "originalTweet._id": 1,
+          "originalTweet.creator._id": 1,
           "originalTweet.creator.name": 1,
           "originalTweet.creator.username": 1,
           "originalTweet.creator.profilePic": 1,
@@ -576,6 +577,7 @@ export const liked = async (req: IRequest, res: Response) => {
         $project: {
           _id: 0,
           "originalTweet._id": 1,
+          "originalTweet.creator._id": 1,
           "originalTweet.creator.name": 1,
           "originalTweet.creator.username": 1,
           "originalTweet.creator.profilePic": 1,
@@ -778,6 +780,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
         $project: {
           _id: 0,
           "originalTweet._id": 1,
+          "originalTweet.creator._id": 1,
           "originalTweet.creator.name": 1,
           "originalTweet.creator.username": 1,
           "originalTweet.creator.profilePic": 1,
