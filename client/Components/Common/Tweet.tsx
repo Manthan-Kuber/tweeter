@@ -169,21 +169,23 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             }
           }}
         >
-          <ProfileInfoWrapper
-            onClick={(e) => {
-              e.stopPropagation();
-              if (props.variant !== "inTweet") {
-                push(`/profile/${props.authorId}`);
-              }
-            }}
-          >
-            <ProfileInfo
-              name={props.authorName}
-              username={props.authorUserName}
-              tweetCreationDate={tweetCreationDate.toDateString()}
-              followerCount={props.authorFollowers}
-              profilePic={props.authorProfilePic}
-            />
+          <ProfileInfoContainer>
+            <ProfileInfoWrapper
+              onClick={(e) => {
+                e.stopPropagation();
+                if (props.variant !== "inTweet") {
+                  push(`/profile/${props.authorId}`);
+                }
+              }}
+            >
+              <ProfileInfo
+                name={props.authorName}
+                username={props.authorUserName}
+                tweetCreationDate={tweetCreationDate.toDateString()}
+                followerCount={props.authorFollowers}
+                profilePic={props.authorProfilePic}
+              />
+            </ProfileInfoWrapper>
             {currentUserId === props.authorId && (
               <DeleteIconWrapper
                 onClick={() => onDeleteButtonClick(props.tweetId)}
@@ -191,7 +193,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
                 <DeleteIcon size={24} />
               </DeleteIconWrapper>
             )}
-          </ProfileInfoWrapper>
+          </ProfileInfoContainer>
           <TweetText>{props.authorTweet}</TweetText>
           {props.variant !== "inTweet" ? (
             <ImagesWrapper numOfImages={props.mediaList.length}>
@@ -212,7 +214,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               ))}
             </ImagesWrapper>
           ) : (
-            props.mediaList.map((mediaItemUrl) => <p>{mediaItemUrl}</p>)
+            props.mediaList.map((mediaItemUrl) => <LinkText>{mediaItemUrl}</LinkText>)
           )}
           {props.variant !== "inTweet" && (
             <TweetInfo>
@@ -242,6 +244,12 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 };
 export default Tweet;
 
+const LinkText = styled.p`
+  font-weight:500;
+  color: hsla(0, 0%, 31%, 1);
+  font-family: var(--ff-noto);
+`;
+
 const ImageWrapper = styled.div`
   position: relative;
   width: min(45rem, 100%);
@@ -260,9 +268,12 @@ const ImageWrapper = styled.div`
   }
 `;
 
-const ProfileInfoWrapper = styled.div`
+const ProfileInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const ProfileInfoWrapper = styled.div`
   transition: opacity 0.4s;
   &:hover {
     opacity: 0.75;
