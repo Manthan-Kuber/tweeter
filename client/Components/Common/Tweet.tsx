@@ -19,6 +19,7 @@ import {
 import { useAppSelector } from "../../hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -113,7 +114,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 
   return (
     <>
-    {/* Close Modal on submit  */}
+      {/* Close Modal on submit  */}
       <CustomModal
         setModalIsOpen={setIsModalOpen}
         modalIsOpen={isModalOpen}
@@ -192,19 +193,27 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             )}
           </ProfileInfoWrapper>
           <TweetText>{props.authorTweet}</TweetText>
-          <ImagesWrapper numOfImages={props.mediaList.length}>
-            {props.mediaList.map((mediaItemUrl, index) => (
-              <ImageWrapper>
-                <Image
-                  key={`${mediaItemUrl} ${index}`}
-                  src={mediaItemUrl}
-                  alt="Tweet Image"
-                  layout="fill"
-                  style={{ borderRadius: "16px" }}
-                />
-              </ImageWrapper>
-            ))}
-          </ImagesWrapper>
+          {props.variant !== "inTweet" ? (
+            <ImagesWrapper numOfImages={props.mediaList.length}>
+              {props.mediaList.map((mediaItemUrl, index) => (
+                <Link href={mediaItemUrl} passHref>
+                  <a target="_blank" rel="noopener noreferrer">
+                    <ImageWrapper onClick={(e) => e.stopPropagation()}>
+                      <Image
+                        key={`${mediaItemUrl} ${index}`}
+                        src={mediaItemUrl}
+                        alt="Tweet Image"
+                        layout="fill"
+                        style={{ borderRadius: "16px" }}
+                      />
+                    </ImageWrapper>
+                  </a>
+                </Link>
+              ))}
+            </ImagesWrapper>
+          ) : (
+            props.mediaList.map((mediaItemUrl) => <p>{mediaItemUrl}</p>)
+          )}
           {props.variant !== "inTweet" && (
             <TweetInfo>
               <span>{props.commentCount || 0} Comments</span>
@@ -244,6 +253,10 @@ const ImageWrapper = styled.div`
   }
   @media screen and (min-width: 55em) {
     height: 45rem;
+  }
+  transition: opacity 0.4s;
+  &:hover {
+    opacity: 0.75;
   }
 `;
 
