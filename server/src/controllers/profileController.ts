@@ -384,7 +384,8 @@ export const media = async (req: IRequest, res: Response) => {
           "originalTweet.retweetedUsers": {
             $size: "$originalTweet.retweetedUsers",
           },
-          "originalTweet.likes": 1,
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
           "originalTweet.saved": 1,
           "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
           "originalTweet.commentCount": "$count.count",
@@ -585,7 +586,8 @@ export const liked = async (req: IRequest, res: Response) => {
           "originalTweet.retweetedUsers": {
             $size: "$originalTweet.retweetedUsers",
           },
-          "originalTweet.likes": 1,
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
           "originalTweet.saved": 1,
           "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
           "originalTweet.commentCount": "$count.count",
@@ -786,7 +788,8 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
           "originalTweet.retweetedUsers": {
             $size: "$originalTweet.retweetedUsers",
           },
-          "originalTweet.likes": 1,
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
           "originalTweet.saved": 1,
           "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
           "originalTweet.commentCount": "$count.count",
