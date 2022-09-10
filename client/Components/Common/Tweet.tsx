@@ -19,7 +19,6 @@ import {
 import { useAppSelector } from "../../hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
-// import { GetStaticPaths, GetStaticProps } from "next";
 
 const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -200,7 +199,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
                   src={mediaItemUrl}
                   alt="Tweet Image"
                   layout="fill"
-                  objectFit="contain"
                   style={{ borderRadius: "16px" }}
                 />
               </ImageWrapper>
@@ -249,16 +247,15 @@ export default Tweet;
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: min(40rem, 100%);
+  width: min(45rem, 100%);
   height: 15rem;
   border-radius: 16px;
-  background-color: black;
   margin-inline: auto;
   @media screen and (min-width: 20em) {
     height: 20rem;
   }
   @media screen and (min-width: 55em) {
-    height: 40rem;
+    height: 45rem;
   }
 `;
 

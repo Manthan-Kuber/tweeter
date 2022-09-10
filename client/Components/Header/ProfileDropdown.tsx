@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { MdAccountCircle } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
-import { HiUserGroup, HiOutlineLogout } from "react-icons/hi";
+import { HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import { logOut } from "../../features/auth/authSlice";
