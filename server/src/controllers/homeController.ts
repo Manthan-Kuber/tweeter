@@ -238,11 +238,12 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
           "originalTweet.retweetedUsers": {
             $size: "$originalTweet.retweetedUsers",
           },
-          "originalTweet.likes": 1,
           "originalTweet.saved": 1,
           "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
           "originalTweet.commentCount": "$count.count",
           "originalTweet.fetchReply": 1,
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
         },
       },
     ]);
@@ -437,7 +438,8 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
           "originalTweet.retweetedUsers": {
             $size: "$originalTweet.retweetedUsers",
           },
-          "originalTweet.likes": 1,
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
           "originalTweet.saved": 1,
           "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
           "originalTweet.commentCount": "$count.count",
