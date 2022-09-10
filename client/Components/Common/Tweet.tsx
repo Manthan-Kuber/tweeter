@@ -16,10 +16,10 @@ import {
   useCreateTweetMutation,
   useDeleteTweetMutation,
 } from "../../app/services/api";
-import { useAppSelector } from "../../Hooks/store";
+import { useAppSelector } from "../../hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
-// import { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 
 const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -114,6 +114,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 
   return (
     <>
+      {/* Close Modal on submit  */}
       <CustomModal
         setModalIsOpen={setIsModalOpen}
         modalIsOpen={isModalOpen}
@@ -192,20 +193,27 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             )}
           </ProfileInfoWrapper>
           <TweetText>{props.authorTweet}</TweetText>
-          <ImagesWrapper numOfImages={props.mediaList.length}>
-            {props.mediaList.map((mediaItemUrl, index) => (
-              <ImageWrapper>
-                <Image
-                  key={`${mediaItemUrl} ${index}`}
-                  src={mediaItemUrl}
-                  alt="Tweet Image"
-                  layout="fill"
-                  objectFit="contain"
-                  style={{ borderRadius: "16px" }}
-                />
-              </ImageWrapper>
-            ))}
-          </ImagesWrapper>
+          {props.variant !== "inTweet" ? (
+            <ImagesWrapper numOfImages={props.mediaList.length}>
+              {props.mediaList.map((mediaItemUrl, index) => (
+                <Link href={mediaItemUrl} passHref>
+                  <a target="_blank" rel="noopener noreferrer">
+                    <ImageWrapper onClick={(e) => e.stopPropagation()}>
+                      <Image
+                        key={`${mediaItemUrl} ${index}`}
+                        src={mediaItemUrl}
+                        alt="Tweet Image"
+                        layout="fill"
+                        style={{ borderRadius: "16px" }}
+                      />
+                    </ImageWrapper>
+                  </a>
+                </Link>
+              ))}
+            </ImagesWrapper>
+          ) : (
+            props.mediaList.map((mediaItemUrl) => <p>{mediaItemUrl}</p>)
+          )}
           {props.variant !== "inTweet" && (
             <TweetInfo>
               <span>{props.commentCount || 0} Comments</span>
@@ -234,31 +242,21 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 };
 export default Tweet;
 
-// export const getStaticPaths: GetStaticPaths = () => {
-//   return {
-//     paths: [],
-//     fallback: "blocking",
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps = () => {
-//   return {
-//     props: {},
-//   };
-// };
-
 const ImageWrapper = styled.div`
   position: relative;
-  width: min(40rem, 100%);
+  width: min(45rem, 100%);
   height: 15rem;
   border-radius: 16px;
-  background-color: black;
   margin-inline: auto;
   @media screen and (min-width: 20em) {
     height: 20rem;
   }
   @media screen and (min-width: 55em) {
-    height: 40rem;
+    height: 45rem;
+  }
+  transition: opacity 0.4s;
+  &:hover {
+    opacity: 0.75;
   }
 `;
 

@@ -3,7 +3,7 @@ import Navbar from "./Navbar/Navbar";
 import styled from "styled-components";
 import Profile from "./Profile";
 import BottomNav from "./Navbar/BottomNav";
-import useWindowSize from "../../Hooks/useWindowDimensions";
+import useWindowSize from "../../hooks/useWindowDimensions";
 
 const Header = ({ NavList, activeTab, setActiveTab }: NavProps) => {
   const { width:WindowWidth } = useWindowSize();

@@ -13,11 +13,12 @@ import {
 } from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
+import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
 import TweetsDataList from "../Components/Common/TweetsDataList";
 import { logOut } from "../features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
@@ -178,6 +179,7 @@ const Home = ({
 
   return (
     <Container>
+      <ScrollToTopButton />
       <Toaster />
       <div>
         <CreateTweetWrapper>

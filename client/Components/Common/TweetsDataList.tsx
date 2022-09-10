@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { ScrollerMessage } from "../../pages/profile/[userId]";
-import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
 import Tweet from "./Tweet";
 
@@ -28,11 +27,9 @@ const TweetsDataList = ({
         <NoTweetsToShow message="No Tweets To Show !" />
       ) : (
         TweetsData.data.map((tweet, key) => (
-          // <TweetWrapper> Add loader or skeleton
-          //   <TweetBox>
-          //     <Skeleton count={5} />
-          //   </TweetBox>
-          // </TweetWrapper>
+          // tweet === undefined ? (
+          //   <Loader size={16} color={"var(--clr-primary)"} />
+          // ) :
           <>
             {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
             <Tweet

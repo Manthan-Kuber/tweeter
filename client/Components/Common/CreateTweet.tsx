@@ -83,9 +83,7 @@ const CreateTweet = ({
                 <TweetImageWrapper key={arrObject.id}>
                   <TweetImage
                     src={URL.createObjectURL(arrObject.file)}
-                    layout="responsive"
-                    width="100%"
-                    height="100%"
+                    layout="fill"
                   />
                   <CloseIcon
                     size={24}
@@ -220,6 +218,16 @@ const TweetImage = styled(Image)`
 
 const TweetImageWrapper = styled.div`
   position: relative;
+  width: min(45rem, 100%);
+  height: 15rem;
+  border-radius: 16px;
+  margin-inline: auto;
+  @media screen and (min-width: 20em) {
+    height: 20rem;
+  }
+  @media screen and (min-width: 55em) {
+    height: 45rem;
+  }
 `;
 
 const MediaIcon = styled(Icon)`
@@ -241,5 +249,6 @@ export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
+      justify-items: stretch;
     `}
 `;
