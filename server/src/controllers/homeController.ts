@@ -249,7 +249,7 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
     ]);
     replies = replies.map((item) => item.originalTweet);
     tweets = tweets.concat(replies);
-    tweets.sort((a, b) => a.createdAt - b.createdAt);
+    tweets.sort((a, b) => b.createdAt - a.createdAt);
     res.status(200).json({ data: tweets });
   } catch (err) {
     res.status(400).json({ error: err });
@@ -449,7 +449,7 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
     ]);
     replies = replies.map((item) => item.originalTweet);
     tweets = tweets.concat(replies);
-    tweets.sort((a, b) => a.createdAt - b.createdAt);
+    tweets.sort((a, b) => b.createdAt - a.createdAt);
     res.status(200).json({ data: tweets });
   } catch (err) {
     res.status(400).json({ error: err });
