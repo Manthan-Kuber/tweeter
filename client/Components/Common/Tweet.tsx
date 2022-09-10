@@ -113,6 +113,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 
   return (
     <>
+    {/* Close Modal on submit  */}
       <CustomModal
         setModalIsOpen={setIsModalOpen}
         modalIsOpen={isModalOpen}
@@ -231,19 +232,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   );
 };
 export default Tweet;
-
-// export const getStaticPaths: GetStaticPaths = () => {
-//   return {
-//     paths: [],
-//     fallback: "blocking",
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps = () => {
-//   return {
-//     props: {},
-//   };
-// };
 
 const ImageWrapper = styled.div`
   position: relative;
