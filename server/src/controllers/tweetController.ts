@@ -171,7 +171,104 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
           "creator.username": 1,
           "creator.profilePic": 1,
           comment: 1,
-          tweet:1,
+          tweet: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          retweeted: 1,
+          saved: 1,
+          liked: 1,
+          savedBy: { $size: "$savedBy" },
+          retweetedUsers: { $size: "$retweetedUsers" },
+          createdAt: 1,
+          commentCount: "$count.count",
+        },
+      },
+    ]);
+    res.status(200).json({ data: tweets });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err });
+  }
+};
+
+export const getFollowingReplies = async (req: IRequest, res: Response) => {
+  const tweetId = req.params.tweetId;
+  const id = req.user?._id;
+
+  try {
+    const user = await User.findById(id);
+    const tweets = await Tweet.aggregate([
+      {
+        $match: {
+          tweetId: new ObjectId(tweetId),
+          creator: { $in: user?.following },
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $lookup: {
+          from: "tweets",
+          let: { tweetid: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { _id: 0, count: 1 } },
+          ],
+          as: "count",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          "creator.name": 1,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          comment: 1,
+          tweet: 1,
           media: 1,
           likes: {
             $cond: {
