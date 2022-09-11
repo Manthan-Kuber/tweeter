@@ -52,7 +52,7 @@ export const getTweet = async (req: IRequest, res: Response) => {
       },
       {
         $lookup: {
-          from: "comments",
+          from: "tweets",
           let: { tweetid: "$_id" },
           pipeline: [
             { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
