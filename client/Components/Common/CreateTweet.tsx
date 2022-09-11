@@ -110,17 +110,9 @@ const CreateTweet = ({
                 onClick={(e: React.SyntheticEvent) =>
                   fileInputRef.current && fileInputRef.current.click()
                 }
-                
               />
             )}
-            <TweetButton
-              disabled={isDisabled}
-              onClick={() =>
-                props.variant === "inTweet" && props.setIsModalOpen!(false)
-              }
-            >
-              {props.btnText}
-            </TweetButton>
+            <TweetButton disabled={isDisabled}>{props.btnText}</TweetButton>
           </OptionsWrapper>
         </form>
       </InputFormWrapper>
@@ -244,10 +236,10 @@ const MediaIcon = styled(Icon)`
   padding: 8px;
   border-radius: 100%;
   &:hover {
-    background-color: rgba(47, 128, 237,0.2);
+    background-color: rgba(47, 128, 237, 0.2);
   }
   &:active {
-    background-color: rgba(47, 128, 237,0.7);
+    background-color: rgba(47, 128, 237, 0.7);
   }
 `;
 

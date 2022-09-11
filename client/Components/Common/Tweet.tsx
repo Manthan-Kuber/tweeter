@@ -35,7 +35,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
-  const currentUsername = useAppSelector(state => state.auth.user?.name)
+  const currentUsername = useAppSelector((state) => state.auth.user?.name);
   const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
   const { push } = useRouter();
 
@@ -65,6 +65,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
       toast.success(() => (
         <ToastMessage>Created Tweet Successfully</ToastMessage>
       ));
+      setIsModalOpen(false);
     } catch (error) {
       toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
     }
@@ -152,12 +153,11 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           setFileList={setFileList}
           onSubmit={onSubmit}
           replyImageUrl={currentUserPfp}
-          setIsModalOpen={setIsModalOpen}
           variant="inTweet"
         />
       </CustomModal>
       <TweetWrapper>
-        {props.isRetweeted &&  (
+        {props.isRetweeted && (
           <RetweetWrapper>
             <AiOutlineRetweet size={14} />{" "}
             <span>{currentUsername} Retweeted</span>
@@ -246,7 +246,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               setIsRetweeted={setIsRetweeted}
             />
           )}
-          
         </TweetBox>
       </TweetWrapper>
     </>

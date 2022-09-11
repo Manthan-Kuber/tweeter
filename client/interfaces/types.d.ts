@@ -217,7 +217,6 @@ interface CreateTweetProps {
   onSubmit: (e: React.FormEvent) => void;
   replyImageUrl?: string;
   isMediaInputVisible?: boolean;
-  setIsModalOpen?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 interface TweetProps {
