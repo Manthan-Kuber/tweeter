@@ -112,7 +112,7 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $addFields: {
@@ -215,7 +215,7 @@ export const media = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $addFields: {
@@ -307,7 +307,7 @@ export const media = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $lookup: {
@@ -419,7 +419,7 @@ export const liked = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $addFields: {
@@ -510,7 +510,7 @@ export const liked = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $lookup: {
@@ -622,7 +622,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $addFields: {
@@ -713,7 +713,7 @@ export const tweetsAndReplies = async (req: IRequest, res: Response) => {
       {
         $sort: { createdAt: -1 },
       },
-      { $skip: skip * 10 },
+      { $skip: skip * 5 },
       { $limit: 5 },
       {
         $lookup: {
