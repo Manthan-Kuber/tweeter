@@ -68,7 +68,7 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
         $sort: { createdAt: -1 },
       },
       { $skip: skip * 10 },
-      { $limit: 10 },
+      { $limit: 5 },
       {
         $addFields: {
           retweeted: {
@@ -162,7 +162,7 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
         $sort: { createdAt: -1 },
       },
       { $skip: skip * 10 },
-      { $limit: 10 },
+      { $limit: 5 },
       {
         $lookup: {
           from: "tweets",
@@ -274,7 +274,7 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
         $sort: { createdAt: -1 },
       },
       { $skip: skip * 10 },
-      { $limit: 10 },
+      { $limit: 5 },
       {
         $addFields: {
           retweeted: {
@@ -363,7 +363,7 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
         $sort: { createdAt: -1 },
       },
       { $skip: skip * 10 },
-      { $limit: 10 },
+      { $limit: 5 },
       {
         $lookup: {
           from: "tweets",
