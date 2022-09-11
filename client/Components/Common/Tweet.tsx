@@ -35,7 +35,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
   const { push } = useRouter();
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -143,14 +143,16 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
         />
         <CreateTweet
           isReplyImageVisible={true}
-          placeholder="Tweet your Comment"
-          btnText="Comment"
+          placeholder="Tweet your Reply"
+          btnText="Reply"
           message={message}
           setMessage={setMessage}
           fileList={fileList}
           setFileList={setFileList}
           onSubmit={onSubmit}
           replyImageUrl={currentUserPfp}
+          setIsModalOpen={setIsModalOpen}
+          variant="inTweet"
         />
       </CustomModal>
       <TweetWrapper>
@@ -186,7 +188,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
                 profilePic={props.authorProfilePic}
               />
             </ProfileInfoWrapper>
-            {currentUserId === props.authorId && (
+            {currentUserId === props.authorId && props.variant !== "inTweet" && (
               <DeleteIconWrapper
                 onClick={() => onDeleteButtonClick(props.tweetId)}
               >

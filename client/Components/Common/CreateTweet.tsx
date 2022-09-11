@@ -112,7 +112,14 @@ const CreateTweet = ({
                 }
               />
             )}
-            <TweetButton disabled={isDisabled}>{props.btnText}</TweetButton>
+            <TweetButton
+              disabled={isDisabled}
+              onClick={() =>
+                props.variant === "inTweet" && props.setIsModalOpen!(false)
+              }
+            >
+              {props.btnText}
+            </TweetButton>
           </OptionsWrapper>
         </form>
       </InputFormWrapper>
