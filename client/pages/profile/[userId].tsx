@@ -38,7 +38,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
-import { LoaderWrapper } from "../tweet/[tweetId]";
 
 const filterList = [
   {
@@ -64,7 +63,6 @@ const Profile = ({ userId }: { userId: string }) => {
   const [followerModalIsOpen, setFollowerModalIsOpen] = useState(false);
   const [followingModalIsOpen, setFollowingModalIsOpen] = useState(false);
   const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
-  const { width } = useWindowSize();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [tab, setTab] = useState(0);

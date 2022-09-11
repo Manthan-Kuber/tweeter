@@ -24,7 +24,7 @@ function TweetPage() {
   } = useRouter();
   const { data } = useGetTweetQuery(tweetId as string);
   const { data: TweetReplyData } = useGetTweetRepliesQuery({
-    tweetId: data?.data[0]._id ?? "",
+    tweetId: data?.data[0]._id ?? "", //change
     skip: 0,
   });
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
@@ -38,7 +38,7 @@ function TweetPage() {
           setHasMoreTweets(false);
         } else {
           const { data: newTweetData } = await GetTweetRepliesTrigger({
-            tweetId: data?.data[0]._id ?? "",
+            tweetId: data?.data[0]._id ?? "", //change
             skip: TweetReplyData.data.length / tweetLimit,
           }).unwrap();
           if (newTweetData.length < TweetReplyData.data.length)
@@ -89,6 +89,7 @@ function TweetPage() {
           savedBy={tweet.savedBy}
           variant="tweetPage"
           TweetReplyData={TweetReplyData}
+          fetchReply={false} 
         />
         <TweetReplyHeading>Tweet Replies</TweetReplyHeading>
         <TweetDataListWrapper>

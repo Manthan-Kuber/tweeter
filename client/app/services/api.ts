@@ -129,6 +129,7 @@ export const api = createApi({
       }),
       invalidatesTags: [
         "Tweets",
+        "HomeTweets",
         "Bookmarks",
         "TweetsAndReplies",
         "TweetsLikes",

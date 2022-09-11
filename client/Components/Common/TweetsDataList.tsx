@@ -55,6 +55,7 @@ const TweetsDataList = ({
               retweetedUsers={tweet.retweetedUsers}
               savedBy={tweet.savedBy}
               variant={variant}
+              fetchReply={tweet.fetchReply}
             />
           </>
         ))

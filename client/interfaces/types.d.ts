@@ -237,6 +237,7 @@ interface TweetProps {
   likes: number;
   retweetedUsers: number;
   savedBy: number;
+  fetchReply:boolean;
   variant?: "inTweet" | "tweetPage" | "tweetReply";
   TweetReplyData?: GetTweetsResponse;
 }
