@@ -35,6 +35,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
+  const currentUsername = useAppSelector(state => state.auth.user?.name)
   const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
   const { push } = useRouter();
 
@@ -114,7 +115,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 
   return (
     <>
-      {/* Close Modal on submit  */}
       <CustomModal
         setModalIsOpen={setIsModalOpen}
         modalIsOpen={isModalOpen}
@@ -140,6 +140,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           likes={0}
           retweetedUsers={0}
           savedBy={0}
+          fetchReply={false} // Don't fetch reply for reply modal
         />
         <CreateTweet
           isReplyImageVisible={true}
@@ -156,10 +157,10 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
         />
       </CustomModal>
       <TweetWrapper>
-        {props.isRetweeted && (
+        {props.isRetweeted &&  (
           <RetweetWrapper>
             <AiOutlineRetweet size={14} />{" "}
-            <span>{props.authorName} Retweeted</span>
+            <span>{currentUsername} Retweeted</span>
           </RetweetWrapper>
         )}
         <TweetBox
