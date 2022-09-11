@@ -103,7 +103,6 @@ export const fetchTweets = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const tweetId = req.params.tweetId;
   const id = req.user?._id;
-  if (!skip) skip = 0;
   try {
     const tweets = await Tweet.aggregate([
       {
@@ -211,6 +210,7 @@ export const getFollowingReplies = async (req: IRequest, res: Response) => {
         },
       },
       { $sort: { createdAt: -1 } },
+      { $limit: 1 },
       {
         $lookup: {
           from: "tweets",

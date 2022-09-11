@@ -54,9 +54,113 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
   const id = req.user?._id;
   try {
     const user = await User.findById(id);
+    let replies = await Tweet.aggregate([
+      {
+        $match: {
+          tweetId: { $exists: true },
+          $or: [
+            { creator: { $in: user?.following } },
+            { retweetedUsers: { $in: user?.following } },
+          ],
+        },
+      },
+      { $group: { _id: "$tweetId" } },
+      {
+        $sort: { createdAt: -1 },
+      },
+      { $skip: skip * 5 },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "tweets",
+          localField: "_id",
+          foreignField: "_id",
+          as: "originalTweet",
+        },
+      },
+      { $unwind: "$originalTweet" },
+      {
+        $lookup: {
+          from: "users",
+          localField: "originalTweet.creator",
+          foreignField: "_id",
+          as: "originalTweet.creator",
+        },
+      },
+      {
+        $addFields: {
+          "originalTweet.retweeted": {
+            $filter: {
+              input: "$originalTweet.retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          "originalTweet.saved": {
+            $filter: {
+              input: "$originalTweet.savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          "originalTweet.liked": {
+            $filter: {
+              input: "$originalTweet.likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          "originalTweet.fetchReply": true,
+        },
+      },
+      {
+        $lookup: {
+          from: "tweets",
+          let: { tweetid: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { _id: 0, count: 1 } },
+          ],
+          as: "count",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          "originalTweet._id": 1,
+          "originalTweet.creator._id": 1,
+          "originalTweet.creator.name": 1,
+          "originalTweet.creator.username": 1,
+          "originalTweet.creator.profilePic": 1,
+          "originalTweet.tweet": 1,
+          "originalTweet.media": 1,
+          "originalTweet.liked": 1,
+          "originalTweet.retweeted": 1,
+          "originalTweet.retweetedUsers": {
+            $size: "$originalTweet.retweetedUsers",
+          },
+          "originalTweet.saved": 1,
+          "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
+          "originalTweet.commentCount": "$count.count",
+          "originalTweet.fetchReply": 1,
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
+        },
+      },
+    ]);
+    replies = replies.map((item) => item.originalTweet);
+    const ids = replies.map((item) => item._id);
     let tweets = await Tweet.aggregate([
       {
         $match: {
+          _id: { $nin: ids },
           tweetId: { $exists: false },
           $or: [
             { creator: { $in: user?.following } },
@@ -147,14 +251,25 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
         },
       },
     ]);
+    tweets = tweets.concat(replies);
+    tweets.sort((a, b) => b.createdAt - a.createdAt);
+    res.status(200).json({ data: tweets });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
+export const getBoomarks = async (req: IRequest, res: Response) => {
+  const skip = parseInt(req.params.skip);
+  const id = req.user?._id;
+
+  try {
+    const user = await User.findById(id);
     let replies = await Tweet.aggregate([
       {
         $match: {
           tweetId: { $exists: true },
-          $or: [
-            { creator: { $in: user?.following } },
-            { retweetedUsers: { $in: user?.following } },
-          ],
+          savedBy: id,
         },
       },
       { $group: { _id: "$tweetId" } },
@@ -239,33 +354,21 @@ export const getHomeTweets = async (req: IRequest, res: Response) => {
           "originalTweet.retweetedUsers": {
             $size: "$originalTweet.retweetedUsers",
           },
+          "originalTweet.likes": { $size: "$originalTweet.likes" },
+          "originalTweet.createdAt": 1,
           "originalTweet.saved": 1,
           "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
           "originalTweet.commentCount": "$count.count",
           "originalTweet.fetchReply": 1,
-          "originalTweet.likes": { $size: "$originalTweet.likes" },
-          "originalTweet.createdAt": 1,
         },
       },
     ]);
     replies = replies.map((item) => item.originalTweet);
-    tweets = tweets.concat(replies);
-    tweets.sort((a, b) => b.createdAt - a.createdAt);
-    res.status(200).json({ data: tweets });
-  } catch (err) {
-    res.status(400).json({ error: err });
-  }
-};
-
-export const getBoomarks = async (req: IRequest, res: Response) => {
-  const skip = parseInt(req.params.skip);
-  const id = req.user?._id;
-
-  try {
-    const user = await User.findById(id);
+    const ids = replies.map((item) => item._id);
     let tweets = await Tweet.aggregate([
       {
         $match: {
+          _id: { $nin: ids },
           tweetId: { $exists: false },
           savedBy: id,
         },
@@ -351,105 +454,6 @@ export const getBoomarks = async (req: IRequest, res: Response) => {
         },
       },
     ]);
-    let replies = await Tweet.aggregate([
-      {
-        $match: {
-          tweetId: { $exists: true },
-          savedBy: id,
-        },
-      },
-      { $group: { _id: "$tweetId" } },
-      {
-        $sort: { createdAt: -1 },
-      },
-      { $skip: skip * 5 },
-      { $limit: 5 },
-      {
-        $lookup: {
-          from: "tweets",
-          localField: "_id",
-          foreignField: "_id",
-          as: "originalTweet",
-        },
-      },
-      { $unwind: "$originalTweet" },
-      {
-        $lookup: {
-          from: "users",
-          localField: "originalTweet.creator",
-          foreignField: "_id",
-          as: "originalTweet.creator",
-        },
-      },
-      {
-        $addFields: {
-          "originalTweet.retweeted": {
-            $filter: {
-              input: "$originalTweet.retweetedUsers",
-              as: "user",
-              cond: {
-                $eq: ["$$user", new ObjectId(id)],
-              },
-            },
-          },
-          "originalTweet.saved": {
-            $filter: {
-              input: "$originalTweet.savedBy",
-              as: "user",
-              cond: {
-                $eq: ["$$user", new ObjectId(id)],
-              },
-            },
-          },
-          "originalTweet.liked": {
-            $filter: {
-              input: "$originalTweet.likes",
-              as: "user",
-              cond: {
-                $eq: ["$$user", new ObjectId(id)],
-              },
-            },
-          },
-          "originalTweet.fetchReply": true,
-        },
-      },
-      {
-        $lookup: {
-          from: "tweets",
-          let: { tweetid: "$_id" },
-          pipeline: [
-            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
-            { $group: { _id: null, count: { $sum: 1 } } },
-            { $project: { _id: 0, count: 1 } },
-          ],
-          as: "count",
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          "originalTweet._id": 1,
-          "originalTweet.creator._id": 1,
-          "originalTweet.creator.name": 1,
-          "originalTweet.creator.username": 1,
-          "originalTweet.creator.profilePic": 1,
-          "originalTweet.tweet": 1,
-          "originalTweet.media": 1,
-          "originalTweet.liked": 1,
-          "originalTweet.retweeted": 1,
-          "originalTweet.retweetedUsers": {
-            $size: "$originalTweet.retweetedUsers",
-          },
-          "originalTweet.likes": { $size: "$originalTweet.likes" },
-          "originalTweet.createdAt": 1,
-          "originalTweet.saved": 1,
-          "originalTweet.savedBy": { $size: "$originalTweet.savedBy" },
-          "originalTweet.commentCount": "$count.count",
-          "originalTweet.fetchReply": 1,
-        },
-      },
-    ]);
-    replies = replies.map((item) => item.originalTweet);
     tweets = tweets.concat(replies);
     tweets.sort((a, b) => b.createdAt - a.createdAt);
     res.status(200).json({ data: tweets });
