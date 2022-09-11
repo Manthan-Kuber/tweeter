@@ -34,10 +34,16 @@ const SuggestedFollow = ({
           <NoTweetsToShow message="No More Suggestions to show" />
         ) : (
           suggestedFollowList.map((item) => (
-            <FollowerContainer key={item._id}>
+            <FollowerContainer
+              key={item._id}
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/profile/${item._id}`);
+              }}
+            >
               <hr />
               <ProfileInfoWrapper>
-                <div onClick={() => router.push(`/profile/${item._id}`)}>
+                <div>
                   <ProfileInfo
                     name={item.name}
                     username={item.username}
@@ -48,7 +54,8 @@ const SuggestedFollow = ({
                 <MoreStyledFollowButton
                   as={motion.button}
                   whileTap={{ scale: 0.9 }}
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     try {
                       await followUser(item._id);
                       toast.success(() => (
@@ -82,7 +89,7 @@ const Article = styled(AsideContainer)`
   overflow-y: scroll;
   & > h3 {
     color: #333;
-    font: revert
+    font: revert;
   }
   h5 {
     margin-bottom: 1rem;
