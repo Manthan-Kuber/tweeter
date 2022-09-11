@@ -16,7 +16,6 @@ var tweetLimit = 10;
 function Bookmarks() {
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
   const { data: BookmarksData } = useGetBookmarksQuery(0);
-  const userId = useAppSelector((state) => state.auth.user?.id);
   const [getBookmarksTrigger] = useLazyGetBookmarksQuery();
   const dispatch = useAppDispatch();
 

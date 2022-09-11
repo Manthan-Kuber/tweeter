@@ -268,7 +268,7 @@ interface ComponentLoaderProps {
   borderRadius: number;
 }
 
-interface SuggestedFollowerResponse {
+interface SuggestedFollowerResponseElement {
   _id: string;
   name: string;
   email: string;

@@ -413,7 +413,7 @@ const Profile = ({ userId }: { userId: string }) => {
             TweetsAndRepliesData !== undefined && (
               <TweetsDataList
                 TweetsData={TweetsAndRepliesData}
-                getMoreTweets={getMoreTweets}
+                getMoreTweets={getMoreTweetsAndReplies}
                 hasMoreTweets={hasMoreTweets}
                 setHasMoreTweets={setHasMoreTweets}
               />

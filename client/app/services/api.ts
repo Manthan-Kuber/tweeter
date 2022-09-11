@@ -12,7 +12,8 @@ export const api = createApi({
     credentials: "include",
   }),
   tagTypes: [
-    "Tweets",
+    "HomeTweets",
+    "Tweets", //  <== Profile Tweets
     "TweetsAndReplies",
     "TweetsMedia",
     "TweetsLikes",
@@ -23,6 +24,7 @@ export const api = createApi({
     "SuggestedFollowers",
     "CommentsReplies",
     "Tweet",
+    "ReplyToTweet", // <== Tweet Page Replies
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -73,7 +75,7 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Tweets", "Tweet"],
+      invalidatesTags: ["Tweets", "Tweet", "HomeTweets"],
     }),
     deleteTweet: builder.mutation({
       query: (tweetId: string) => ({
@@ -109,6 +111,7 @@ export const api = createApi({
     }),
     getHomeTweets: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/tweets/${skip}`,
+      providesTags: ["HomeTweets"],
     }),
     getFollowers: builder.query<GetFollowingAndFollowersResponse, string>({
       query: (userId) => `users/followers/${userId}/0`,
@@ -179,7 +182,10 @@ export const api = createApi({
       }),
       invalidatesTags: ["Followers", "Following"],
     }),
-    getSuggestedFollowers: builder.query<SuggestedFollowerResponse[], number>({
+    getSuggestedFollowers: builder.query<
+      SuggestedFollowerResponseElement[],
+      number
+    >({
       query: (skip) => ({
         url: `home/people/${skip}/4`,
       }),
@@ -206,13 +212,14 @@ export const api = createApi({
     }),
     getTweet: builder.query<GetTweetsResponse, string>({
       query: (tweetId) => `tweets/${tweetId}`,
+      providesTags: ["Tweet"],
     }),
     getTweetReplies: builder.query<
       GetTweetsResponse,
       { tweetId: string; skip: number }
     >({
       query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
-      providesTags: ["Tweet"],
+      providesTags: ["ReplyToTweet"],
     }),
   }),
 });
