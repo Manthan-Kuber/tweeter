@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { AiOutlineCloseCircle } from "react-icons/ai";
+import { GrClose } from "react-icons/gr";
 import { MdOutlineImage } from "react-icons/md";
 import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
@@ -86,7 +86,7 @@ const CreateTweet = ({
                     layout="fill"
                   />
                   <CloseIcon
-                    size={24}
+                    size={32}
                     onClick={() =>
                       setFileList((prev) =>
                         prev.filter(
@@ -241,11 +241,21 @@ const MediaIcon = styled(Icon)`
   position: revert;
 `;
 
-const CloseIcon = styled(AiOutlineCloseCircle)`
+const CloseIcon = styled(GrClose)`
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
   cursor: pointer;
+  border-radius: 100%;
+  padding: 8px;
+  transition: all 0.4s;
+  background-color: rgba(130, 130, 130, 0.9);
+  &:hover {
+    background-color: rgba(130, 130, 130, 0.7);
+  }
+  &:active {
+    background-color: rgba(130, 130, 130, 0.5);
+  }
 `;
 
 export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
