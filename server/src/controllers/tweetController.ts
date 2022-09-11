@@ -211,6 +211,7 @@ export const getFollowingReplies = async (req: IRequest, res: Response) => {
         },
       },
       { $sort: { createdAt: -1 } },
+      { $limit: 1 },
       {
         $lookup: {
           from: "tweets",
