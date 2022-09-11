@@ -104,12 +104,13 @@ const CreateTweet = ({
             {isMediaInputVisible && (
               <MediaIcon
                 as={MdOutlineImage}
-                size={28}
+                size={40}
                 color={"var(--clr-primary)"}
                 $cursorPointer
                 onClick={(e: React.SyntheticEvent) =>
                   fileInputRef.current && fileInputRef.current.click()
                 }
+                
               />
             )}
             <TweetButton
@@ -239,6 +240,15 @@ const TweetImageWrapper = styled.div`
 
 const MediaIcon = styled(Icon)`
   position: revert;
+  transition: all 0.4s;
+  padding: 8px;
+  border-radius: 100%;
+  &:hover {
+    background-color: rgba(47, 128, 237,0.2);
+  }
+  &:active {
+    background-color: rgba(47, 128, 237,0.7);
+  }
 `;
 
 const CloseIcon = styled(GrClose)`
