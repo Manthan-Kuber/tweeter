@@ -125,7 +125,7 @@ const TweetReplyHeading = styled.h1`
   color: #333;
 `;
 
-const LoaderWrapper = styled.div`
+export const LoaderWrapper = styled.div`
   width: fit-content;
   margin-inline: auto;
   margin-top: 2rem;

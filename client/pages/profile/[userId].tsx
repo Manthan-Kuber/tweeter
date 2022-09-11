@@ -9,8 +9,9 @@ import FollowerInfo from "../../Components/Common/FollowerInfo";
 import axiosApi from "../../app/services/axiosApi";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../hooks/store";
-import { logOut } from "../../features/auth/authSlice";
-import FullScreenLoader from "../../Components/Common/FullScreenLoader";
+import FullScreenLoader, {
+  Loader,
+} from "../../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import {
   CancelButton,
@@ -21,7 +22,9 @@ import {
 import EditProfile from "../../Components/Common/EditProfile";
 import {
   api,
+  useGetProfileTweetsAndRepliesQuery,
   useGetProfileTweetsLikesQuery,
+  useGetProfileTweetsMediaQuery,
   useGetProfileTweetsQuery,
   useLazyGetFollowersQuery,
   useLazyGetFollowingQuery,
@@ -35,6 +38,26 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
+import { LoaderWrapper } from "../tweet/[tweetId]";
+
+const filterList = [
+  {
+    id: 0,
+    label: "Tweets",
+  },
+  {
+    id: 1,
+    label: "Tweets & Replies",
+  },
+  {
+    id: 2,
+    label: "Media",
+  },
+  {
+    id: 3,
+    label: "Likes",
+  },
+];
 
 const Profile = ({ userId }: { userId: string }) => {
   const dispatch = useAppDispatch();
@@ -44,6 +67,7 @@ const Profile = ({ userId }: { userId: string }) => {
   const { width } = useWindowSize();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [tab, setTab] = useState(0);
   const [profileData, setProfileData] = useState({
     name: "",
     profilePic: "",
@@ -58,10 +82,34 @@ const Profile = ({ userId }: { userId: string }) => {
     { userId, skip: 0 }
     // { refetchOnMountOrArgChange: true }
   ); //Resets api cache on mount
-  const { data: TweetsLikesData } = useGetProfileTweetsLikesQuery({
-    userId,
-    skip: 0,
-  });
+  const { data: TweetsAndRepliesData } = useGetProfileTweetsAndRepliesQuery(
+    {
+      userId,
+      skip: 0,
+    },
+    {
+      skip: tab === 1,
+    }
+  );
+  const { data: TweetsMediaData } = useGetProfileTweetsMediaQuery(
+    {
+      userId,
+      skip: 0,
+    },
+    {
+      skip: tab === 2,
+    }
+  );
+  const { data: TweetsLikesData } = useGetProfileTweetsLikesQuery(
+    {
+      userId,
+      skip: 0,
+    },
+    {
+      skip: tab === 3,
+    }
+  );
+
   const {
     name,
     profilePic,
@@ -72,6 +120,7 @@ const Profile = ({ userId }: { userId: string }) => {
     bio,
     followed,
   } = profileData;
+
   const token = useAppSelector((state) => state.auth.token);
   const [GetFollowersTrigger, { data: GetFollowersData }] =
     useLazyGetFollowersQuery();
@@ -82,31 +131,11 @@ const Profile = ({ userId }: { userId: string }) => {
     useLazyGetProfileTweetsAndRepliesQuery();
   const [GetProfileTweetsMediaTrigger] = useLazyGetProfileTweetsMediaQuery();
   const [GetProfileTweetsLikesTrigger] = useLazyGetProfileTweetsLikesQuery();
-  const [tab, setTab] = useState(0);
   const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const { width: WindowWidth } = useWindowSize();
   const { isFallback } = useRouter();
 
   var tweetLimit = 10;
-
-  const filterList = [
-    {
-      id: 0,
-      label: "Tweets",
-    },
-    {
-      id: 1,
-      label: "Tweets & Replies",
-    },
-    {
-      id: 2,
-      label: "Media",
-    },
-    {
-      id: 3,
-      label: "Likes",
-    },
-  ];
 
   const getProfile = async () => {
     try {
@@ -179,7 +208,70 @@ const Profile = ({ userId }: { userId: string }) => {
                 });
               }
             )
-        );
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
+
+  const getMoreTweetsMedia = async () => {
+    try {
+      if (TweetsMediaData !== undefined) {
+        if (TweetsMediaData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetProfileTweetsMediaTrigger({
+            userId,
+            skip: TweetsMediaData.data.length / tweetLimit,
+          }).unwrap();
+          if (newTweetData.length < TweetsMediaData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getProfileTweetsMedia",
+              { userId, skip: 0 },
+              (tweetData) => {
+                newTweetData.map((newTweet) => {
+                  tweetData.data.push(newTweet);
+                });
+              }
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
+
+  const getMoreTweetsAndReplies = async () => {
+    try {
+      if (TweetsAndRepliesData !== undefined) {
+        if (TweetsAndRepliesData.data.length < tweetLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } =
+            await GetProfileTweetsAndRepliesTrigger({
+              userId,
+              skip: TweetsAndRepliesData.data.length / tweetLimit,
+            }).unwrap();
+          if (newTweetData.length < TweetsAndRepliesData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getProfileTweetsAndReplies",
+              { userId, skip: 0 },
+              (tweetData) => {
+                newTweetData.map((newTweet) => {
+                  tweetData.data.push(newTweet);
+                });
+              }
+            )
+          );
         }
       }
     } catch (error) {
@@ -318,10 +410,24 @@ const Profile = ({ userId }: { userId: string }) => {
               />
             )
           ) : tab === 1 ? (
-            <p>Replies {tab}</p>
+            TweetsAndRepliesData !== undefined && (
+              <TweetsDataList
+                TweetsData={TweetsAndRepliesData}
+                getMoreTweets={getMoreTweets}
+                hasMoreTweets={hasMoreTweets}
+                setHasMoreTweets={setHasMoreTweets}
+              />
+            )
           ) : tab === 2 ? (
-            <p>Media {tab}</p>
-          ) : (
+            TweetsMediaData !== undefined && (
+              <TweetsDataList
+                TweetsData={TweetsMediaData}
+                getMoreTweets={getMoreTweetsMedia}
+                hasMoreTweets={hasMoreTweets}
+                setHasMoreTweets={setHasMoreTweets}
+              />
+            )
+          ) : tab === 3 ? (
             TweetsLikesData !== undefined && (
               <TweetsDataList
                 TweetsData={TweetsLikesData}
@@ -330,6 +436,8 @@ const Profile = ({ userId }: { userId: string }) => {
                 setHasMoreTweets={setHasMoreTweets}
               />
             )
+          ) : (
+            <p>Loading</p>
           )}
         </div>
       </ContentContainer>

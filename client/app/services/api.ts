@@ -250,4 +250,6 @@ export const {
   useGetTweetQuery,
   useGetTweetRepliesQuery,
   useLazyGetTweetRepliesQuery,
+  useGetProfileTweetsMediaQuery,
+  useGetProfileTweetsAndRepliesQuery,
 } = api;
