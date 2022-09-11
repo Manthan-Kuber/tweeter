@@ -96,7 +96,6 @@ export const editProfile = async (req: IRequest, res: Response) => {
 export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const id = req.params.userId;
-  if (!skip) skip = 0;
 
   try {
     let tweets = await Tweet.aggregate([
@@ -201,7 +200,6 @@ export const tweetsAndRetweets = async (req: IRequest, res: Response) => {
 export const media = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const id = req.params.userId;
-  if (!skip) skip = 0;
 
   try {
     let replies = await Tweet.aggregate([
@@ -408,7 +406,6 @@ export const media = async (req: IRequest, res: Response) => {
 export const liked = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const id = req.params.userId;
-  if (!skip) skip = 0;
 
   try {
     let replies = await Tweet.aggregate([
@@ -613,7 +610,6 @@ export const liked = async (req: IRequest, res: Response) => {
 export const tweetsAndReplies = async (req: IRequest, res: Response) => {
   let skip = parseInt(req.params.skip);
   const id = req.params.userId;
-  if (!skip) skip = 0;
 
   try {
     let replies = await Tweet.aggregate([
