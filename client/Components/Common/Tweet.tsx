@@ -173,6 +173,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
         >
           <ProfileInfoContainer>
             <ProfileInfoWrapper
+              variant={props.variant}
               onClick={(e) => {
                 e.stopPropagation();
                 if (props.variant !== "inTweet") {
@@ -200,7 +201,10 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           {props.variant !== "inTweet" ? (
             <ImagesWrapper numOfImages={props.mediaList.length}>
               {props.mediaList.map((mediaItemUrl, index) => (
-                <ImageWrapper onClick={(e) => e.stopPropagation()}>
+                <ImageWrapper
+                  onClick={(e) => e.stopPropagation()}
+                  variant={props.variant}
+                >
                   <Link href={mediaItemUrl} passHref>
                     <a target="_blank" rel="noopener noreferrer">
                       <Image
@@ -216,7 +220,9 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               ))}
             </ImagesWrapper>
           ) : (
-            props.mediaList.map((mediaItemUrl) => <LinkText>{mediaItemUrl}</LinkText>)
+            props.mediaList.map((mediaItemUrl) => (
+              <LinkText>{mediaItemUrl}</LinkText>
+            ))
           )}
           {props.variant !== "inTweet" && (
             <TweetInfo>
@@ -247,12 +253,14 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 export default Tweet;
 
 const LinkText = styled.p`
-  font-weight:500;
+  font-weight: 500;
   color: hsla(0, 0%, 31%, 1);
   font-family: var(--ff-noto);
 `;
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled.div<{
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
+}>`
   position: relative;
   width: min(45rem, 100%);
   height: 15rem;
@@ -266,7 +274,7 @@ const ImageWrapper = styled.div`
   }
   transition: opacity 0.4s;
   &:hover {
-    opacity: 0.75;
+    opacity: ${({ variant }) => variant !== "inTweet" && "0.75"};
   }
 `;
 
@@ -275,10 +283,12 @@ const ProfileInfoContainer = styled.div`
   justify-content: space-between;
 `;
 
-const ProfileInfoWrapper = styled.div`
+const ProfileInfoWrapper = styled.div<{
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
+}>`
   transition: opacity 0.4s;
   &:hover {
-    opacity: 0.75;
+    opacity: ${({ variant }) => variant !== "inTweet" && "0.75"};
   }
 `;
 
