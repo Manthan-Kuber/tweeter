@@ -382,7 +382,6 @@ interface TweetsDataListProps {
   TweetsData: GetTweetsResponse;
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
-  setHasMoreTweets: React.Dispatch<React.SetStateAction<boolean>>;
   variant?: "inTweet" | "tweetPage" | "tweetReply";
 }
 

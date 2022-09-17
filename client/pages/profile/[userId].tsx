@@ -84,28 +84,28 @@ const Profile = ({ userId }: { userId: string }) => {
     {
       userId,
       skip: 0,
-    },
-    {
-      skip: tab === 1,
     }
+    // {
+    //   skip: tab === 1,
+    // }
   );
   const { data: TweetsMediaData } = useGetProfileTweetsMediaQuery(
     {
       userId,
       skip: 0,
-    },
-    {
-      skip: tab === 2,
     }
+    // {
+    //   skip: tab === 2,
+    // }
   );
   const { data: TweetsLikesData } = useGetProfileTweetsLikesQuery(
     {
       userId,
       skip: 0,
-    },
-    {
-      skip: tab === 3,
     }
+    // {
+    //   skip: tab === 3,
+    // }
   );
 
   const {
@@ -217,27 +217,23 @@ const Profile = ({ userId }: { userId: string }) => {
   const getMoreTweetsMedia = async () => {
     try {
       if (TweetsMediaData !== undefined) {
-        if (TweetsMediaData.data.length < tweetLimit) {
-          setHasMoreTweets(false);
-        } else {
-          const { data: newTweetData } = await GetProfileTweetsMediaTrigger({
-            userId,
-            skip: TweetsMediaData.data.length / tweetLimit,
-          }).unwrap();
-          if (newTweetData.length < TweetsMediaData.data.length)
-            setHasMoreTweets(false);
-          dispatch(
-            api.util.updateQueryData(
-              "getProfileTweetsMedia",
-              { userId, skip: 0 },
-              (tweetData) => {
-                newTweetData.map((newTweet) => {
-                  tweetData.data.push(newTweet);
-                });
-              }
-            )
-          );
-        }
+        const { data: newTweetData } = await GetProfileTweetsMediaTrigger({
+          userId,
+          skip: tweetsMediaSkip,
+        }).unwrap();
+        if (newTweetData.length === 0) setHasMoreTweetsMedia(false);
+        else setTweetsMediaSkip(tweetsMediaSkip + 1);
+        dispatch(
+          api.util.updateQueryData(
+            "getProfileTweetsMedia",
+            { userId, skip: 0 },
+            (tweetData) => {
+              newTweetData.map((newTweet) => {
+                tweetData.data.push(newTweet);
+              });
+            }
+          )
+        );
       }
     } catch (error) {
       console.log(error);
@@ -248,28 +244,23 @@ const Profile = ({ userId }: { userId: string }) => {
   const getMoreTweetsAndReplies = async () => {
     try {
       if (TweetsAndRepliesData !== undefined) {
-        if (TweetsAndRepliesData.data.length < tweetLimit) {
-          setHasMoreTweets(false);
-        } else {
-          const { data: newTweetData } =
-            await GetProfileTweetsAndRepliesTrigger({
-              userId,
-              skip: TweetsAndRepliesData.data.length / tweetLimit,
-            }).unwrap();
-          if (newTweetData.length < TweetsAndRepliesData.data.length)
-            setHasMoreTweets(false);
-          dispatch(
-            api.util.updateQueryData(
-              "getProfileTweetsAndReplies",
-              { userId, skip: 0 },
-              (tweetData) => {
-                newTweetData.map((newTweet) => {
-                  tweetData.data.push(newTweet);
-                });
-              }
-            )
-          );
-        }
+        const { data: newTweetData } = await GetProfileTweetsAndRepliesTrigger({
+          userId,
+          skip: tweetsAndRepliesSkip,
+        }).unwrap();
+        if (newTweetData.length === 0) setHasMoreTweetsAndReplies(false);
+        else setTweetsAndRepliesSkip(tweetsAndRepliesSkip + 1)
+        dispatch(
+          api.util.updateQueryData(
+            "getProfileTweetsAndReplies",
+            { userId, skip: 0 },
+            (tweetData) => {
+              newTweetData.map((newTweet) => {
+                tweetData.data.push(newTweet);
+              });
+            }
+          )
+        );
       }
     } catch (error) {
       console.log(error);

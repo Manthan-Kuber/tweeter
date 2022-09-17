@@ -196,7 +196,6 @@ const Home = ({
           <TweetsDataList
             TweetsData={HomeTweetsData}
             hasMoreTweets={hasMoreTweets}
-            setHasMoreTweets={setHasMoreTweets}
             getMoreTweets={getMoreHomeTweets}
           />
         )}

@@ -8,7 +8,7 @@ import {
 } from "../../app/services/api";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
-import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { useAppDispatch } from "../../hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
 
 var tweetLimit = 10;

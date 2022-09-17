@@ -9,7 +9,6 @@ const TweetsDataList = ({
   TweetsData,
   getMoreTweets,
   hasMoreTweets,
-  setHasMoreTweets,
   variant,
 }: TweetsDataListProps) => {
   return (
