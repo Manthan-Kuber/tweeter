@@ -56,13 +56,14 @@ const Home = ({
   const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
-  const [hasMoreTweets, setHasMoreTweets] = useState(false);
+  const [hasMoreTweets, setHasMoreTweets] = useState(true);
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
-  const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
   const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
   const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
   const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
+  const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
+  const [homeTweetsSkip, setHomeTweetsSkip] = useState(1);
 
   const requestConfig = {
     headers: {
@@ -126,20 +127,16 @@ const Home = ({
   const getMoreHomeTweets = async () => {
     try {
       if (HomeTweetsData !== undefined) {
-        if (HomeTweetsData.data.length < tweetLimit) {
-          setHasMoreTweets(false);
-        } else {
-          const { data: newTweetData } = await GetHomeTweetsTrigger(
-            HomeTweetsData.data.length / tweetLimit
-          ).unwrap();
-          if (newTweetData.length < HomeTweetsData.data.length)
-            setHasMoreTweets(false);
-          dispatch(
-            api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
-              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-            })
-          );
-        }
+        const { data: newTweetData } = await GetHomeTweetsTrigger(
+          homeTweetsSkip
+        ).unwrap();
+        if (newTweetData.length === 0) setHasMoreTweets(false)
+        else setHomeTweetsSkip(homeTweetsSkip + 1)
+        dispatch(
+          api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
+            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          })
+        );
       }
     } catch (error) {
       console.log(error);
