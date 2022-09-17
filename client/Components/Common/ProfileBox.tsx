@@ -13,6 +13,8 @@ import {
   useUnfollowUserMutation,
 } from "../../app/services/api";
 import toast from "react-hot-toast";
+import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
+import { Loader } from "./FullScreenLoader";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
@@ -68,7 +70,7 @@ const ProfileBox = ({
           <></>
         ) : (
           <>
-            {profilePic !== undefined && (
+            {profilePic !== undefined ? (
               <ProfileImage
                 src={profilePic}
                 alt="profilePic"
@@ -76,6 +78,10 @@ const ProfileBox = ({
                 width={width! > 880 ? 160 : 120}
                 height={width! > 880 ? 160 : 120}
               />
+            ) : (
+              <LoaderWrapper>
+                <Loader size={32} color="var(--clr-primary)" />
+              </LoaderWrapper>
             )}
           </>
         )}

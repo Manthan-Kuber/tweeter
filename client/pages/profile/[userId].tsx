@@ -38,6 +38,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
+import { LoaderWrapper } from "../tweet/[tweetId]";
 
 const filterList = [
   {
@@ -85,6 +86,7 @@ const Profile = ({ userId }: { userId: string }) => {
       userId,
       skip: 0,
     }
+    //To conditionally fetch on tab switch (buggy with inf scroll) 
     // {
     //   skip: tab === 1,
     // }
@@ -274,8 +276,8 @@ const Profile = ({ userId }: { userId: string }) => {
     <>
       <ScrollToTopButton />
       {!editProfileModalIsOpen && <Toaster />}
-      {coverPic !== undefined && WindowWidth !== undefined && (
-        <BannerWrapper>
+      <BannerWrapper>
+        {coverPic !== undefined && WindowWidth !== undefined ? (
           <StyledImage
             src={coverPic}
             className="banner-image"
@@ -284,8 +286,12 @@ const Profile = ({ userId }: { userId: string }) => {
             priority
             objectFit={WindowWidth < 880 ? "contain" : undefined}
           />
-        </BannerWrapper>
-      )}
+        ) : (
+          <LoaderWrapper>
+            <Loader size={32} color="var(--clr-primary)" />
+          </LoaderWrapper>
+        )}
+      </BannerWrapper>
       <ProfileBox
         followerModalIsOpen={followerModalIsOpen}
         setFollowerModalIsOpen={setFollowerModalIsOpen}
