@@ -84,29 +84,28 @@ const Profile = ({ userId }: { userId: string }) => {
     {
       userId,
       skip: 0,
+    },
+    {
+      skip: !(tab === 1),
     }
-    //To conditionally fetch on tab switch (buggy with inf scroll) 
-    // {
-    //   skip: tab === 1,
-    // }
   );
   const { data: TweetsMediaData } = useGetProfileTweetsMediaQuery(
     {
       userId,
       skip: 0,
+    },
+    {
+      skip: !(tab === 2),
     }
-    // {
-    //   skip: tab === 2,
-    // }
   );
   const { data: TweetsLikesData } = useGetProfileTweetsLikesQuery(
     {
       userId,
       skip: 0,
+    },
+    {
+      skip: !(tab === 3),
     }
-    // {
-    //   skip: tab === 3,
-    // }
   );
 
   const {
