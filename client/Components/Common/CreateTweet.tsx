@@ -126,7 +126,8 @@ const HomeVariantContainer = styled.div`
     margin-block: 1rem;
   }
   h3 {
-    font: 700 1.6rem var(--ff-noto);
+    font: revert;
+    font-size: 1.6rem;
     color: #333;
   }
 `;
