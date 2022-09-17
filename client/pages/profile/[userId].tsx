@@ -33,7 +33,6 @@ import {
   useLazyGetProfileTweetsMediaQuery,
   useLazyGetProfileTweetsQuery,
 } from "../../app/services/api";
-import { TweetBox } from "../../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";

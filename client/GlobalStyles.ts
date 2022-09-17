@@ -4,7 +4,7 @@ const GlobalStyles = createGlobalStyle`
 :root{
   --clr-primary:#2F80ED;
   --clr-gray:#828282;
-  --ff-montserrat:'Montserrat', sans-serif;
+  --ff-montserrat:"Montserrat", sans-serif;
   --ff-poppins:"Poppins",sans-serif;
   --ff-noto:"Noto Sans",sans-serif;
 }
