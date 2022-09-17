@@ -18,24 +18,19 @@ function Bookmarks() {
   const { data: BookmarksData } = useGetBookmarksQuery(0);
   const [getBookmarksTrigger] = useLazyGetBookmarksQuery();
   const dispatch = useAppDispatch();
+  const [skip, setSkip] = useState(1);
 
   const getMoreBookmarks = async () => {
     try {
       if (BookmarksData !== undefined) {
-        if (BookmarksData.data.length < tweetLimit) {
-          setHasMoreTweets(false);
-        } else {
-          const { data: newTweetData } = await getBookmarksTrigger(
-            BookmarksData.data.length / tweetLimit
-          ).unwrap();
-          if (newTweetData.length < BookmarksData.data.length)
-            setHasMoreTweets(false);
-          dispatch(
-            api.util.updateQueryData("getBookmarks", 0, (tweetData) => {
-              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-            })
-          );
-        }
+        const { data: newTweetData } = await getBookmarksTrigger(skip).unwrap();
+        if (newTweetData.length === 0) setHasMoreTweets(false);
+        else setSkip(skip + 1);
+        dispatch(
+          api.util.updateQueryData("getBookmarks", 0, (tweetData) => {
+            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          })
+        );
       }
     } catch (error) {
       console.log(error);
@@ -55,7 +50,6 @@ function Bookmarks() {
           TweetsData={BookmarksData}
           getMoreTweets={getMoreBookmarks}
           hasMoreTweets={hasMoreTweets}
-          setHasMoreTweets={setHasMoreTweets}
         />
       )}
     </Container>
