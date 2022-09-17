@@ -1,11 +1,139 @@
+import { AxiosError } from "axios";
 import Image from "next/image";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { AiOutlineHeart } from "react-icons/ai";
+import { MdOutlineModeComment } from "react-icons/md";
 import styled from "styled-components";
+import {
+  useCreateReplyMutation,
+  useCreateTweetMutation,
+  useLazyGetCommentRepliesQuery,
+  useLikeCommentMutation,
+} from "../../app/services/api";
+import { useAppSelector } from "../../hooks/store";
+import { ToastMessage } from "../../styles/Toast.styles";
+import CommentReply from "./CommentReply";
+import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
+import { OptionsWrapper, OptionWrapper } from "./TweetOptions";
 
 const TweetReplies = (props: TweetRepliesProps) => {
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLikeActive, setIsLikeActive] = useState(props.isLiked);
   const commentCreationDate = new Date(props.commentCreationDate);
+  const [isCommentActive, setIsCommentActive] = useState(false);
+  const [createTweet] = useCreateTweetMutation();
+  const [likeComment] = useLikeCommentMutation();
+  const [createReply] = useCreateReplyMutation();
+  const [GetCommentRepliesTrigger, { data: CommentRepliesData }] =
+    useLazyGetCommentRepliesQuery();
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+  const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
+
+  // const onSubmit = async (e: React.FormEvent, commentId: string) => {
+  //   e.preventDefault();
+  //   const isHashtagPresent = /#[a-z]+/gi;
+  //   const fileArray = fileList.map((item) => item.file);
+  //   setFileList([]);
+  //   setMessage("");
+  //   const formData = new FormData();
+  //   formData.append("comment", message);
+  //   formData.append("tweetId", props.tweetId);
+  //   formData.append("commentId", commentId);
+  //   for (let i = 0; i < fileList.length; i++) {
+  //     formData.append("media", fileArray[i]);
+  //   }
+  //   if (isHashtagPresent.test(message)) {
+  //     const hashtagArray = message.match(isHashtagPresent);
+  //     if (hashtagArray !== null) {
+  //       for (let i = 0; i < hashtagArray.length; i++) {
+  //         formData.append("hashtags", hashtagArray[i]);
+  //       }
+  //     }
+  //   }
+  //   try {
+  //     await createReply(formData).unwrap();
+  //     toast.success(() => (
+  //       <ToastMessage>Created Reply Successfully</ToastMessage>
+  //     ));
+  //   } catch (error) {
+  //     toast.error(() => <ToastMessage>Error in Creating Reply</ToastMessage>);
+  //   }
+  // };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
+    const fileArray = fileList.map((item) => item.file);
+    setFileList([]);
+    setMessage("");
+    const formData = new FormData();
+    formData.append("tweetId", props.tweetId);
+    formData.append("shared", "true");
+    formData.append("tweet", message);
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+    }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
+    }
+    try {
+      await createTweet(formData).unwrap();
+      toast.success(() => (
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
+    }
+  };
+
+  const optionsList = [
+    {
+      id: 1,
+      name: "Comments",
+      icon: <MdOutlineModeComment size={16} />,
+      isActive: isCommentActive,
+      activeColor: "black",
+      onClick: async () => {
+        if (isCommentActive) setIsCommentActive((prev) => !prev);
+        else {
+          try {
+            await GetCommentRepliesTrigger(props.commentId).unwrap();
+            setIsCommentActive((prev) => !prev);
+          } catch (error) {
+            <ToastMessage>Error in Fetching Comment</ToastMessage>;
+          }
+        }
+      },
+    },
+    {
+      id: 2,
+      name: "Like",
+      icon: <AiOutlineHeart size={16} />,
+      isActive: isLikeActive,
+      activeColor: "hsla(0, 79%, 63%, 1)",
+      onClick: async () => {
+        try {
+          await likeComment(props.commentId).unwrap();
+          setIsLikeActive((prev) => !prev);
+        } catch (error) {
+          toast.error(() => (
+            <ToastMessage>Error in Liking Comment</ToastMessage>
+          ));
+        }
+      },
+    },
+  ];
+
+  console.log(CommentRepliesData);
+
   return (
     <RepliesContainer>
       <ReplyContainer>
@@ -20,17 +148,67 @@ const TweetReplies = (props: TweetRepliesProps) => {
             </AuthorWrapper>
             <UserName>@ {props.authorUserName}</UserName>
             <TweetText>{props.commentText}</TweetText>
+            <ImagesWrapper numOfImages={props.mediaList?.length ?? 0}>
+              {props.mediaList?.map((mediaItemUrl, index) => (
+                <TweetImage
+                  key={`${mediaItemUrl} ${index}`}
+                  src={mediaItemUrl}
+                  layout="responsive"
+                  width={100}
+                  height={30}
+                />
+              ))}
+            </ImagesWrapper>
+            <ModifiedOptionsWrapper>
+              {optionsList.map((option) => (
+                <ModifiedOptionWrapper
+                  key={option.id}
+                  onClick={option.onClick}
+                  isActive={option.isActive}
+                  activeColor={option.activeColor}
+                >
+                  {option.icon}
+                  {option.name === "Like" && props.likesCount !== 0 && (
+                    <span>{props.likesCount}</span>
+                  )}
+                  {option.name === "Comments" &&
+                    props.replyCount.length !== 0 && (
+                      <span>{props.replyCount[0]}</span>
+                    )}
+                </ModifiedOptionWrapper>
+              ))}
+            </ModifiedOptionsWrapper>
           </AnotherReplyWrapper>
-          <LikesWrapper>
-            <LikesContainer
-              isLiked={isLiked}
-              onClick={() => setIsLiked((prev) => !prev)} //Api call here
-            >
-              <AiOutlineHeart size={14} />
-              <span>Like</span>
-            </LikesContainer>
-            <span>{props.likesCount} Likes</span>
-          </LikesWrapper>
+          {isCommentActive && (
+            <>
+              <CreateTweet
+                isReplyImageVisible={true}
+                placeholder={"Tweet your reply"}
+                btnText={"Reply"}
+                message={message}
+                setMessage={setMessage}
+                fileList={fileList}
+                setFileList={setFileList}
+                onSubmit={onSubmit}
+                replyImageUrl={currentUserPfp}
+                isMediaInputVisible={false}
+              />
+              {CommentRepliesData?.data.map((reply) => (
+                <CommentReply
+                  key={reply._id}
+                  replyId={reply._id}
+                  reply={reply.comment}
+                  replyCreationDate={reply.createdAt}
+                  authorId={reply.author[0]._id}
+                  authorName={reply.author[0].name}
+                  authorUsername={reply.author[0].username}
+                  authorProfilePic={reply.author[0].profilePic}
+                  likesCount={reply.likes}
+                  isLiked={reply.liked.length === 0 ? false : true}
+                />
+              ))}
+            </>
+          )}
         </ReplyWrapper>
       </ReplyContainer>
     </RepliesContainer>
@@ -38,36 +216,46 @@ const TweetReplies = (props: TweetRepliesProps) => {
 };
 export default TweetReplies;
 
-const RepliesContainer = styled.div`
+const TweetImage = styled(Image)`
+  border-radius: 6px;
+`;
+
+const ImagesWrapper = styled(TweetImageArrayWrapper)`
+  width: 100%;
+  margin-top: revert;
+`;
+
+export const RepliesContainer = styled.div`
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid hsla(0, 0%, 95%, 1);
 `;
 
-const RepliesImage = styled(Image)`
+export const RepliesImage = styled(Image)`
   border-radius: 6px;
 `;
 
-const ReplyContainer = styled.div`
+export const ReplyContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
 `;
 
-const UserName = styled.span`
+export const UserName = styled.span`
   font: 500 1.2rem var(--ff-noto);
-  color: hsla(0, 0%, 74%, 1);
+  color: hsla(0, 0%, 51%, 1);
 `;
 
-const ReplyWrapper = styled.div``;
+export const ReplyWrapper = styled.div`
+  flex: 1;
+`;
 
-const AnotherReplyWrapper = styled.div`
+export const AnotherReplyWrapper = styled.div`
   border-radius: 6px;
   padding: 0.5rem 1rem;
-  background-color: hsla(0, 0%, 98%, 1);
 `;
 
-const AuthorWrapper = styled.div`
+export const AuthorWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -82,36 +270,26 @@ const AuthorWrapper = styled.div`
   }
 `;
 
-const TweetText = styled.span`
+export const TweetText = styled.span`
   display: block;
-  font: 400 1.4rem var(--ff-noto);
+  font: 400 1.6rem var(--ff-noto);
   color: hsla(0, 0%, 31%, 1);
+  margin-top: 1rem;
 `;
 
-const RepliesImageWrapper = styled.div`
+export const RepliesImageWrapper = styled.div`
   align-self: flex-start;
 `;
 
-const LikesWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  line-height: 14px;
-  gap: 1rem;
-  font: 600 1.4rem var(--ff-noto);
-  color: hsla(0, 0%, 74%, 1);
-  margin-top: 1rem;
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+export const ModifiedOptionsWrapper = styled(OptionsWrapper)`
+  justify-content: revert;
+  border-block: revert;
+  gap: 3rem;
+  margin-bottom: revert;
+  margin-left: -0.75rem;
 `;
 
-const LikesContainer = styled.div<{ isLiked: boolean }>`
-  display: flex;
-  align-items: center;
-  line-height: 14px;
-  gap: 0.25rem;
-  cursor: pointer;
-  color: ${(props) =>
-    props.isLiked ? "hsla(0, 79%, 63%, 1)" : "hsla(0, 0%, 74%, 1)"};
+export const ModifiedOptionWrapper = styled(OptionWrapper)`
+  padding: 0.75rem;
+  margin-top: 1rem;
 `;

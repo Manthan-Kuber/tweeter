@@ -17,9 +17,9 @@ router.put("/follow", requireAuth, followUser);
 
 router.put("/unfollow", requireAuth, unfollowUser);
 
-router.get("/followers/:userid", requireAuth, getFollowers);
+router.get("/followers/:userid/:skip", requireAuth, getFollowers);
 
-router.get("/following/:userid", requireAuth, getFollowing);
+router.get("/following/:userid/:skip", requireAuth, getFollowing);
 
 router.delete("/profilePic", requireAuth, deleteProfilePic);
 

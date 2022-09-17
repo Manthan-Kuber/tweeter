@@ -3,9 +3,8 @@ import { AiOutlineDelete, AiOutlineRetweet } from "react-icons/ai";
 import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
-import TweetReplies from "./TweetReplies";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   CancelButton,
   DiscardButton,
@@ -14,41 +13,61 @@ import {
 } from "../../styles/Toast.styles";
 import toast from "react-hot-toast";
 import {
-  useCreateCommentMutation,
+  useCreateTweetMutation,
   useDeleteTweetMutation,
-  useLazyGetCommentsQuery,
 } from "../../app/services/api";
+import { useAppSelector } from "../../hooks/store";
+import CustomModal from "./CustomModal";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-const Tweet = (props: TweetProps) => {
+const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
   const [isCommentButtonClicked, setIsCommentButtonClicked] = useState(false);
+  const [createTweet] = useCreateTweetMutation();
   const [deleteTweet] = useDeleteTweetMutation();
-  const [createComment] = useCreateCommentMutation();
-  const [commentFetchTrigger, { data: commentsData }] =
-    useLazyGetCommentsQuery();
   const tweetCreationDate = new Date(props.tweetCreationDate);
+  const [isLiked, setIsLiked] = useState(props.isLiked);
+  const [isSaved, setIsSaved] = useState(props.isSaved);
+  const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
+  const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
+  const currentUsername = useAppSelector((state) => state.auth.user?.name);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
+  const { push } = useRouter();
 
-  const onSubmit = async (e: React.FormEvent, tweetId: string) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
     const fileArray = fileList.map((item) => item.file);
     setFileList([]);
     setMessage("");
     const formData = new FormData();
-    formData.append("comment", message);
-    formData.append("tweetId", tweetId);
+    formData.append("tweetId", props.tweetId);
+    formData.append("shared", "true");
+    formData.append("tweet", message);
     for (let i = 0; i < fileList.length; i++) {
       formData.append("media", fileArray[i]);
     }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
+    }
     try {
-      await createComment(formData).unwrap();
+      await createTweet(formData).unwrap();
       toast.success(() => (
-        <ToastMessage>Created Comment Successfully</ToastMessage>
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
       ));
+      setIsModalOpen(false);
     } catch (error) {
-      toast.error(() => <ToastMessage>Error in Creating Comment</ToastMessage>);
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
     }
   };
 
@@ -96,81 +115,182 @@ const Tweet = (props: TweetProps) => {
   };
 
   return (
-    <TweetWrapper>
-      <RetweetWrapper>
-        <AiOutlineRetweet size={14} />
-        {/* To be Conditionally Rendered */}
-        <span>{props.authorName} Retweeted</span>
-      </RetweetWrapper>
-      <TweetBox>
-        <ProfileInfoWrapper>
-          <ProfileInfo
-            name={props.authorName}
-            username={props.authorUserName}
-            tweetCreationDate={tweetCreationDate.toDateString()}
-            followerCount={props.authorFollowers}
-            profilePic={props.authorProfilePic}
-          />
-          <DeleteIconWrapper onClick={() => onDeleteButtonClick(props.tweetId)}>
-            <DeleteIcon size={24} />
-          </DeleteIconWrapper>
-        </ProfileInfoWrapper>
-        <TweetText>{props.authorTweet}</TweetText>
-        <ImageWrapper numOfImages={props.mediaList.length}>
-          {props.mediaList.map((mediaItemUrl, index) => (
-            <TweetImage
-              key={`${mediaItemUrl} ${index}`}
-              src={mediaItemUrl}
-              layout="responsive"
-              width={100}
-              height={30}
-            />
-          ))}
-        </ImageWrapper>
-        <TweetInfo>
-          <span>449 Comments</span>
-          <span>59K Retweets</span>
-          <span>234 Saved</span>
-        </TweetInfo>
-        <TweetOptions
-          setIsCommentButtonClicked={setIsCommentButtonClicked}
+    <>
+      <CustomModal
+        setModalIsOpen={setIsModalOpen}
+        modalIsOpen={isModalOpen}
+        modalHeight="fit-content"
+        modalTitle={`Reply to ${props.authorUserName}'s Tweet`}
+        shouldCloseOnOverlayClick={true}
+      >
+        <Tweet
+          authorId={props.authorId}
+          authorName={props.authorName}
+          authorUserName={props.authorUserName}
+          authorFollowers={props.authorFollowers}
+          authorProfilePic={props.authorProfilePic}
+          authorTweet={props.authorTweet}
+          mediaList={props.mediaList}
           tweetId={props.tweetId}
-          commentFetchTrigger={commentFetchTrigger}
+          tweetCreationDate={props.tweetCreationDate}
+          variant="inTweet"
+          commentCount={0}
+          isSaved={false}
+          isLiked={false}
+          isRetweeted={false}
+          likes={0}
+          retweetedUsers={0}
+          savedBy={0}
+          fetchReply={false} // Don't fetch reply for reply modal
         />
-        {isCommentButtonClicked && (
-          <CreateTweet
-            isReplyImageVisible={true}
-            placeholder="Tweet your reply"
-            btnText="Reply"
-            message={message}
-            setMessage={setMessage}
-            fileList={fileList}
-            setFileList={setFileList}
-            onSubmit={(e) => onSubmit(e, props.tweetId)}
-            replyImageUrl={props.authorProfilePic}
-          />
+        <CreateTweet
+          isReplyImageVisible={true}
+          placeholder="Tweet your Reply"
+          btnText="Reply"
+          message={message}
+          setMessage={setMessage}
+          fileList={fileList}
+          setFileList={setFileList}
+          onSubmit={onSubmit}
+          replyImageUrl={currentUserPfp}
+          variant="inTweet"
+        />
+      </CustomModal>
+      <TweetWrapper>
+        {props.isRetweeted && (
+          <RetweetWrapper>
+            <AiOutlineRetweet size={14} />{" "}
+            <span>{currentUsername} Retweeted</span>
+          </RetweetWrapper>
         )}
-        {isCommentButtonClicked &&
-          commentsData?.data.comments.map((comment) => (
-            <TweetReplies
-              key={comment._id}
-              commentText={comment.comment}
-              likesCount={comment.likes}
-              authorName={comment.author[0].name}
-              authorUserName={comment.author[0].username}
-              authorProfilePic={comment.author[0].profilePic}
-              commentCreationDate={comment.createdAt}
+        <TweetBox
+          variant={props.variant}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (props.variant !== "inTweet") {
+              push(`/tweet/${props.tweetId}`);
+            }
+          }}
+        >
+          <ProfileInfoContainer>
+            <ProfileInfoWrapper
+              variant={props.variant}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (props.variant !== "inTweet") {
+                  push(`/profile/${props.authorId}`);
+                }
+              }}
+            >
+              <ProfileInfo
+                name={props.authorName}
+                username={props.authorUserName}
+                tweetCreationDate={tweetCreationDate.toDateString()}
+                followerCount={props.authorFollowers}
+                profilePic={props.authorProfilePic}
+              />
+            </ProfileInfoWrapper>
+            {currentUserId === props.authorId && props.variant !== "inTweet" && (
+              <DeleteIconWrapper
+                onClick={() => onDeleteButtonClick(props.tweetId)}
+              >
+                <DeleteIcon size={24} />
+              </DeleteIconWrapper>
+            )}
+          </ProfileInfoContainer>
+          <TweetText>{props.authorTweet}</TweetText>
+          {props.variant !== "inTweet" ? (
+            <ImagesWrapper numOfImages={props.mediaList.length}>
+              {props.mediaList.map((mediaItemUrl, index) => (
+                <ImageWrapper
+                  onClick={(e) => e.stopPropagation()}
+                  variant={props.variant}
+                >
+                  <Link href={mediaItemUrl} passHref>
+                    <a target="_blank" rel="noopener noreferrer">
+                      <Image
+                        key={`${mediaItemUrl} ${index}`}
+                        src={mediaItemUrl}
+                        alt="Tweet Image"
+                        layout="fill"
+                        style={{ borderRadius: "16px" }}
+                      />
+                    </a>
+                  </Link>
+                </ImageWrapper>
+              ))}
+            </ImagesWrapper>
+          ) : (
+            props.mediaList.map((mediaItemUrl) => (
+              <LinkText>{mediaItemUrl}</LinkText>
+            ))
+          )}
+          {props.variant !== "inTweet" && (
+            <TweetInfo>
+              <span>{props.commentCount || 0} Comments</span>
+              <span>{props.retweetedUsers || 0} Retweets</span>
+              <span>{props.likes || 0} Likes</span>
+              <span>{props.savedBy || 0} Saved</span>
+            </TweetInfo>
+          )}
+          {props.variant !== "inTweet" && (
+            <TweetOptions
+              setIsModalOpen={setIsModalOpen}
+              setIsCommentButtonClicked={setIsCommentButtonClicked}
+              tweetId={props.tweetId}
+              isLiked={isLiked}
+              isSaved={isSaved}
+              isRetweeted={isRetweeted}
+              setIsLiked={setIsLiked}
+              setIsSaved={setIsSaved}
+              setIsRetweeted={setIsRetweeted}
             />
-          ))}
-      </TweetBox>
-    </TweetWrapper>
+          )}
+        </TweetBox>
+      </TweetWrapper>
+    </>
   );
 };
 export default Tweet;
 
-const ProfileInfoWrapper = styled.div`
+const LinkText = styled.p`
+  font-weight: 500;
+  color: hsla(0, 0%, 31%, 1);
+  font-family: var(--ff-noto);
+`;
+
+const ImageWrapper = styled.div<{
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
+}>`
+  position: relative;
+  width: min(45rem, 100%);
+  height: 15rem;
+  border-radius: 16px;
+  margin-inline: auto;
+  @media screen and (min-width: 20em) {
+    height: 20rem;
+  }
+  @media screen and (min-width: 55em) {
+    height: 45rem;
+  }
+  transition: opacity 0.4s;
+  &:hover {
+    opacity: ${({ variant }) => variant !== "inTweet" && "0.75"};
+  }
+`;
+
+const ProfileInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const ProfileInfoWrapper = styled.div<{
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
+}>`
+  transition: opacity 0.4s;
+  &:hover {
+    opacity: ${({ variant }) => variant !== "inTweet" && "0.75"};
+  }
 `;
 
 const DeleteIconWrapper = styled.div`
@@ -181,10 +301,10 @@ const DeleteIconWrapper = styled.div`
   padding: 8px;
   transition: all 0.4s;
   &:hover {
-    background-color: rgba(130, 130, 130, 0.2);
+    background-color: rgba(255, 0, 0, 0.2);
   }
   &:active {
-    background-color: rgba(130, 130, 130, 0.7);
+    background-color: rgba(255, 0, 0, 0.7);
   }
   align-self: flex-start;
 `;
@@ -210,12 +330,26 @@ const RetweetWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-export const TweetBox = styled.div`
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+export const TweetBox = styled.div<{
+  variant: "inTweet" | "tweetPage" | "tweetReply" | undefined;
+}>`
+  box-shadow: ${(props) =>
+    props.variant === "inTweet" || props.variant === "tweetReply"
+      ? "none"
+      : "0px 2px 4px rgba(0, 0, 0, 0.05)"};
   border-radius: 8px;
   font-family: var(--ff-noto);
-  background-color: white;
+  background-color: ${({ variant }) =>
+    variant === "tweetReply" ? "transparent" : "white"};
   padding: 2rem;
+  cursor: ${({ variant }) => variant !== "inTweet" && "pointer"};
+  transition: all 0.4s;
+  &:hover {
+    box-shadow: ${({ variant }) =>
+      variant === "tweetReply" || variant === "inTweet"
+        ? "none"
+        : "0px 2px 4px 2px rgba(0, 0, 0, 0.1)"};
+  }
 `;
 
 const TweetText = styled.span`
@@ -237,11 +371,7 @@ const TweetInfo = styled.span`
   }
 `;
 
-const ImageWrapper = styled(TweetImageArrayWrapper)`
+const ImagesWrapper = styled(TweetImageArrayWrapper)`
   width: 100%;
   margin-top: revert;
-`;
-
-const TweetImage = styled(Image)`
-  border-radius: 6px;
 `;

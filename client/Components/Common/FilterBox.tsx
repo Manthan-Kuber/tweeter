@@ -1,19 +1,17 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
-const FilterBox = ({ filterList }: FilterBoxProps) => {
-  const [tab, setTab] = useState(1);
+const FilterBox = ({ tab, setTab, filterList }: FilterBoxProps) => {
   return (
     <AsideContainer>
       <Ul>
-        {Object.entries(filterList).map(([key, value]) => (
+        {filterList.map((filter) => (
           <Li
-            key={key}
-            onClick={() => setTab(parseInt(key))}
-            active={parseInt(key) === tab}
+            key={filter.id}
+            onClick={() => setTab(filter.id)}
+            active={filter.id === tab}
           >
-            {parseInt(key) === tab && (
+            {filter.id === tab && (
               <SideDiv
                 as={motion.div}
                 layoutId="sideDiv"
@@ -24,7 +22,7 @@ const FilterBox = ({ filterList }: FilterBoxProps) => {
                 }}
               />
             )}
-            <p>{value}</p>
+            <p>{filter.label}</p>
           </Li>
         ))}
       </Ul>

@@ -1,27 +1,65 @@
-import { GetServerSideProps } from "next";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import styled from "styled-components";
-import axiosApi from "../../app/services/axiosApi";
+import {
+  api,
+  useGetBookmarksQuery,
+  useLazyGetBookmarksQuery,
+} from "../../app/services/api";
+import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
+import TweetsDataList from "../../Components/Common/TweetsDataList";
+import { useAppDispatch } from "../../hooks/store";
+import { ToastMessage } from "../../styles/Toast.styles";
+
+var tweetLimit = 10;
 
 function Bookmarks() {
-  return <Container>Bookmarks</Container>;
+  const [hasMoreTweets, setHasMoreTweets] = useState(true);
+  const { data: BookmarksData } = useGetBookmarksQuery(0);
+  const [getBookmarksTrigger] = useLazyGetBookmarksQuery();
+  const dispatch = useAppDispatch();
+  const [skip, setSkip] = useState(1);
+
+  const getMoreBookmarks = async () => {
+    try {
+      if (BookmarksData !== undefined) {
+        const { data: newTweetData } = await getBookmarksTrigger(skip).unwrap();
+        if (newTweetData.length === 0) setHasMoreTweets(false);
+        else setSkip(skip + 1);
+        dispatch(
+          api.util.updateQueryData("getBookmarks", 0, (tweetData) => {
+            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => (
+        <ToastMessage>Error in Fetching Bookmarks</ToastMessage>
+      ));
+    }
+  };
+
+  console.log(BookmarksData);
+
+  return (
+    <Container>
+      <ScrollToTopButton />
+      {BookmarksData !== undefined && (
+        <TweetsDataList
+          TweetsData={BookmarksData}
+          getMoreTweets={getMoreBookmarks}
+          hasMoreTweets={hasMoreTweets}
+        />
+      )}
+    </Container>
+  );
 }
 
 export default Bookmarks;
 
 const Container = styled.div`
-  width: min(95%, 60rem);
+  width: min(95%, 95rem);
   margin-inline: auto;
   padding-block: 2rem;
 `;
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const token = ctx.req.cookies.jwt;
-  const response = await axiosApi.get("/home/bookmarks/100",{
-    headers:{
-      authorization:`Bearer ${token}`
-    }
-  })
-  console.log(response.data);
-  return {
-    props: {},
-  };
-};

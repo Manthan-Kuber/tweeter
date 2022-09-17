@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { MdAccountCircle } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
-import { HiUserGroup, HiOutlineLogout } from "react-icons/hi";
+import { HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import { logOut } from "../../features/auth/authSlice";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
@@ -44,25 +43,25 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
       name: "My Profile",
       onClick: async () => {
         setVisible((prev) => !prev);
-        push(`/${userId}`);
+        push(`/profile/${userId}`);
       },
     },
-    {
-      id: 2,
-      icon: <HiUserGroup size={20} />,
-      name: "Group Chat",
-      onClick: () => {
-        setVisible((prev) => !prev);
-      },
-    },
-    {
-      id: 3,
-      icon: <IoMdSettings size={20} />,
-      name: "Settings",
-      onClick: () => {
-        setVisible((prev) => !prev);
-      },
-    },
+    // {
+    //   id: 2,
+    //   icon: <HiUserGroup size={20} />,
+    //   name: "Group Chat",
+    //   onClick: () => {
+    //     setVisible((prev) => !prev);
+    //   },
+    // },
+    // {
+    //   id: 3,
+    //   icon: <IoMdSettings size={20} />,
+    //   name: "Settings",
+    //   onClick: () => {
+    //     setVisible((prev) => !prev);
+    //   },
+    // },
     {
       id: 4,
       icon: <HiOutlineLogout size={20} />,
@@ -94,7 +93,7 @@ function ProfileDropdown({ setVisible }: ProfileDropDownProps) {
             {option.icon}
             <h4>{option.name}</h4>
           </div>
-          {option.id === 3 && <hr />}
+          {option.id === 1 && <hr />}
         </OptionWrapper>
       ))}
     </Container>
@@ -104,7 +103,7 @@ export default ProfileDropdown;
 
 const Container = styled.div`
   position: absolute;
-  bottom: -28rem;
+  bottom: -16.5rem;
   right: 0;
   background-color: white;
   padding: 1.5rem 1.3rem;

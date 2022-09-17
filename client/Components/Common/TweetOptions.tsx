@@ -1,67 +1,102 @@
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
-import { BsBookmark } from "react-icons/bs";
-import { MdOutlineModeComment } from "react-icons/md";
+import { AiFillHeart, AiOutlineRetweet } from "react-icons/ai";
+import { BsBookmarkFill } from "react-icons/bs";
+import { MdModeComment } from "react-icons/md";
 import styled from "styled-components";
-import { useLazyGetCommentsQuery } from "../../app/services/api";
-import useWindowSize from "../../Hooks/useWindowDimensions";
+import {
+  useLikeTweetMutation,
+  useRetweetTweetMutation,
+  useSaveTweetMutation,
+} from "../../app/services/api";
+import useWindowSize from "../../hooks/useWindowDimensions";
 import { ToastMessage } from "../../styles/Toast.styles";
 
-const TweetOptions = (props: TweetOptionsProps) => {
+const TweetOptions = ({
+  setIsLiked,
+  setIsSaved,
+  setIsRetweeted,
+  ...props
+}: TweetOptionsProps) => {
   const { width } = useWindowSize();
   const [isActive, setIsActive] = useState({
-    Comments: false,
-    Retweet: false,
-    Like: false,
-    Saved: false,
+    Reply: false,
+    Retweet: props.isRetweeted,
+    Like: props.isLiked,
+    Saved: props.isSaved,
   });
+  const [likeTweet] = useLikeTweetMutation();
+  const [saveTweet] = useSaveTweetMutation();
+  const [retweetTweet] = useRetweetTweetMutation();
 
   const optionsList = [
     {
       id: 1,
-      name: "Comments",
-      icon: <MdOutlineModeComment />,
-      activeColor: "black",
-      onClick: async () => {
+      name: "Reply",
+      icon: <MdModeComment size={16} />,
+      activeColor: "rgba(47, 128, 237,1)",
+      hoverColor: "rgba(47, 128, 237,0.2)",
+      onActiveColor: "rgba(47, 128, 237,0.7)",
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation();
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
-        if (isActive.Comments === false) {
-          try{
-            await props.commentFetchTrigger(props.tweetId).unwrap();
-          } catch (error) {
-            toast.error(() => (
-              <ToastMessage>Error in Creating Comment</ToastMessage>
-              ));
-            }
-          }
-          setIsActive((prev) => ({ ...prev, Comments: !prev.Comments }));
+        props.setIsModalOpen(true);
       },
     },
     {
       id: 2,
       name: "Retweet",
-      icon: <AiOutlineRetweet />,
-      activeColor: "hsla(145, 63%, 42%, 1)",
-      onClick: () => {
-        setIsActive({ ...isActive, Retweet: !isActive.Retweet });
+      icon: <AiOutlineRetweet size={16} />,
+      activeColor: "rgba(40, 175, 96,1)",
+      hoverColor: "rgba(40, 175, 96,0.2)",
+      onActiveColor: "rgba(40, 175, 96,0.7)",
+      onClick: async (e: MouseEvent) => {
+        e.stopPropagation();
+        try {
+          await retweetTweet(props.tweetId).unwrap();
+          setIsActive({ ...isActive, Retweet: !isActive.Retweet });
+          setIsRetweeted(!props.isRetweeted);
+        } catch (error) {
+          toast.error(() => (
+            <ToastMessage>Error in Retweeting Tweet</ToastMessage>
+          ));
+        }
       },
     },
     {
       id: 3,
       name: "Like",
-      icon: <AiOutlineHeart />,
-      activeColor: "hsla(0, 79%, 63%, 1)",
-      onClick: () => {
-        setIsActive({ ...isActive, Like: !isActive.Like });
+      icon: <AiFillHeart size={16} />,
+      activeColor: "rgba(235, 86, 86,1)",
+      hoverColor: "rgba(235, 86, 86,0.2)",
+      onActiveColor: "rgba(235, 86, 86,0.7)",
+      onClick: async (e: MouseEvent) => {
+        e.stopPropagation();
+        try {
+          await likeTweet(props.tweetId).unwrap();
+          setIsActive({ ...isActive, Like: !isActive.Like });
+          setIsLiked(!props.isLiked);
+        } catch (error) {
+          toast.error(() => <ToastMessage>Error in Liking Tweet</ToastMessage>);
+        }
       },
     },
     {
       id: 4,
       name: "Saved",
-      icon: <BsBookmark />,
-      activeColor: "hsla(202, 71%, 52%, 1)",
-      onClick: () => {
-        setIsActive({ ...isActive, Saved: !isActive.Saved });
+      icon: <BsBookmarkFill size={16} />,
+      activeColor: "rgba(46, 156, 220,1)",
+      hoverColor: "rgba(46, 156, 220,0.2)",
+      onActiveColor: "rgba(46, 156, 220,0.7)",
+      onClick: async (e: MouseEvent) => {
+        e.stopPropagation();
+        try {
+          await saveTweet(props.tweetId).unwrap();
+          setIsActive({ ...isActive, Saved: !isActive.Saved });
+          setIsSaved(!props.isSaved);
+        } catch (error) {
+          toast.error(() => <ToastMessage>Error in Saving Tweet</ToastMessage>);
+        }
       },
     },
   ];
@@ -75,9 +110,11 @@ const TweetOptions = (props: TweetOptionsProps) => {
             onClick={option.onClick}
             isActive={(isActive as any)[option.name]}
             activeColor={option.activeColor}
+            hoverColor={option.hoverColor}
+            onActiveColor={option.onActiveColor}
           >
             {option.icon}
-            {width !== undefined && width > 880 && <span>{option.name}</span>}
+            {/* {width !== undefined && width > 880 && <span>{option.name}</span>} */}
           </OptionWrapper>
         ))}
       </OptionsWrapper>
@@ -86,7 +123,7 @@ const TweetOptions = (props: TweetOptionsProps) => {
 };
 export default TweetOptions;
 
-const OptionsWrapper = styled.div`
+export const OptionsWrapper = styled.div`
   border-block: 1px solid hsla(0, 0%, 95%, 1);
   display: flex;
   align-items: center;
@@ -94,8 +131,10 @@ const OptionsWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const OptionWrapper = styled.div<{
+export const OptionWrapper = styled.div<{
   activeColor: string;
+  onActiveColor: string;
+  hoverColor: string;
   isActive: boolean;
 }>`
   display: flex;
@@ -105,16 +144,20 @@ const OptionWrapper = styled.div<{
   font: 500 1.4rem var(--ff-noto);
   color: ${(props) =>
     props.isActive ? props.activeColor : "hsla(0, 0%, 31%, 1)"};
-  padding: 1.5rem 3rem;
+  padding: 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-
+  transition: all 0.4s;
   &:hover {
-    background-color: hsla(0, 0%, 95%, 1);
+    background-color: ${({ hoverColor }) => hoverColor};
+    color: ${({ activeColor }) => activeColor};
+  }
+  &:active {
+    background-color: ${({ onActiveColor }) => onActiveColor};
   }
 
   span {

@@ -5,7 +5,7 @@ import SignInIcon from "../../Components/Common/SignInIcon";
 import { motion } from "framer-motion";
 import RegisterForm from "../../Components/Common/RegisterForm";
 import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import { useLoginMutation, useSignupMutation } from "../../app/services/api";
 import { setCredentials } from "../../features/auth/authSlice";
 import FullScreenLoader from "../../Components/Common/FullScreenLoader";
@@ -133,7 +133,7 @@ function Register() {
       ) : (
         <Container>
           <SignUpBox>
-            <Image src="/tweeter.svg" height={30} width="100%" />
+            <Image src="/tweeter.svg" alt="Tweeter Logo" height={30} width="100%" />
             <FormTabUl>
               {TabList.map((item) => (
                 <FormLi
@@ -174,11 +174,11 @@ function Register() {
               />
             )}
 
-            <SignInIconsWrapper>
+            {/* <SignInIconsWrapper>
               {IconArray.map((icon) => (
                 <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />
               ))}
-            </SignInIconsWrapper>
+            </SignInIconsWrapper> */}
           </SignUpBox>
         </Container>
       )}

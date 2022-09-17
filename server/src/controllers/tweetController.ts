@@ -39,11 +39,20 @@ export const getTweet = async (req: IRequest, res: Response) => {
               },
             },
           },
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
         },
       },
       {
         $lookup: {
-          from: "comments",
+          from: "tweets",
           let: { tweetid: "$_id" },
           pipeline: [
             { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
@@ -75,6 +84,7 @@ export const getTweet = async (req: IRequest, res: Response) => {
               else: 0,
             },
           },
+          liked: 1,
           retweeted: 1,
           saved: 1,
           retweetedUsers: { $size: "$retweetedUsers" },
@@ -89,24 +99,230 @@ export const getTweet = async (req: IRequest, res: Response) => {
   }
 };
 
+export const fetchTweets = async (req: IRequest, res: Response) => {
+  let skip = parseInt(req.params.skip);
+  const tweetId = req.params.tweetId;
+  const id = req.user?._id;
+  try {
+    const tweets = await Tweet.aggregate([
+      {
+        $match: {
+          tweetId: new ObjectId(tweetId),
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip * 10 },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "tweets",
+          let: { tweetid: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { _id: 0, count: 1 } },
+          ],
+          as: "count",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          "creator.name": 1,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          comment: 1,
+          tweet: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          retweeted: 1,
+          saved: 1,
+          liked: 1,
+          savedBy: { $size: "$savedBy" },
+          retweetedUsers: { $size: "$retweetedUsers" },
+          createdAt: 1,
+          commentCount: "$count.count",
+        },
+      },
+    ]);
+    res.status(200).json({ data: tweets });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err });
+  }
+};
+
+export const getFollowingReplies = async (req: IRequest, res: Response) => {
+  const tweetId = req.params.tweetId;
+  const id = req.user?._id;
+
+  try {
+    const user = await User.findById(id);
+    const tweets = await Tweet.aggregate([
+      {
+        $match: {
+          tweetId: new ObjectId(tweetId),
+          creator: { $in: user?.following },
+        },
+      },
+      { $sort: { createdAt: -1 } },
+      { $limit: 1 },
+      {
+        $lookup: {
+          from: "tweets",
+          let: { tweetid: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tweetId", "$$tweetid"] } } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { _id: 0, count: 1 } },
+          ],
+          as: "count",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "creator",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $addFields: {
+          retweeted: {
+            $filter: {
+              input: "$retweetedUsers",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          saved: {
+            $filter: {
+              input: "$savedBy",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+          liked: {
+            $filter: {
+              input: "$likes",
+              as: "user",
+              cond: {
+                $eq: ["$$user", new ObjectId(id)],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          "creator.name": 1,
+          "creator.username": 1,
+          "creator.profilePic": 1,
+          comment: 1,
+          tweet: 1,
+          media: 1,
+          likes: {
+            $cond: {
+              if: { $isArray: "$likes" },
+              then: { $size: "$likes" },
+              else: 0,
+            },
+          },
+          retweeted: 1,
+          saved: 1,
+          liked: 1,
+          savedBy: { $size: "$savedBy" },
+          retweetedUsers: { $size: "$retweetedUsers" },
+          createdAt: 1,
+          commentCount: "$count.count",
+        },
+      },
+    ]);
+    res.status(200).json({ data: tweets });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err });
+  }
+};
+
 export const createTweet = async (req: IRequest, res: Response) => {
-  const { tweet, shared, hashtags } = req.body;
+  const { tweet, shared, hashtags, tweetId } = req.body;
   const id = req.user?._id;
   const files = req.files as Express.Multer.File[];
   try {
-    const newTweet = await Tweet.create({
-      creator: id,
-      tweet: tweet,
-      shared: shared ? shared : true,
-      hashtags: hashtags ? hashtags : [],
-    });
+    let newTweet: any;
+    if (tweetId) {
+      newTweet = await Tweet.create({
+        creator: id,
+        tweetId: tweetId,
+        tweet: tweet,
+        shared: shared ? shared : true,
+        hashtags: hashtags ? hashtags : [],
+      });
+    } else {
+      newTweet = await Tweet.create({
+        creator: id,
+        tweet: tweet,
+        shared: shared ? shared : true,
+        hashtags: hashtags ? hashtags : [],
+      });
+    }
     if (hashtags) {
-      for (var hashtag in hashtags) {
+      for (var i = 0; i < hashtags.length; i++) {
         await Hashtag.findOneAndUpdate(
-          { hashtag: hashtag.toLowerCase() },
+          { hashtag: hashtags[i].toLowerCase() },
           {
             $set: {
-              hashtag: hashtag.toLowerCase(),
+              hashtag: hashtags[i].toLowerCase(),
               lastUsed: new Date(Date.now()),
             },
             $inc: { tweets: 1 },
@@ -154,14 +370,20 @@ export const likeTweet = async (req: IRequest, res: Response) => {
     const user = await User.findById(id);
     const tweet = await Tweet.findById(tweetId);
     if (!tweet?.likes?.includes(id)) {
-      const updatedTweet = await Tweet.findByIdAndUpdate(id, {
-        $inc: { likes: 1 },
-      });
+      await Tweet.updateOne(
+        { _id: tweetId },
+        {
+          $push: { likes: id },
+        }
+      );
       res.status(200).json({ message: "Tweet liked successfully" });
     } else {
-      const updatedTweet = await Tweet.findByIdAndUpdate(id, {
-        $dec: { likes: 1 },
-      });
+      await Tweet.updateOne(
+        { _id: tweetId },
+        {
+          $pull: { likes: id },
+        }
+      );
       res.status(200).json({ message: "Tweet unliked successfully" });
     }
   } catch (err) {
@@ -221,7 +443,7 @@ export const deleteTweet = async (req: IRequest, res: Response) => {
 
   try {
     const tweet = await Tweet.findById(tweetId);
-    if (tweet?.creator.toString() === id) {
+    if (tweet?.creator.toString() === id.toString()) {
       if (tweet?.hashtags) {
         for (var hashtag in tweet.hashtags) {
           await Hashtag.findOneAndUpdate(

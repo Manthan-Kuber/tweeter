@@ -1,11 +1,16 @@
+import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { AsideContainer } from "./FilterBox";
+import NoTweetsToShow from "./NoTweetsToShow";
 
 const Trends = ({ trendList, ...props }: TrendProps) => {
+  useEffect(() => {
+    if (trendList.length === 6) props.setHasMoreTrends(true);
+  }, [trendList]);
   return (
     <Article as="article" id="trendScroll">
-      <h5>Trends for you</h5>
+      <h3>Trends for you</h3>
       <hr />
       <ul>
         <InfiniteScroll
@@ -14,16 +19,23 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
           hasMore={props.hasMore}
           loader={<p>Loading...</p>} //Change Later
           scrollableTarget="trendScroll"
-          endMessage={<p>You've reached the end</p>} //Change Later
+          endMessage={
+            trendList.length !== 0 && <p>You have reached the end...</p>
+          } //Change Later
         >
-          {trendList.map((item, index) => (
-            // Add onclick function later
-            <li key={`${item.id}${index}`}> 
-              <h3>#{item.tagName}</h3>
-              <span>{item.tweetCount}</span>
-              <p>count {index + 1}</p>
-            </li>
-          ))}
+          {trendList.length === 0 ? (
+            <NoTweetsToShow message={"No More Trends to show"} />
+          ) : (
+            trendList.map((item, index) => (
+              // Add onclick function later if req
+              <li key={`${item.id}${index}`}>
+                <h3>{item.tagName}</h3>
+                <span>{`${item.tweetCount} ${
+                  parseInt(item.tweetCount) > 1 ? "tweets" : "tweet"
+                }`}</span>
+              </li>
+            ))
+          )}
         </InfiniteScroll>
       </ul>
     </Article>
@@ -49,6 +61,10 @@ const Article = styled(AsideContainer)`
     color: #333;
     margin-bottom: 1rem;
     letter-spacing: -0.035em;
+  }
+  & > h3 {
+    color: #333;
+    font: revert
   }
   span {
     color: #828282;

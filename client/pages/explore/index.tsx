@@ -1,17 +1,31 @@
+import { useState } from "react";
 import styled from "styled-components";
 import FilterBox from "../../Components/Common/FilterBox";
 
 function Explore() {
-  const filterList = {
-    1: "Top",
-    2: "Latest",
-    3: "People",
-    4: "Media",
-  };
+  const filterList = [
+    {
+      id: 0,
+      label: "Top",
+    },
+    {
+      id: 1,
+      label: "Latest",
+    },
+    {
+      id: 2,
+      label: "People",
+    },
+    {
+      id: 3,
+      label: "Media",
+    },
+  ];
+  const [tab, setTab] = useState(0)
 
   return (
     <Container>
-      <FilterBox filterList={filterList} />
+      <FilterBox filterList={filterList} tab={tab} setTab={setTab} />
       <div>Explore Content goes here</div>
     </Container>
   );

@@ -11,7 +11,21 @@ export const api = createApi({
     },
     credentials: "include",
   }),
-  tagTypes: ["Tweets", "Comments"],
+  tagTypes: [
+    "HomeTweets",
+    "Tweets", //  <== Profile Tweets
+    "TweetsAndReplies",
+    "TweetsMedia",
+    "TweetsLikes",
+    "Comments",
+    "Bookmarks",
+    "Followers",
+    "Following",
+    "SuggestedFollowers",
+    "CommentsReplies",
+    "Tweet",
+    "ReplyToTweet", // <== Tweet Page Replies
+  ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
       query: (credentials) => ({
@@ -27,9 +41,33 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    getTweets: builder.query<GetTweetsResponse, number>({
-      query: (skip) => `profile/tweets/${skip}`, //skip to be included
+    getProfileTweets: builder.query<
+      GetTweetsResponse,
+      { userId: string; skip: number }
+    >({
+      query: ({ userId, skip }) => `profile/tweets/${userId}/${skip}`,
       providesTags: ["Tweets"],
+    }),
+    getProfileTweetsAndReplies: builder.query<
+      GetTweetsResponse,
+      { userId: string; skip: number }
+    >({
+      query: ({ userId, skip }) => `profile/tweetsandreplies/${userId}/${skip}`,
+      providesTags: ["TweetsAndReplies"],
+    }),
+    getProfileTweetsMedia: builder.query<
+      GetTweetsResponse,
+      { userId: string; skip: number }
+    >({
+      query: ({ userId, skip }) => `profile/media/${userId}/${skip}`,
+      providesTags: ["TweetsMedia"],
+    }),
+    getProfileTweetsLikes: builder.query<
+      GetTweetsResponse,
+      { userId: string; skip: number }
+    >({
+      query: ({ userId, skip }) => `profile/likes/${userId}/${skip}`,
+      providesTags: ["TweetsLikes"],
     }),
     createTweet: builder.mutation({
       query: (body) => ({
@@ -37,19 +75,26 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: ["Tweets", "Tweet", "HomeTweets"],
     }),
     deleteTweet: builder.mutation({
       query: (tweetId: string) => ({
         url: "tweets",
         method: "DELETE",
-        body: tweetId,
+        body: { tweetId },
       }),
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+      ],
     }),
     //Needs tweetid and skip
-    getComments: builder.query<GetCommentsResponse,string>({ //change to object later for skip
-      query: (tweetId:string) => `comment/${tweetId}/0`,
+    getComments: builder.query<GetCommentsResponse, string>({
+      //change to object later for skip if req
+      query: (tweetId: string) => `comment/${tweetId}/0`,
       providesTags: ["Comments"],
     }),
     createComment: builder.mutation({
@@ -58,7 +103,124 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Comments"],
+      invalidatesTags: ["Comments", "Tweets"],
+    }),
+    getBookmarks: builder.query<GetTweetsResponse, number>({
+      query: (skip) => `home/bookmarks/${skip}`,
+      providesTags: ["Bookmarks"],
+    }),
+    getHomeTweets: builder.query<GetTweetsResponse, number>({
+      query: (skip) => `home/tweets/${skip}`,
+      providesTags: ["HomeTweets"],
+    }),
+    getFollowers: builder.query<GetFollowingAndFollowersResponse, string>({
+      query: (userId) => `users/followers/${userId}/0`,
+      providesTags: ["Followers"],
+    }),
+    getFollowing: builder.query<GetFollowingAndFollowersResponse, string>({
+      query: (userId) => `users/following/${userId}/0`,
+      providesTags: ["Following"],
+    }),
+    likeTweet: builder.mutation<string, string>({
+      query: (tweetId) => ({
+        url: "/tweets/like",
+        method: "PUT",
+        body: { tweetId }, //invalidate tags for liked tweets fetch
+      }),
+      invalidatesTags: [
+        "Tweets",
+        "HomeTweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+        "Tweet",
+      ],
+    }),
+    saveTweet: builder.mutation<string, string>({
+      query: (tweetId) => ({
+        url: "/tweets/save",
+        method: "PUT",
+        body: { tweetId },
+      }),
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+        "Tweet",
+      ],
+    }),
+    retweetTweet: builder.mutation<string, string>({
+      query: (tweetId) => ({
+        url: "/tweets/retweet",
+        method: "PUT",
+        body: { tweetId },
+      }),
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+        "Tweet",
+      ],
+    }),
+    followUser: builder.mutation<void, string>({
+      query: (targetid) => ({
+        url: "/users/follow",
+        method: "PUT",
+        body: { targetid },
+      }),
+      invalidatesTags: ["Following", "Followers", "SuggestedFollowers"],
+    }),
+    unfollowUser: builder.mutation<void, string>({
+      query: (targetid) => ({
+        url: "/users/unfollow",
+        method: "PUT",
+        body: { targetid },
+      }),
+      invalidatesTags: ["Followers", "Following"],
+    }),
+    getSuggestedFollowers: builder.query<
+      SuggestedFollowerResponseElement[],
+      number
+    >({
+      query: (skip) => ({
+        url: `home/people/${skip}/4`,
+      }),
+      providesTags: ["SuggestedFollowers"],
+    }),
+    likeComment: builder.mutation<void, string>({
+      //same api for likeReply
+      query: (commentId) => ({
+        url: `comment/like`,
+        method: "PUT",
+        body: { commentId },
+      }),
+      invalidatesTags: ["CommentsReplies", "Comments"],
+    }),
+    getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
+      query: (commentId) => ({
+        url: `comment/replies/${commentId}/0`,
+      }),
+      providesTags: ["CommentsReplies"],
+    }),
+    createReply: builder.mutation({
+      query: (body) => ({ url: "comment/reply", method: "POST", body }),
+      invalidatesTags: ["CommentsReplies"],
+    }),
+    getTweet: builder.query<GetTweetsResponse, string>({
+      query: (tweetId) => `tweets/${tweetId}`,
+      providesTags: ["Tweet"],
+    }),
+    getTweetReplies: builder.query<
+      GetTweetsResponse,
+      { tweetId: string; skip: number }
+    >({
+      query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
+      providesTags: ["ReplyToTweet"],
     }),
   }),
 });
@@ -66,11 +228,36 @@ export const api = createApi({
 export const {
   useLoginMutation,
   useSignupMutation,
-  useGetTweetsQuery,
+  useGetProfileTweetsQuery,
   useCreateTweetMutation,
   useDeleteTweetMutation,
   useCreateCommentMutation,
   useLazyGetCommentsQuery,
   useGetCommentsQuery,
-  useLazyGetTweetsQuery,
+  useGetBookmarksQuery,
+  useGetHomeTweetsQuery,
+  useLazyGetHomeTweetsQuery,
+  useLikeTweetMutation,
+  useSaveTweetMutation,
+  useRetweetTweetMutation,
+  useLazyGetFollowersQuery,
+  useLazyGetFollowingQuery,
+  useLazyGetBookmarksQuery,
+  useLazyGetProfileTweetsQuery,
+  useLazyGetProfileTweetsAndRepliesQuery,
+  useLazyGetProfileTweetsMediaQuery,
+  useLazyGetProfileTweetsLikesQuery,
+  useGetProfileTweetsLikesQuery,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+  useLazyGetSuggestedFollowersQuery,
+  useGetSuggestedFollowersQuery,
+  useLikeCommentMutation,
+  useLazyGetCommentRepliesQuery,
+  useCreateReplyMutation,
+  useGetTweetQuery,
+  useGetTweetRepliesQuery,
+  useLazyGetTweetRepliesQuery,
+  useGetProfileTweetsMediaQuery,
+  useGetProfileTweetsAndRepliesQuery,
 } = api;

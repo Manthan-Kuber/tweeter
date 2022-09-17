@@ -5,7 +5,7 @@ import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import styled from "styled-components";
 import axiosApi from "../../app/services/axiosApi";
 import { setProfilePic } from "../../features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import {
   Icon,
   PlaceholderText,
@@ -77,22 +77,26 @@ const EditProfile = (props: EditProfileProps) => {
         profileFormData,
         requestConfig
       );
-      console.log(response);
       const { name, username, bio } = formValues;
-      const pfp = profilePictureFile as Blob
-      const coverpic = coverPictureFile as Blob
-      dispatch(setProfilePic(URL.createObjectURL(pfp))) //set with response's url
+      // const pfp = profilePictureFile as Blob;
+      // const coverpic = coverPictureFile as Blob;
+      dispatch(setProfilePic(response.data.data.profilePic)); //set with response's url
+      // dispatch(setCoverp)
       props.setProfileData((prev) => ({ ...prev, name, username, bio }));
-      coverPictureFile !== undefined &&
-        props.setProfileData((prev) => ({
-          ...prev,
-          profilePic: URL.createObjectURL(pfp), //set with response's url
-        }));
+      console.log(response.data.data.profilePic);
+      console.log( response.data.data.coverPic);
       profilePictureFile !== undefined &&
         props.setProfileData((prev) => ({
           ...prev,
-          coverPic: URL.createObjectURL(coverpic), //set with response's url
+          profilePic: response.data.data.profilePic, //set with response's url
         }));
+      coverPictureFile !== undefined &&
+        props.setProfileData((prev) => ({
+          ...prev,
+          coverPic: response.data.data.coverPic, //set with response's url
+        }));
+      if (profilePictureFile !== undefined || coverPictureFile !== undefined)
+        window.location.reload();
     } catch (err) {
       console.log(err);
     }

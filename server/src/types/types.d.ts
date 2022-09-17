@@ -38,6 +38,7 @@ interface IUserModel extends Model<IUser> {
 interface ITweet {
   creator: Schema.Types.ObjectId;
   tweet: string;
+  tweetId: Schema.Types.ObjectId;
   media?: string[];
   likes?: Schema.Types.ObjectId[];
   retweetedUsers?: Schema.Types.ObjectId[];

@@ -1,35 +1,84 @@
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import styled from "styled-components";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "../../app/services/api";
+import { ToastMessage } from "../../styles/Toast.styles";
+import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
-interface Props {}
-const FollowerInfo = (props: Props) => {
+const FollowerInfo = ({ RawData, setModalIsOpen }: FollowerInfoProps) => {
+  const router = useRouter();
+  const [followUser] = useFollowUserMutation();
+  const [unfollowUser] = useUnfollowUserMutation();
+
+  const handleFollow = async (userId: string) => {
+    try {
+      await followUser(userId).unwrap();
+      toast.success(() => (
+        <ToastMessage>Followed User Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Following User</ToastMessage>);
+    }
+  };
+
+  const handleUnfollow = async (userId: string) => {
+    try {
+      await unfollowUser(userId).unwrap();
+      toast.success(() => (
+        <ToastMessage>Unfollowed User Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Unfollowing User</ToastMessage>);
+    }
+  };
   return (
     <>
-      {Array.from(Array(10).keys()).map((index, item) => (
-        <div key={index}>
-          <ProfileElementWrapper>
-            <div>
-              <ProfileInfo />
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-                eu erat eu ipsum placerat gravida. Duis nec nisl eget enim
-                facilisis rhoncus ac sit amet turpis. Maecenas fermentum quis
-                nulla consequat lobortis. Cras et elit at quam ornare efficitur.
-                Aliquam erat volutpat. In leo lorem, rhoncus sed fermentum a,
-                feugiat non metus. Vivamus cursus aliquet metus.
-              </p>
-            </div>
-            <StyledFollowButton as={motion.button} whileTap={{ scale: 0.9 }}>
-              <BsFillPersonPlusFill />
-              Follow
-            </StyledFollowButton>
-          </ProfileElementWrapper>
-          <hr />
-        </div>
-      ))}
+      {RawData.data.length === 0 ? (
+        <NoTweetsToShow message="Nothing to Show !" />
+      ) : (
+        RawData.data.map((item) => (
+          <div key={item._id}>
+            <ProfileElementWrapper>
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  router.push(`/${item._id}`);
+                  setModalIsOpen(false);
+                }}
+              >
+                <ProfileInfo
+                  name={item.name}
+                  username={item.username}
+                  profilePic={item.profilePic}
+                />
+                <p>{item.bio}</p>
+              </div>
+              <StyledFollowButton
+                as={motion.button}
+                whileTap={{ scale: 0.9 }}
+                onClick={
+                  item.followed.length === 0
+                    ? () => handleFollow(item._id)
+                    : () => handleUnfollow(item._id)
+                }
+              >
+                <BsFillPersonPlusFill />
+                {item.followed.length === 0 ? "Follow" : "Unfollow"}
+              </StyledFollowButton>
+            </ProfileElementWrapper>
+            <hr />
+          </div>
+        ))
+      )}
     </>
   );
 };

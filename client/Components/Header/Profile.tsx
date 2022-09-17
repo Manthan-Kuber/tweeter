@@ -3,11 +3,12 @@ import Image from "next/image";
 import ProfileDropdown from "./ProfileDropdown";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "../../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axiosApi from "../../app/services/axiosApi";
 import { setProfilePic } from "../../features/auth/authSlice";
-import useWindowSize from "../../Hooks/useWindowDimensions";
+import useWindowSize from "../../hooks/useWindowDimensions";
+import OutsideClickHandler from "react-outside-click-handler";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
@@ -47,15 +48,17 @@ const Profile = () => {
         />
       )}
       {WindowWidth! > 880 && <h4>{name}</h4>}
-      <DropDownIconWrapper
-        visible={visible}
-        onClick={() => setVisible(!visible)}
-      >
-        <BsThreeDotsVertical className="dropdownIcon" size={20} />
-      </DropDownIconWrapper>
-      <AnimatePresence>
-        {visible && <ProfileDropdown setVisible={setVisible} />}
-      </AnimatePresence>
+      <OutsideClickHandler onOutsideClick={() => setVisible(false)}>
+        <DropDownIconWrapper
+          visible={visible}
+          onClick={() => setVisible(!visible)}
+        >
+          <BsThreeDotsVertical className="dropdownIcon" size={20} />
+        </DropDownIconWrapper>
+        <AnimatePresence>
+          {visible && <ProfileDropdown setVisible={setVisible} />}
+        </AnimatePresence>
+      </OutsideClickHandler>
     </ProfileContainer>
   );
 };

@@ -13,7 +13,7 @@ const ProfileInfo = ({
       <UserInfoWrapper>
         <div>
           <span>{name}</span>
-          <span>@ {props.username}</span>
+          <span>@ {props.username} </span>
         </div>
         {props.tweetCreationDate && <span>・{props.tweetCreationDate}</span>}
       </UserInfoWrapper>

@@ -4,6 +4,8 @@ import { requireAuth } from "../middleware/authMiddleware";
 import {
   createTweet,
   getTweet,
+  fetchTweets,
+  getFollowingReplies,
   deleteTweet,
   likeTweet,
   retweet,
@@ -12,6 +14,10 @@ import {
 import { tweetMediaUpload as upload } from "../middleware/mediaUpload";
 
 router.get("/:tweetId", requireAuth, getTweet);
+
+router.get("/replies/:tweetId/:skip", requireAuth, fetchTweets);
+
+router.get("/followingReplies/:tweetId", requireAuth, getFollowingReplies);
 
 router.post("/", requireAuth, upload.array("media", 4), createTweet);
 

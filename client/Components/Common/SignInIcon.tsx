@@ -13,7 +13,7 @@ const scaleOnHover = {
 function SignInIcon({ imgUrl }: Props) {
   return (
     <IconWrapper as={motion.div} variants={scaleOnHover} whileHover="whileHover">
-      <Image src={imgUrl} width={24} height={24} />
+      <Image src={imgUrl} alt="Icon" width={24} height={24} />
     </IconWrapper>
   );
 }

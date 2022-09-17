@@ -3,25 +3,33 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
-import { useCreateTweetMutation } from "../app/services/api";
+import {
+  api,
+  useCreateTweetMutation,
+  useGetHomeTweetsQuery,
+  useGetSuggestedFollowersQuery,
+  useLazyGetHomeTweetsQuery,
+  useLazyGetSuggestedFollowersQuery,
+} from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
 import CreateTweet from "../Components/Common/CreateTweet";
+import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
+import TweetsDataList from "../Components/Common/TweetsDataList";
 import { logOut } from "../features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../Hooks/store";
+import { useAppDispatch, useAppSelector } from "../hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
+var tweetLimit = 10;
 
 const Home = ({
   initialTrendData = [],
-  initialSuggestedFollowersData = [],
   isAuthenticated = true,
 }: {
   initialTrendData: any;
-  initialSuggestedFollowersData: any;
   isAuthenticated: boolean;
 }) => {
   const [message, setMessage] = useState<string>("");
@@ -41,25 +49,21 @@ const Home = ({
     initialTrendData.map((item: typeof initialTrendData) => ({
       id: item._id,
       tagName: item.hashtag,
-      tweetCount: `${item.tweets}k tweets`,
+      tweetCount: `${item.tweets}`,
     }))
   );
 
-  const [suggestedFollowersArray, setSuggestedFollowersArray] = useState<
-    SuggestedFollowerResponse[]
-  >(
-    initialSuggestedFollowersData.map((item: SuggestedFollowerResponse) => ({
-      id: item._id,
-      bio: item.bio,
-      name: item.name,
-      profilePic: item.profilePic,
-    }))
-  );
   const [createTweet] = useCreateTweetMutation();
-  const [hasMoreTrends, setHasMoreTrends] = useState(true);
-  const [hasMoreSuggestions, setHasMoreSuggestions] = useState(true);
+  const [hasMoreTrends, setHasMoreTrends] = useState(false);
+  const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
+  const [hasMoreTweets, setHasMoreTweets] = useState(true);
   const dispatch = useAppDispatch();
   const token = useAppSelector((state) => state.auth.token);
+  const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
+  const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
+  const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
+  const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
+  const [homeTweetsSkip, setHomeTweetsSkip] = useState(1);
 
   const requestConfig = {
     headers: {
@@ -80,7 +84,7 @@ const Home = ({
           {
             id: item._id,
             tagName: item.hashtag,
-            tweetCount: `${item.tweets}k tweets`,
+            tweetCount: `${item.tweets}`,
           },
         ])
       );
@@ -91,25 +95,52 @@ const Home = ({
 
   const getSuggestedFollowers = async () => {
     try {
-      const response = await axiosApi.get(
-        `home/people/${suggestedFollowersArray.length}/${suggestedFollowerLimit}`,
-        requestConfig
-      );
-      if (response.data.length < suggestedFollowerLimit)
-        setHasMoreSuggestions(false);
-      response.data.map((item: typeof response.data) =>
-        setSuggestedFollowersArray((prev: typeof response.data) => [
-          ...prev,
-          {
-            id: item._id,
-            bio: item.bio,
-            name: item.name,
-            profilePic: item.profilePic,
-          },
-        ])
-      );
+      if (suggestedFollowersArray !== undefined) {
+        if (suggestedFollowersArray.length < suggestedFollowerLimit) {
+          setHasMoreTweets(false);
+        } else {
+          const newFollowerData = await GetSuggestedFollowersTrigger(
+            suggestedFollowersArray.length
+          ).unwrap();
+          console.log(newFollowerData);
+          if (newFollowerData.length < suggestedFollowersArray.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getSuggestedFollowers",
+              0,
+              (tweetData) => {
+                newFollowerData.map((newFollower) =>
+                  tweetData.push(newFollower)
+                );
+              }
+            )
+          );
+        }
+      }
     } catch (error) {
       console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
+    }
+  };
+
+  const getMoreHomeTweets = async () => {
+    try {
+      if (HomeTweetsData !== undefined) {
+        const { data: newTweetData } = await GetHomeTweetsTrigger(
+          homeTweetsSkip
+        ).unwrap();
+        if (newTweetData.length === 0) setHasMoreTweets(false)
+        else setHomeTweetsSkip(homeTweetsSkip + 1)
+        dispatch(
+          api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
+            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(() => <ToastMessage>Error in Fetching Tweets</ToastMessage>);
     }
   };
 
@@ -127,8 +158,10 @@ const Home = ({
     }
     if (isHashtagPresent.test(message)) {
       const hashtagArray = message.match(isHashtagPresent);
-      for (let i = 0; i < hashtagArray!.length; i++) {
-        formData.append("hashtags", hashtagArray![i]);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
       }
     }
     try {
@@ -137,41 +170,51 @@ const Home = ({
         <ToastMessage>Created Tweet Successfully</ToastMessage>
       ));
     } catch (error) {
-      toast.error(() => (
-        <ToastMessage>
-          Error in creating Tweet: <br /> {(error as AxiosError).message}
-        </ToastMessage>
-      ));
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
     }
   };
 
   return (
     <Container>
+      <ScrollToTopButton />
       <Toaster />
       <div>
-        <CreateTweet
-          isReplyImageVisible={false}
-          placeholder="Whats happening?"
-          btnText="Tweet"
-          variant="Home"
-          message={message}
-          setMessage={setMessage}
-          fileList={fileList}
-          setFileList={setFileList}
-          onSubmit={onSubmit}
-        />
+        <CreateTweetWrapper>
+          <CreateTweet
+            isReplyImageVisible={false}
+            placeholder="Whats happening?"
+            btnText="Tweet"
+            variant="Home"
+            message={message}
+            setMessage={setMessage}
+            fileList={fileList}
+            setFileList={setFileList}
+            onSubmit={onSubmit}
+          />
+        </CreateTweetWrapper>
+        {HomeTweetsData !== undefined && (
+          <TweetsDataList
+            TweetsData={HomeTweetsData}
+            hasMoreTweets={hasMoreTweets}
+            getMoreTweets={getMoreHomeTweets}
+          />
+        )}
       </div>
       <aside>
         <Trends
           trendList={hashtagArray}
           getHashtags={getHashtags}
           hasMore={hasMoreTrends}
+          setHasMoreTrends={setHasMoreTrends}
         />
-        <SuggestedFollow
-          suggestedFollowList={suggestedFollowersArray}
-          getSuggestedFollowers={getSuggestedFollowers}
-          hasMore={hasMoreSuggestions}
-        />
+        {suggestedFollowersArray !== undefined && (
+          <SuggestedFollow
+            suggestedFollowList={suggestedFollowersArray}
+            getSuggestedFollowers={getSuggestedFollowers}
+            hasMore={hasMoreSuggestions}
+            setHasMoreSuggestions={setHasMoreSuggestions}
+          />
+        )}
       </aside>
     </Container>
   );
@@ -180,24 +223,16 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const endPoints = [
-    `home/hashtags/0/${hashtagLimit}`,
-    `home/people/0/${suggestedFollowerLimit}`,
-  ];
   const token = ctx.req.cookies.jwt;
   try {
-    const requests = endPoints.map((endP) =>
-      axiosApi.get(endP, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
-    );
-    const responses = await Promise.all(requests);
+    const response = await axiosApi.get(`home/hashtags/0/${hashtagLimit}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
     return {
       props: {
-        initialTrendData: responses[0].data,
-        initialSuggestedFollowersData: responses[1].data,
+        initialTrendData: response.data,
       },
     };
   } catch (err) {
@@ -214,6 +249,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {},
   };
 };
+
+const CreateTweetWrapper = styled.div`
+  margin-bottom: 4rem;
+`;
 
 const Container = styled.div`
   width: min(95%, 120rem);

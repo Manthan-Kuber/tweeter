@@ -4,6 +4,7 @@ import { ITweet } from "../types/types";
 const tweetSchema = new Schema<ITweet>(
   {
     creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    tweetId: { type: Schema.Types.ObjectId, ref: "Tweet" },
     tweet: { type: String, required: true, maxlength: 280 },
     media: { type: [String], default: [] },
     likes: { type: [Schema.Types.ObjectId], ref: "User", default: [] },

@@ -2,22 +2,28 @@ import styled from "styled-components";
 import { StyledUl, UnderlinedDiv, Li } from "../../../styles/Navbar.styles";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function BottomNav({
   NavList,
   setActiveTab,
   activeTab,
 }: NavProps) {
+  const { route } = useRouter();
+  useEffect(() => {
+    if (!NavList.map((item) => item.url).includes(route)) setActiveTab("");
+  }, [route]);
   return (
     <Container>
       <BottomNavUl>
         {NavList.map((item) => (
           <Li
             key={item.id}
-            onClick={() => setActiveTab(item.name)}
-            active={activeTab === item.name ? true : false}
+            onClick={() => setActiveTab(item.url)}
+            active={activeTab === item.url ? true : false}
           >
-            {activeTab === item.name && (
+            {activeTab === item.url && (
               <OverlinedDiv as={motion.div} layoutId="underline" />
             )}
             <Link href={item.url}>

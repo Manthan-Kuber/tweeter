@@ -11,10 +11,10 @@ export const Container = styled.div`
 `;
 
 export const SignUpBox = styled.div`
-  padding-block: 4rem;
+  padding-block: 6rem;
   padding-inline: clamp(2rem, 3vw + 1.5rem, 4rem);
   border-radius: 24px;
-  width: min(90%, 48rem);
+  width: min(90%, 47rem);
   display: flex;
   flex-direction: column;
 
@@ -71,4 +71,5 @@ export const FormLi = styled(Li)<{ active: boolean }>`
 export const FormUnderlinedDiv = styled(UnderlinedDiv)`
   height: 3px;
   bottom: -0.7px;
+  left: 0;
 `;

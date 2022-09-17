@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { AiOutlineCloseCircle } from "react-icons/ai";
+import { GrClose } from "react-icons/gr";
 import { MdOutlineImage } from "react-icons/md";
 import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
@@ -12,6 +12,7 @@ const CreateTweet = ({
   setMessage,
   setFileList,
   onSubmit,
+  isMediaInputVisible = true,
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,11 +50,7 @@ const CreateTweet = ({
     <ReplyContainer>
       {props.isReplyImageVisible && (
         <ReplyImageWrapper>
-          <ReplyImage
-            src={props.replyImageUrl!}
-            width={42}
-            height={45}
-          />
+          <ReplyImage src={props.replyImageUrl!} width={42} height={45} />
         </ReplyImageWrapper>
       )}
       <InputFormWrapper id="formWrapper" variant={props.variant}>
@@ -86,12 +83,10 @@ const CreateTweet = ({
                 <TweetImageWrapper key={arrObject.id}>
                   <TweetImage
                     src={URL.createObjectURL(arrObject.file)}
-                    layout="responsive"
-                    width="100%"
-                    height="100%"
+                    layout="fill"
                   />
                   <CloseIcon
-                    size={24}
+                    size={32}
                     onClick={() =>
                       setFileList((prev) =>
                         prev.filter(
@@ -105,16 +100,18 @@ const CreateTweet = ({
             </TweetImageArrayWrapper>
           )}
           {props.variant !== "Home" && <hr />}
-          <OptionsWrapper>
-            <MediaIcon
-              as={MdOutlineImage}
-              size={28}
-              color={"var(--clr-primary)"}
-              $cursorPointer
-              onClick={(e: React.SyntheticEvent) =>
-                fileInputRef.current && fileInputRef.current.click()
-              }
-            />
+          <OptionsWrapper isMediaInputVisible={isMediaInputVisible}>
+            {isMediaInputVisible && (
+              <MediaIcon
+                as={MdOutlineImage}
+                size={40}
+                color={"var(--clr-primary)"}
+                $cursorPointer
+                onClick={(e: React.SyntheticEvent) =>
+                  fileInputRef.current && fileInputRef.current.click()
+                }
+              />
+            )}
             <TweetButton disabled={isDisabled}>{props.btnText}</TweetButton>
           </OptionsWrapper>
         </form>
@@ -128,11 +125,16 @@ const HomeVariantContainer = styled.div`
   hr {
     margin-block: 1rem;
   }
+  h3 {
+    font: 700 1.6rem var(--ff-noto);
+    color: #333;
+  }
 `;
 
-const OptionsWrapper = styled.div`
+const OptionsWrapper = styled.div<{ isMediaInputVisible: boolean }>`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({ isMediaInputVisible }) =>
+    !isMediaInputVisible ? "flex-end" : "space-between"};
   align-items: center;
   margin-top: 1rem;
 `;
@@ -216,17 +218,46 @@ const TweetImage = styled(Image)`
 
 const TweetImageWrapper = styled.div`
   position: relative;
+  width: min(45rem, 100%);
+  height: 15rem;
+  border-radius: 16px;
+  margin-inline: auto;
+  @media screen and (min-width: 20em) {
+    height: 20rem;
+  }
+  @media screen and (min-width: 55em) {
+    height: 45rem;
+  }
 `;
 
 const MediaIcon = styled(Icon)`
   position: revert;
+  transition: all 0.4s;
+  padding: 8px;
+  border-radius: 100%;
+  &:hover {
+    background-color: rgba(47, 128, 237, 0.2);
+  }
+  &:active {
+    background-color: rgba(47, 128, 237, 0.7);
+  }
 `;
 
-const CloseIcon = styled(AiOutlineCloseCircle)`
+const CloseIcon = styled(GrClose)`
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
   cursor: pointer;
+  border-radius: 100%;
+  padding: 8px;
+  transition: all 0.4s;
+  background-color: rgba(130, 130, 130, 0.9);
+  &:hover {
+    background-color: rgba(130, 130, 130, 0.7);
+  }
+  &:active {
+    background-color: rgba(130, 130, 130, 0.5);
+  }
 `;
 
 export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
@@ -237,5 +268,6 @@ export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
+      justify-items: stretch;
     `}
 `;
