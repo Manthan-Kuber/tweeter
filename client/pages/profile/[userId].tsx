@@ -249,7 +249,7 @@ const Profile = ({ userId }: { userId: string }) => {
           skip: tweetsAndRepliesSkip,
         }).unwrap();
         if (newTweetData.length === 0) setHasMoreTweetsAndReplies(false);
-        else setTweetsAndRepliesSkip(tweetsAndRepliesSkip + 1)
+        else setTweetsAndRepliesSkip(tweetsAndRepliesSkip + 1);
         dispatch(
           api.util.updateQueryData(
             "getProfileTweetsAndReplies",
@@ -468,13 +468,6 @@ const BannerWrapper = styled.div`
     border: revert;
     height: 30rem;
   }
-`;
-
-const PlaceholderTweetBox = styled(TweetBox)`
-  margin-bottom: 1rem;
-  display: grid;
-  place-items: center;
-  height: 450px;
 `;
 
 const ContentContainer = styled.div`

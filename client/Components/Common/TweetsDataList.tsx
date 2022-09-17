@@ -1,7 +1,8 @@
-import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { ScrollerMessage } from "../../pages/profile/[userId]";
+import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
+import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
 import Tweet from "./Tweet";
 
@@ -16,15 +17,17 @@ const TweetsDataList = ({
       dataLength={TweetsData.data.length}
       next={getMoreTweets}
       hasMore={hasMoreTweets}
-      loader={<ScrollerMessage>Loading...</ScrollerMessage>}
+      loader={
+        <LoaderWrapper>
+          <Loader size={32} color="var(--clr-primary)" />
+        </LoaderWrapper>
+      }
+      scrollThreshold={0.95}
     >
       {TweetsData.data.length === 0 ? (
         <NoTweetsToShow message="No Tweets To Show !" />
       ) : (
         TweetsData.data.map((tweet, key) => (
-          // tweet === undefined ? (
-          //   <Loader size={16} color={"var(--clr-primary)"} />
-          // ) :
           <>
             {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
             <Tweet
