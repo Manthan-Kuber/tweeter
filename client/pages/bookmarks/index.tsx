@@ -12,8 +12,6 @@ import TweetsDataList from "../../Components/Common/TweetsDataList";
 import { useAppDispatch } from "../../hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
 
-var tweetLimit = 10;
-
 function Bookmarks() {
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
   const { data: BookmarksData } = useGetBookmarksQuery(0);
@@ -52,7 +50,9 @@ function Bookmarks() {
           getMoreTweets={getMoreBookmarks}
           hasMoreTweets={hasMoreTweets}
         />
-      ) : <ContentLoader size={32} />}
+      ) : (
+        <ContentLoader size={32} />
+      )}
     </Container>
   );
 }

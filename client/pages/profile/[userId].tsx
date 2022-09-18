@@ -487,7 +487,7 @@ const ContentContainer = styled.div`
   margin-inline: auto;
   padding-block: 2rem;
 
-  @media screen and (min-width: 40em) {
+  @media screen and (min-width: 50em) {
     display: grid;
     grid-template-columns: 25rem auto;
     gap: 2rem;

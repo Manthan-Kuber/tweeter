@@ -371,7 +371,7 @@ const DeleteIcon = styled(AiOutlineDelete)`
 
 export const TweetWrapper = styled.div`
   margin-block: 2rem;
-  @media screen and (min-width: 40em) {
+  @media screen and (min-width: 50em) {
     margin-top: revert;
   }
 `;
@@ -421,6 +421,9 @@ const TweetInfo = styled.span`
   font: 500 1.2rem var(--ff-noto);
   color: hsla(0, 0%, 74%, 1);
   margin-block: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   span {
     display: inline-block;
     margin-left: 1.5rem;
