@@ -38,6 +38,7 @@ import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
 import { LoaderWrapper } from "../tweet/[tweetId]";
+import ContentLoader from "../../Components/Common/ContentLoader";
 
 const filterList = [
   {
@@ -393,39 +394,46 @@ const Profile = ({ userId }: { userId: string }) => {
         <FilterBox filterList={filterList} tab={tab} setTab={setTab} />
         <div>
           {tab === 0 ? (
-            TweetsData !== undefined && (
+            TweetsData !== undefined ? (
               <TweetsDataList
                 TweetsData={TweetsData}
                 getMoreTweets={getMoreTweets}
                 hasMoreTweets={hasMoreTweets}
               />
+            ) : (
+              <ContentLoader size={36} />
             )
           ) : tab === 1 ? (
-            TweetsAndRepliesData !== undefined && (
+            TweetsAndRepliesData !== undefined ? (
               <TweetsDataList
                 TweetsData={TweetsAndRepliesData}
                 getMoreTweets={getMoreTweetsAndReplies}
                 hasMoreTweets={hasMoreTweetsAndReplies}
               />
+            ) : (
+              <ContentLoader size={36} />
             )
           ) : tab === 2 ? (
-            TweetsMediaData !== undefined && (
+            TweetsMediaData !== undefined ? (
               <TweetsDataList
                 TweetsData={TweetsMediaData}
                 getMoreTweets={getMoreTweetsMedia}
                 hasMoreTweets={hasMoreTweetsMedia}
               />
+            ) : (
+              <ContentLoader size={36} />
             )
-          ) : tab === 3 ? (
-            TweetsLikesData !== undefined && (
+          ) : (
+            tab === 3 &&
+            (TweetsLikesData !== undefined ? (
               <TweetsDataList
                 TweetsData={TweetsLikesData}
                 getMoreTweets={getMoreTweetsLikes}
                 hasMoreTweets={hasMoreTweetsLikes}
               />
-            )
-          ) : (
-            <p>Loading</p>
+            ) : (
+              <ContentLoader size={36} />
+            ))
           )}
         </div>
       </ContentContainer>

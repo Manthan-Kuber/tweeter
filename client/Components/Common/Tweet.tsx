@@ -42,7 +42,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
   const { push } = useRouter();
   const { data: FollowingReplyTweetData } = useGetFollowingReplyQuery(
-    props.tweetId,
+    { tweetId: props.tweetId, userId: props.authorId },
     { skip: !props.fetchReply } //Conditionally fetch reply only when reply exists
   );
 

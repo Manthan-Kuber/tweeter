@@ -410,3 +410,8 @@ interface CommentReplyProps {
   likesCount: number;
   isLiked: boolean;
 }
+
+interface ContentLoaderProps {
+  size?:number;
+  color?:string;
+}

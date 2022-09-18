@@ -238,8 +238,12 @@ export const api = createApi({
       query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
       providesTags: ["ReplyToTweet"],
     }),
-    getFollowingReply: builder.query<GetTweetsResponse, string>({
-      query: (tweetId) => `tweets/followingReplies/${tweetId}`,
+    getFollowingReply: builder.query<
+      GetTweetsResponse,
+      { tweetId: string; userId: string }
+    >({
+      query: ({ tweetId, userId }) =>
+        `tweets/followingReplies/${tweetId}/${userId}`,
       providesTags: ["FollowingReplyTweet"],
     }),
   }),
