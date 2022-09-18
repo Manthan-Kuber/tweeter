@@ -3,7 +3,7 @@ import { RootState } from "../store";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:6969/",
+    baseUrl: "https://tweeter-uojf.onrender.com/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set("authorization", `Bearer ${token}`);
