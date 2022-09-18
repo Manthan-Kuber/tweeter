@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
@@ -11,6 +12,8 @@ const TweetsDataList = ({
   hasMoreTweets,
   variant,
 }: TweetsDataListProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {TweetsData && setIsLoading(false)},[TweetsData])
   return (
     <InfiniteScroll
       dataLength={TweetsData.data.length}
@@ -25,6 +28,10 @@ const TweetsDataList = ({
     >
       {TweetsData.data.length === 0 ? (
         <NoTweetsToShow message="No Tweets To Show !" />
+      ) : isLoading ? (
+        <LoaderWrapper>
+          <Loader size={32} color="var(--clr-primary)" />
+        </LoaderWrapper>
       ) : (
         TweetsData.data.map((tweet, key) => (
           <>
