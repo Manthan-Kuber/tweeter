@@ -48,7 +48,8 @@ const UsernameContainer = styled.div`
     }
 
     @media screen and (min-width: 30em) {
-      width: 125px;
+      max-width: calc(100% - 2rem);
+      width: revert;
     }
   }
 `;

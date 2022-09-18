@@ -37,7 +37,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
-import { LoaderWrapper } from "../tweet/[tweetId]";
 import ContentLoader from "../../Components/Common/ContentLoader";
 
 const filterList = [

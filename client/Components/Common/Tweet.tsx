@@ -384,6 +384,12 @@ const RetweetWrapper = styled.div`
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+  max-width: calc(100% * 3 / 4);
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const TweetBox = styled.div<{
