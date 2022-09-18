@@ -9,10 +9,10 @@ import { nanoid } from "@reduxjs/toolkit";
 const CreateTweet = ({
   fileList,
   message,
+  isMediaInputVisible = true,
   setMessage,
   setFileList,
   onSubmit,
-  isMediaInputVisible = true,
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,17 +34,19 @@ const CreateTweet = ({
     else setIsDisabled(true);
   }, [message, fileList]);
 
-  const autoResize = () => {
-    if (tweetInputRef.current) {
-      tweetInputRef.current.style.height = "auto";
-      tweetInputRef.current.style.height =
-        tweetInputRef.current.scrollHeight + "px";
-    }
-  };
+  useEffect(() => {
+    (() => {
+      if (tweetInputRef.current) {
+        tweetInputRef.current.style.height = "auto";
+        tweetInputRef.current.style.height =
+          tweetInputRef.current.scrollHeight + "px";
+      }
+    })();
+  }, [message]);
 
   useEffect(() => {
-    autoResize();
-  }, [message]);
+    props.focusOnClick && tweetInputRef.current?.focus();
+  }, []);
 
   return (
     <ReplyContainer>
@@ -154,7 +156,7 @@ export const TweetButton = styled.button`
   }
   &:disabled {
     background-color: rgba(47, 128, 237, 0.3);
-    cursor: auto;
+    cursor: not-allowed;
   }
 `;
 

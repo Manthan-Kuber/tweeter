@@ -163,6 +163,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           onSubmit={onSubmit}
           replyImageUrl={currentUserPfp}
           variant="inTweet"
+          focusOnClick={true}
         />
       </CustomModal>
       <TweetWrapper>
