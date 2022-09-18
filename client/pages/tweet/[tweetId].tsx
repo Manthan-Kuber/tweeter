@@ -129,6 +129,7 @@ export const LoaderWrapper = styled.div`
   width: fit-content;
   margin-inline: auto;
   margin-top: 2rem;
+  overflow: hidden;
 `;
 
 const TweetDataListWrapper = styled.div`
