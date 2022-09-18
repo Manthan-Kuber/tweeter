@@ -5,6 +5,7 @@ import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import styled from "styled-components";
 import axiosApi from "../../app/services/axiosApi";
 import { setProfilePic } from "../../features/auth/authSlice";
+//@ts-ignore 
 import { useAppDispatch, useAppSelector } from "../../hooks/store";
 import {
   Icon,
