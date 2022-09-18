@@ -1,6 +1,8 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 :root{
   --clr-primary:#2F80ED;
   --clr-gray:#828282;
