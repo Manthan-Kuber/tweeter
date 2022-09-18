@@ -9,10 +9,10 @@ import { nanoid } from "@reduxjs/toolkit";
 const CreateTweet = ({
   fileList,
   message,
+  isMediaInputVisible = true,
   setMessage,
   setFileList,
   onSubmit,
-  isMediaInputVisible = true,
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,17 +34,19 @@ const CreateTweet = ({
     else setIsDisabled(true);
   }, [message, fileList]);
 
-  const autoResize = () => {
-    if (tweetInputRef.current) {
-      tweetInputRef.current.style.height = "auto";
-      tweetInputRef.current.style.height =
-        tweetInputRef.current.scrollHeight + "px";
-    }
-  };
+  useEffect(() => {
+    (() => {
+      if (tweetInputRef.current) {
+        tweetInputRef.current.style.height = "auto";
+        tweetInputRef.current.style.height =
+          tweetInputRef.current.scrollHeight + "px";
+      }
+    })();
+  }, [message]);
 
   useEffect(() => {
-    autoResize();
-  }, [message]);
+    props.focusOnClick && tweetInputRef.current?.focus();
+  }, []);
 
   return (
     <ReplyContainer>
@@ -67,6 +69,7 @@ const CreateTweet = ({
             id="tweetReply"
             rows={1}
             value={message}
+            onClick={(e) => e.stopPropagation()}
             onChange={(e) => setMessage((prev) => (prev = e.target.value))}
           />
           <input
@@ -126,7 +129,8 @@ const HomeVariantContainer = styled.div`
     margin-block: 1rem;
   }
   h3 {
-    font: 700 1.6rem var(--ff-noto);
+    font: revert;
+    font-size: 1.6rem;
     color: #333;
   }
 `;
@@ -152,7 +156,7 @@ export const TweetButton = styled.button`
   }
   &:disabled {
     background-color: rgba(47, 128, 237, 0.3);
-    cursor: auto;
+    cursor: not-allowed;
   }
 `;
 

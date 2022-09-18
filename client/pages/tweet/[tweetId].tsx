@@ -89,7 +89,7 @@ function TweetPage() {
           savedBy={tweet.savedBy}
           variant="tweetPage"
           TweetReplyData={TweetReplyData}
-          fetchReply={false} 
+          fetchReply={false}
         />
         <TweetReplyHeading>Tweet Replies</TweetReplyHeading>
         <TweetDataListWrapper>
@@ -97,7 +97,6 @@ function TweetPage() {
             <TweetsDataList
               TweetsData={TweetReplyData}
               hasMoreTweets={hasMoreTweets}
-              setHasMoreTweets={setHasMoreTweets}
               getMoreTweets={getMoreTweetReplies}
               variant="tweetReply"
             />

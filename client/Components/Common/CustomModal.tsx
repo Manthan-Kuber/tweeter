@@ -19,7 +19,10 @@ const CustomModal = ({
   return (
     <Modal
       isOpen={modalIsOpen}
-      onRequestClose={() => setModalIsOpen(false)}
+      onRequestClose={(e) => {
+        e.stopPropagation();
+        setModalIsOpen(false);
+      }}
       contentLabel={`${props.modalTitle} Modal`}
       shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick || false}
       style={{
@@ -56,7 +59,10 @@ const CustomModal = ({
             onClick={
               props.closeIconOnClick
                 ? props.closeIconOnClick
-                : () => setModalIsOpen(false)
+                : (e) => {
+                    e.stopPropagation();
+                    setModalIsOpen(false);
+                  }
             }
           >
             <GrClose size={16} />

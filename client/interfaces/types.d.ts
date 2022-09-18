@@ -217,6 +217,7 @@ interface CreateTweetProps {
   onSubmit: (e: React.FormEvent) => void;
   replyImageUrl?: string;
   isMediaInputVisible?: boolean;
+  focusOnClick?: boolean;
 }
 
 interface TweetProps {
@@ -236,7 +237,7 @@ interface TweetProps {
   likes: number;
   retweetedUsers: number;
   savedBy: number;
-  fetchReply:boolean;
+  fetchReply: boolean;
   variant?: "inTweet" | "tweetPage" | "tweetReply";
   TweetReplyData?: GetTweetsResponse;
 }

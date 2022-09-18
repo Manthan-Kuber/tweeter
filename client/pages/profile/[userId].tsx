@@ -33,11 +33,11 @@ import {
   useLazyGetProfileTweetsMediaQuery,
   useLazyGetProfileTweetsQuery,
 } from "../../app/services/api";
-import { TweetBox } from "../../Components/Common/Tweet";
 import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
+import { LoaderWrapper } from "../tweet/[tweetId]";
 
 const filterList = [
   {
@@ -84,28 +84,28 @@ const Profile = ({ userId }: { userId: string }) => {
     {
       userId,
       skip: 0,
+    },
+    {
+      skip: !(tab === 1),
     }
-    // {
-    //   skip: tab === 1,
-    // }
   );
   const { data: TweetsMediaData } = useGetProfileTweetsMediaQuery(
     {
       userId,
       skip: 0,
+    },
+    {
+      skip: !(tab === 2),
     }
-    // {
-    //   skip: tab === 2,
-    // }
   );
   const { data: TweetsLikesData } = useGetProfileTweetsLikesQuery(
     {
       userId,
       skip: 0,
+    },
+    {
+      skip: !(tab === 3),
     }
-    // {
-    //   skip: tab === 3,
-    // }
   );
 
   const {
@@ -249,7 +249,7 @@ const Profile = ({ userId }: { userId: string }) => {
           skip: tweetsAndRepliesSkip,
         }).unwrap();
         if (newTweetData.length === 0) setHasMoreTweetsAndReplies(false);
-        else setTweetsAndRepliesSkip(tweetsAndRepliesSkip + 1)
+        else setTweetsAndRepliesSkip(tweetsAndRepliesSkip + 1);
         dispatch(
           api.util.updateQueryData(
             "getProfileTweetsAndReplies",
@@ -274,8 +274,8 @@ const Profile = ({ userId }: { userId: string }) => {
     <>
       <ScrollToTopButton />
       {!editProfileModalIsOpen && <Toaster />}
-      {coverPic !== undefined && WindowWidth !== undefined && (
-        <BannerWrapper>
+      <BannerWrapper>
+        {coverPic !== undefined && WindowWidth !== undefined ? (
           <StyledImage
             src={coverPic}
             className="banner-image"
@@ -284,8 +284,12 @@ const Profile = ({ userId }: { userId: string }) => {
             priority
             objectFit={WindowWidth < 880 ? "contain" : undefined}
           />
-        </BannerWrapper>
-      )}
+        ) : (
+          <LoaderWrapper>
+            <Loader size={32} color="var(--clr-primary)" />
+          </LoaderWrapper>
+        )}
+      </BannerWrapper>
       <ProfileBox
         followerModalIsOpen={followerModalIsOpen}
         setFollowerModalIsOpen={setFollowerModalIsOpen}
@@ -468,13 +472,6 @@ const BannerWrapper = styled.div`
     border: revert;
     height: 30rem;
   }
-`;
-
-const PlaceholderTweetBox = styled(TweetBox)`
-  margin-bottom: 1rem;
-  display: grid;
-  place-items: center;
-  height: 450px;
 `;
 
 const ContentContainer = styled.div`
