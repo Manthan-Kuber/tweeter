@@ -15,11 +15,14 @@ import toast from "react-hot-toast";
 import {
   useCreateTweetMutation,
   useDeleteTweetMutation,
+  useGetFollowingReplyQuery,
 } from "../../app/services/api";
 import { useAppSelector } from "../../hooks/store";
 import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
+import { Loader } from "./FullScreenLoader";
 
 const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [message, setMessage] = useState<string>("");
@@ -38,6 +41,12 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const currentUsername = useAppSelector((state) => state.auth.user?.name);
   const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
   const { push } = useRouter();
+  const { data: FollowingReplyTweetData } = useGetFollowingReplyQuery(
+    props.tweetId,
+    { skip: !props.fetchReply } //Conditionally fetch reply only when reply exists
+  );
+
+  const followingReplyTweet = FollowingReplyTweetData?.data[0];
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,7 +166,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
         />
       </CustomModal>
       <TweetWrapper>
-        {props.isRetweeted && (
+        {props.isRetweeted && props.variant !== "tweetReply" && (
           <RetweetWrapper>
             <AiOutlineRetweet size={14} />{" "}
             <span>{currentUsername} Retweeted</span>
@@ -246,12 +255,58 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               setIsRetweeted={setIsRetweeted}
             />
           )}
+          {props.fetchReply && followingReplyTweet ? (
+            <>
+              <ReplyUsername>
+                {followingReplyTweet.creator[0].username} Replied
+              </ReplyUsername>
+              <Tweet
+                authorId={followingReplyTweet.creator[0]._id}
+                authorName={followingReplyTweet.creator[0].name}
+                authorUserName={followingReplyTweet.creator[0].username}
+                authorFollowers={0}
+                authorProfilePic={followingReplyTweet.creator[0].profilePic}
+                authorTweet={followingReplyTweet.tweet}
+                mediaList={followingReplyTweet.media}
+                tweetId={followingReplyTweet._id}
+                commentCount={followingReplyTweet.commentCount[0]}
+                tweetCreationDate={followingReplyTweet.createdAt}
+                isSaved={followingReplyTweet.saved.length === 0 ? false : true}
+                isLiked={
+                  followingReplyTweet.liked !== undefined &&
+                  followingReplyTweet.liked.length === 0
+                    ? false
+                    : true
+                }
+                isRetweeted={
+                  followingReplyTweet.retweeted.length === 0 ? false : true
+                }
+                likes={followingReplyTweet.likes}
+                retweetedUsers={followingReplyTweet.retweetedUsers}
+                savedBy={followingReplyTweet.savedBy}
+                variant="tweetReply"
+                fetchReply={false} //Dont fetch reply for another reply
+              />
+            </>
+          ) : (
+            props.fetchReply && (
+              <LoaderWrapper>
+                <Loader size={24} color="var(--clr-primary)" />
+              </LoaderWrapper>
+            )
+          )}
         </TweetBox>
       </TweetWrapper>
     </>
   );
 };
 export default Tweet;
+
+const ReplyUsername = styled.span`
+  display: block;
+  margin-block: 4rem 3rem;
+  font: 600 1.4rem var(--ff-montserrat);
+`;
 
 const LinkText = styled.p`
   font-weight: 500;

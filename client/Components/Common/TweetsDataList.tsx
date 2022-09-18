@@ -1,6 +1,5 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
-import { ScrollerMessage } from "../../pages/profile/[userId]";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
 import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";

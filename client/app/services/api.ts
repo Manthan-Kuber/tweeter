@@ -25,6 +25,7 @@ export const api = createApi({
     "CommentsReplies",
     "Tweet",
     "ReplyToTweet", // <== Tweet Page Replies
+    "FollowingReplyTweet", // <== Reply to Following tweet for Home Feed and Tweets and Replies in Profile
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -75,20 +76,12 @@ export const api = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["Tweets", "Tweet", "HomeTweets"],
-    }),
-    deleteTweet: builder.mutation({
-      query: (tweetId: string) => ({
-        url: "tweets",
-        method: "DELETE",
-        body: { tweetId },
-      }),
       invalidatesTags: [
         "Tweets",
-        "Bookmarks",
-        "TweetsAndReplies",
-        "TweetsLikes",
-        "TweetsMedia",
+        "Tweet",
+        "HomeTweets",
+        "ReplyToTweet",
+        "FollowingReplyTweet",
       ],
     }),
     //Needs tweetid and skip
@@ -135,6 +128,8 @@ export const api = createApi({
         "TweetsLikes",
         "TweetsMedia",
         "Tweet",
+        "ReplyToTweet",
+        "FollowingReplyTweet",
       ],
     }),
     saveTweet: builder.mutation<string, string>({
@@ -150,6 +145,8 @@ export const api = createApi({
         "TweetsLikes",
         "TweetsMedia",
         "Tweet",
+        "ReplyToTweet",
+        "FollowingReplyTweet",
       ],
     }),
     retweetTweet: builder.mutation<string, string>({
@@ -165,6 +162,25 @@ export const api = createApi({
         "TweetsLikes",
         "TweetsMedia",
         "Tweet",
+        "ReplyToTweet",
+        "FollowingReplyTweet",
+      ],
+    }),
+    deleteTweet: builder.mutation({
+      query: (tweetId: string) => ({
+        url: "tweets",
+        method: "DELETE",
+        body: { tweetId },
+      }),
+      invalidatesTags: [
+        "Tweets",
+        "Bookmarks",
+        "TweetsAndReplies",
+        "TweetsLikes",
+        "TweetsMedia",
+        "Tweet",
+        "ReplyToTweet",
+        "FollowingReplyTweet",
       ],
     }),
     followUser: builder.mutation<void, string>({
@@ -222,6 +238,10 @@ export const api = createApi({
       query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
       providesTags: ["ReplyToTweet"],
     }),
+    getFollowingReply: builder.query<GetTweetsResponse, string>({
+      query: (tweetId) => `tweets/followingReplies/${tweetId}`,
+      providesTags: ["FollowingReplyTweet"],
+    }),
   }),
 });
 
@@ -260,4 +280,5 @@ export const {
   useLazyGetTweetRepliesQuery,
   useGetProfileTweetsMediaQuery,
   useGetProfileTweetsAndRepliesQuery,
+  useGetFollowingReplyQuery,
 } = api;
