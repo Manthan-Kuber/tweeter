@@ -6,6 +6,7 @@ import {
   useGetBookmarksQuery,
   useLazyGetBookmarksQuery,
 } from "../../app/services/api";
+import ContentLoader from "../../Components/Common/ContentLoader";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import { useAppDispatch } from "../../hooks/store";
@@ -45,13 +46,13 @@ function Bookmarks() {
   return (
     <Container>
       <ScrollToTopButton />
-      {BookmarksData !== undefined && (
+      {BookmarksData !== undefined ? (
         <TweetsDataList
           TweetsData={BookmarksData}
           getMoreTweets={getMoreBookmarks}
           hasMoreTweets={hasMoreTweets}
         />
-      )}
+      ) : <ContentLoader size={32} />}
     </Container>
   );
 }

@@ -12,6 +12,7 @@ import {
   useLazyGetSuggestedFollowersQuery,
 } from "../app/services/api";
 import axiosApi from "../app/services/axiosApi";
+import ContentLoader from "../Components/Common/ContentLoader";
 import CreateTweet from "../Components/Common/CreateTweet";
 import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
@@ -130,8 +131,8 @@ const Home = ({
         const { data: newTweetData } = await GetHomeTweetsTrigger(
           homeTweetsSkip
         ).unwrap();
-        if (newTweetData.length === 0) setHasMoreTweets(false)
-        else setHomeTweetsSkip(homeTweetsSkip + 1)
+        if (newTweetData.length === 0) setHasMoreTweets(false);
+        else setHomeTweetsSkip(homeTweetsSkip + 1);
         dispatch(
           api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
             newTweetData.map((newTweet) => tweetData.data.push(newTweet));
@@ -192,12 +193,14 @@ const Home = ({
             onSubmit={onSubmit}
           />
         </CreateTweetWrapper>
-        {HomeTweetsData !== undefined && (
+        {HomeTweetsData !== undefined ? (
           <TweetsDataList
             TweetsData={HomeTweetsData}
             hasMoreTweets={hasMoreTweets}
             getMoreTweets={getMoreHomeTweets}
           />
+        ) : (
+          <ContentLoader size={32} />
         )}
       </div>
       <aside>
@@ -207,13 +210,15 @@ const Home = ({
           hasMore={hasMoreTrends}
           setHasMoreTrends={setHasMoreTrends}
         />
-        {suggestedFollowersArray !== undefined && (
+        {suggestedFollowersArray !== undefined ? (
           <SuggestedFollow
             suggestedFollowList={suggestedFollowersArray}
             getSuggestedFollowers={getSuggestedFollowers}
             hasMore={hasMoreSuggestions}
             setHasMoreSuggestions={setHasMoreSuggestions}
           />
+        ) : (
+          <ContentLoader size={32} />
         )}
       </aside>
     </Container>
