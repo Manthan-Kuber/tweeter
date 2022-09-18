@@ -213,6 +213,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             <ImagesWrapper numOfImages={props.mediaList.length}>
               {props.mediaList.map((mediaItemUrl, index) => (
                 <ImageWrapper
+                  key={`${mediaItemUrl}${index}`}
                   onClick={(e) => e.stopPropagation()}
                   variant={props.variant}
                 >
@@ -231,8 +232,10 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               ))}
             </ImagesWrapper>
           ) : (
-            props.mediaList.map((mediaItemUrl) => (
-              <LinkText>{mediaItemUrl}</LinkText>
+            props.mediaList.map((mediaItemUrl, index) => (
+              <LinkText key={`${mediaItemUrl}${index}`}>
+                {mediaItemUrl}
+              </LinkText>
             ))
           )}
           {props.variant !== "inTweet" && (
