@@ -48,13 +48,7 @@ const FollowerInfo = ({ RawData, setModalIsOpen }: FollowerInfoProps) => {
         RawData.data.map((item) => (
           <div key={item._id}>
             <ProfileElementWrapper>
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  router.push(`/${item._id}`);
-                  setModalIsOpen(false);
-                }}
-              >
+              <div>
                 <ProfileInfo
                   name={item.name}
                   username={item.username}
@@ -89,10 +83,10 @@ const ProfileElementWrapper = styled.div`
   margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 
-  & > div p {
-    margin-top: 2rem;
+  & > div > p:last-child {
+    margin-top: 1rem;
     color: hsla(0, 0%, 51%, 1);
     font-weight: 500;
   }

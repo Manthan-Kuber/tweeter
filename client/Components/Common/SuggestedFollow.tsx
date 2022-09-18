@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { MouseEvent } from "react";
 import toast from "react-hot-toast";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { useFollowUserMutation } from "../../app/services/api";
 import { ToastMessage } from "../../styles/Toast.styles";
+import ContentLoader from "./ContentLoader";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
@@ -24,11 +26,9 @@ const SuggestedFollow = ({
         dataLength={suggestedFollowList.length}
         next={props.getSuggestedFollowers}
         hasMore={props.hasMore}
-        loader={<p>Loading...</p>} //Change Later
+        loader={<ContentLoader />}
         scrollableTarget="suggestedFollowerScroll"
-        endMessage={
-          suggestedFollowList.length !== 0 && <p>You have reached the end...</p>
-        } //Change Later
+        scrollThreshold={0.95}
       >
         {suggestedFollowList.length === 0 ? (
           <NoTweetsToShow message="No More Suggestions to show" />
@@ -54,7 +54,7 @@ const SuggestedFollow = ({
                 <MoreStyledFollowButton
                   as={motion.button}
                   whileTap={{ scale: 0.9 }}
-                  onClick={async (e) => {
+                  onClick={async (e: MouseEvent<Element>) => {
                     e.stopPropagation();
                     try {
                       await followUser(item._id);
@@ -85,7 +85,7 @@ export default SuggestedFollow;
 const Article = styled(AsideContainer)`
   padding: 1rem;
   color: #4f4f4f;
-  max-height: 35rem;
+  max-height: 45rem;
   overflow-y: scroll;
   & > h3 {
     color: #333;
@@ -98,13 +98,8 @@ const Article = styled(AsideContainer)`
 
 const FollowerContainer = styled.div`
   hr {
-    margin-bottom: 2rem;
+    margin-block: 2rem;
     color: hsla(0, 0%, 88%, 1);
-  }
-  p {
-    color: hsla(0, 0%, 51%, 1);
-    font: 500 1.4rem var(--ff-noto);
-    margin-block: 1rem 2rem;
   }
 `;
 
@@ -112,37 +107,11 @@ const MoreStyledFollowButton = styled(FollowButton)`
   padding: 0.75rem 1.5rem;
   height: fit-content;
   margin-inline: revert;
-  margin-top: revert;
-
-  @media screen and (min-width: 20em) {
-    margin-top: 1rem;
-  }
-  @media screen and (min-width: 45em) {
-    margin-top: revert;
-  }
-  @media screen and (min-width: 55em) {
-    margin-top: 1rem;
-  }
+  margin-top: 1rem;
 `;
 
 const ProfileInfoWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-
   & > div {
     cursor: pointer;
-  }
-
-  @media screen and (min-width: 25em) {
-    display: revert;
-  }
-
-  @media screen and (min-width: 45em) {
-    display: flex;
-    margin-top: revert;
-  }
-
-  @media screen and (min-width: 55em) {
-    display: revert;
   }
 `;

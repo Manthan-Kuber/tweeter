@@ -41,10 +41,10 @@ const UsernameContainer = styled.div`
   p {
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 80px;
+    max-width: 80px;
 
     @media screen and (min-width: 21em) {
-      width: 100px;
+      max-width: 100px;
     }
 
     @media screen and (min-width: 30em) {

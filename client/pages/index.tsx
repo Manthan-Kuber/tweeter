@@ -24,7 +24,6 @@ import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
-var tweetLimit = 10;
 
 const Home = ({
   initialTrendData = [],
@@ -268,11 +267,11 @@ const Container = styled.div`
   flex-direction: column-reverse;
 
   @media screen and (min-width: 25em) {
-    width: min(75%, 295px);
+    width: min(85%, 350px);
   }
 
   @media screen and (min-width: 30em) {
-    width: 80%;
+    width: 90%;
   }
 
   @media screen and (min-width: 40em) {

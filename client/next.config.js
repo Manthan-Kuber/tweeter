@@ -8,6 +8,7 @@ const nextConfig = {
   images: {
     domains: ["cloudflare-ipfs.com", "loremflickr.com", "res.cloudinary.com"],
   },
+  optimizeFonts: false, //Might change 
 };
 
 module.exports = nextConfig;
