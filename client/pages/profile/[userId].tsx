@@ -286,9 +286,7 @@ const Profile = ({ userId }: { userId: string }) => {
             objectFit={WindowWidth < 880 ? "contain" : undefined}
           />
         ) : (
-          <LoaderWrapper>
-            <Loader size={32} color="var(--clr-primary)" />
-          </LoaderWrapper>
+          <ContentLoader size={32} />
         )}
       </BannerWrapper>
       <ProfileBox
@@ -475,6 +473,7 @@ const BannerWrapper = styled.div`
   height: 25rem;
   border-radius: 8px;
   border: 1px solid lightgray;
+  background-color: white;
 
   @media screen and (min-width: 50em) {
     border: revert;
