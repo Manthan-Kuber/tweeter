@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
+import ContentLoader from "./ContentLoader";
 import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
 import Tweet from "./Tweet";
@@ -16,11 +18,7 @@ const TweetsDataList = ({
       dataLength={TweetsData.data.length}
       next={getMoreTweets}
       hasMore={hasMoreTweets}
-      loader={
-        <LoaderWrapper>
-          <Loader size={32} color="var(--clr-primary)" />
-        </LoaderWrapper>
-      }
+      loader={<ContentLoader size={32} />}
       scrollThreshold={0.95}
     >
       {TweetsData.data.length === 0 ? (

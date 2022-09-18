@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:6969/"
+  baseURL: "https://tweeter-uojf.onrender.com/"
 });

@@ -3,7 +3,7 @@ import { RootState } from "../store";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:6969/",
+    baseUrl: "https://tweeter-uojf.onrender.com/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set("authorization", `Bearer ${token}`);
@@ -238,8 +238,12 @@ export const api = createApi({
       query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
       providesTags: ["ReplyToTweet"],
     }),
-    getFollowingReply: builder.query<GetTweetsResponse, string>({
-      query: (tweetId) => `tweets/followingReplies/${tweetId}`,
+    getFollowingReply: builder.query<
+      GetTweetsResponse,
+      { tweetId: string; userId: string }
+    >({
+      query: ({ tweetId, userId }) =>
+        `tweets/followingReplies/${tweetId}/${userId}`,
       providesTags: ["FollowingReplyTweet"],
     }),
   }),
