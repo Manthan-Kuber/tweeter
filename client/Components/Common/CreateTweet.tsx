@@ -67,6 +67,7 @@ const CreateTweet = ({
             id="tweetReply"
             rows={1}
             value={message}
+            onClick={(e) => e.stopPropagation()}
             onChange={(e) => setMessage((prev) => (prev = e.target.value))}
           />
           <input
