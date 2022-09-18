@@ -37,7 +37,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
-import { LoaderWrapper } from "../tweet/[tweetId]";
 import ContentLoader from "../../Components/Common/ContentLoader";
 
 const filterList = [
@@ -286,9 +285,7 @@ const Profile = ({ userId }: { userId: string }) => {
             objectFit={WindowWidth < 880 ? "contain" : undefined}
           />
         ) : (
-          <LoaderWrapper>
-            <Loader size={32} color="var(--clr-primary)" />
-          </LoaderWrapper>
+          <ContentLoader size={32} />
         )}
       </BannerWrapper>
       <ProfileBox
@@ -475,6 +472,7 @@ const BannerWrapper = styled.div`
   height: 25rem;
   border-radius: 8px;
   border: 1px solid lightgray;
+  background-color: white;
 
   @media screen and (min-width: 50em) {
     border: revert;
@@ -487,7 +485,7 @@ const ContentContainer = styled.div`
   margin-inline: auto;
   padding-block: 2rem;
 
-  @media screen and (min-width: 40em) {
+  @media screen and (min-width: 50em) {
     display: grid;
     grid-template-columns: 25rem auto;
     gap: 2rem;

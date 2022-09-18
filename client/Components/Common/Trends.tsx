@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
+import ContentLoader from "./ContentLoader";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 
@@ -17,11 +18,9 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
           dataLength={trendList.length}
           next={props.getHashtags}
           hasMore={props.hasMore}
-          loader={<p>Loading...</p>} //Change Later
+          loader={<ContentLoader />}
           scrollableTarget="trendScroll"
-          endMessage={
-            trendList.length !== 0 && <p>You have reached the end...</p>
-          } //Change Later
+          scrollThreshold={0.95}
         >
           {trendList.length === 0 ? (
             <NoTweetsToShow message={"No More Trends to show"} />
@@ -47,7 +46,7 @@ const Article = styled(AsideContainer)`
   padding: 1rem;
   margin-bottom: 2rem;
   color: #4f4f4f;
-  max-height: 52rem;
+  max-height: 45rem;
   overflow-y: scroll;
   hr {
     margin-block: 1rem 2.5rem;
@@ -64,7 +63,7 @@ const Article = styled(AsideContainer)`
   }
   & > h3 {
     color: #333;
-    font: revert
+    font: revert;
   }
   span {
     color: #828282;
