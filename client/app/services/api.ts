@@ -85,19 +85,19 @@ export const api = createApi({
       ],
     }),
     //Needs tweetid and skip
-    getComments: builder.query<GetCommentsResponse, string>({
-      //change to object later for skip if req
-      query: (tweetId: string) => `comment/${tweetId}/0`,
-      providesTags: ["Comments"],
-    }),
-    createComment: builder.mutation({
-      query: (body) => ({
-        url: "comment",
-        method: "POST",
-        body: body,
-      }),
-      invalidatesTags: ["Comments", "Tweets"],
-    }),
+    // getComments: builder.query<GetCommentsResponse, string>({
+    //   //change to object later for skip if req
+    //   query: (tweetId: string) => `comment/${tweetId}/0`,
+    //   providesTags: ["Comments"],
+    // }),
+    // createComment: builder.mutation({
+    //   query: (body) => ({
+    //     url: "comment",
+    //     method: "POST",
+    //     body: body,
+    //   }),
+    //   invalidatesTags: ["Comments", "Tweets"],
+    // }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/bookmarks/${skip}`,
       providesTags: ["Bookmarks"],
@@ -208,25 +208,25 @@ export const api = createApi({
       }),
       providesTags: ["SuggestedFollowers"],
     }),
-    likeComment: builder.mutation<void, string>({
-      //same api for likeReply
-      query: (commentId) => ({
-        url: `comment/like`,
-        method: "PUT",
-        body: { commentId },
-      }),
-      invalidatesTags: ["CommentsReplies", "Comments"],
-    }),
-    getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
-      query: (commentId) => ({
-        url: `comment/replies/${commentId}/0`,
-      }),
-      providesTags: ["CommentsReplies"],
-    }),
-    createReply: builder.mutation({
-      query: (body) => ({ url: "comment/reply", method: "POST", body }),
-      invalidatesTags: ["CommentsReplies"],
-    }),
+    // likeComment: builder.mutation<void, string>({
+    //   //same api for likeReply
+    //   query: (commentId) => ({
+    //     url: `comment/like`,
+    //     method: "PUT",
+    //     body: { commentId },
+    //   }),
+    //   invalidatesTags: ["CommentsReplies", "Comments"],
+    // }),
+    // getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
+    //   query: (commentId) => ({
+    //     url: `comment/replies/${commentId}/0`,
+    //   }),
+    //   providesTags: ["CommentsReplies"],
+    // }),
+    // createReply: builder.mutation({
+    //   query: (body) => ({ url: "comment/reply", method: "POST", body }),
+    //   invalidatesTags: ["CommentsReplies"],
+    // }),
     getTweet: builder.query<GetTweetsResponse, string>({
       query: (tweetId) => `tweets/${tweetId}`,
       providesTags: ["Tweet"],
@@ -255,9 +255,9 @@ export const {
   useGetProfileTweetsQuery,
   useCreateTweetMutation,
   useDeleteTweetMutation,
-  useCreateCommentMutation,
-  useLazyGetCommentsQuery,
-  useGetCommentsQuery,
+  // useCreateCommentMutation,
+  // useLazyGetCommentsQuery,
+  // useGetCommentsQuery,
   useGetBookmarksQuery,
   useGetHomeTweetsQuery,
   useLazyGetHomeTweetsQuery,
@@ -276,9 +276,9 @@ export const {
   useUnfollowUserMutation,
   useLazyGetSuggestedFollowersQuery,
   useGetSuggestedFollowersQuery,
-  useLikeCommentMutation,
-  useLazyGetCommentRepliesQuery,
-  useCreateReplyMutation,
+  // useLikeCommentMutation,
+  // useLazyGetCommentRepliesQuery,
+  // useCreateReplyMutation,
   useGetTweetQuery,
   useGetTweetRepliesQuery,
   useLazyGetTweetRepliesQuery,

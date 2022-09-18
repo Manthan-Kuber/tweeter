@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import Footer from "../../Components/Footer/Footer";
 import Image from "next/image";
-import SignInIcon from "../../Components/Common/SignInIcon";
 import { motion } from "framer-motion";
 import RegisterForm from "../../Components/Common/RegisterForm";
 import { useRouter } from "next/router";
