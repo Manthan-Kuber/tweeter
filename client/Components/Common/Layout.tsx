@@ -52,6 +52,8 @@ function Layout({ children }: { children: React.ReactElement }) {
             ? "Home"
             : router.route === "/[userId]"
             ? `${username}`
+            : router.route === "/[tweetId]"
+            ? `${username}'s Tweet`
             : router.route.split("/")[1].charAt(0).toUpperCase() +
               router.route.split("/")[1].substring(1)}{" "}
           / Tweeter
@@ -69,6 +71,8 @@ function Layout({ children }: { children: React.ReactElement }) {
               ? "Home"
               : router.route === "/[userId]"
               ? `${username}`
+              : router.route === "/[tweetId]"
+              ? `${username}'s Tweet`
               : router.route.split("/")[1].charAt(0).toUpperCase() +
                 router.route.split("/")[1].substring(1) +
                 " - Tweeter"
