@@ -9,7 +9,7 @@ import {
 import ContentLoader from "../../Components/Common/ContentLoader";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
-import { useAppDispatch } from "../../hooks/store";
+import { useAppDispatch } from "../../Hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
 
 function Bookmarks() {

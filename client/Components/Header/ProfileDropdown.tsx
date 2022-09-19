@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { MdAccountCircle } from "react-icons/md";
 import { HiOutlineLogout } from "react-icons/hi";
 import { motion } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import { logOut } from "../../features/auth/authSlice";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
