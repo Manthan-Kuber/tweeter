@@ -132,7 +132,12 @@ function Register() {
       ) : (
         <Container>
           <SignUpBox>
-            <Image src="/tweeter.svg" alt="Tweeter Logo" height={30} width="100%" />
+            <Image
+              src="/tweeter.svg"
+              alt="Tweeter Logo"
+              height={30}
+              width="100%"
+            />
             <FormTabUl>
               {TabList.map((item) => (
                 <FormLi
@@ -191,6 +196,12 @@ Register.getLayout = function getLayout(page: ReactElement) {
       <Head>
         <title>Register / Tweeter</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="og:site_name" content="Tweeter" />
+        <meta
+          name="description"
+          content="A social media app built by Manthan Kuber and Rohit Shelke"
+        />
+        <meta name="og:title" content={"Register - Tweeter"} />
       </Head>
       {page}
       <Footer footerBg="white" />
