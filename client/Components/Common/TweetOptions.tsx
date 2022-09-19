@@ -9,7 +9,7 @@ import {
   useRetweetTweetMutation,
   useSaveTweetMutation,
 } from "../../app/services/api";
-import useWindowSize from "../../hooks/useWindowDimensions";
+import useWindowSize from "../../Hooks/useWindowDimensions";
 import { ToastMessage } from "../../styles/Toast.styles";
 
 const TweetOptions = ({

@@ -19,7 +19,7 @@ import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
 import TweetsDataList from "../Components/Common/TweetsDataList";
 import { logOut } from "../features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../hooks/store";
+import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
