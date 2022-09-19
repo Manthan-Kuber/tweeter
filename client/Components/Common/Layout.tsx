@@ -57,6 +57,23 @@ function Layout({ children }: { children: React.ReactElement }) {
           / Tweeter
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="description"
+          content="A social media app built by Manthan Kuber and Rohit Shelke"
+        />
+        <meta name="og:site_name" content="Tweeter" />
+        <meta
+          name="og:title"
+          content={
+            router.route === "/"
+              ? "Home"
+              : router.route === "/[userId]"
+              ? `${username}`
+              : router.route.split("/")[1].charAt(0).toUpperCase() +
+                router.route.split("/")[1].substring(1) +
+                " - Tweeter"
+          }
+        />
       </Head>
       <Header
         NavList={NavList}
