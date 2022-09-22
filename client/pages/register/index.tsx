@@ -13,19 +13,20 @@ import {
   FormLi,
   FormTabUl,
   FormUnderlinedDiv,
-  SignInIconsWrapper,
   SignUpBox,
 } from "../../styles/registerPage.styles";
 import Head from "next/head";
 import toast, { Toaster } from "react-hot-toast";
 import { ToastMessage } from "../../styles/Toast.styles";
+import axiosApi from "../../app/services/axiosApi";
+import MetaHead from "../../Components/Common/MetaHead";
 
-const IconArray = [
-  { id: 1, imgUrl: "/icons8-google.svg" },
-  { id: 2, imgUrl: "/icons8-facebook.svg" },
-  { id: 3, imgUrl: "/icons8-twitter.svg" },
-  { id: 4, imgUrl: "/icons8-github.svg" },
-];
+// const IconArray = [
+//   { id: 1, imgUrl: "/icons8-google.svg" },
+//   { id: 2, imgUrl: "/icons8-facebook.svg" },
+//   { id: 3, imgUrl: "/icons8-twitter.svg" },
+//   { id: 4, imgUrl: "/icons8-github.svg" },
+// ];
 
 const TabList = [
   { id: 1, name: "Sign In" },
@@ -54,6 +55,7 @@ function Register() {
   const [signup] = useSignupMutation();
   const token = useAppSelector((state) => state.auth.token);
   const [isLoading, setIsLoading] = useState(false);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -69,7 +71,9 @@ function Register() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsButtonLoading(true);
       const user = await login({ email, password }).unwrap();
+      setIsButtonLoading(false);
       toast.success(
         () => <ToastMessage>Signed In Successfully!</ToastMessage>,
         {
@@ -79,24 +83,28 @@ function Register() {
       dispatch(setCredentials(user));
       replace("/");
     } catch (err: any) {
-      const { errors } = err.data;
-      console.log(errors);
-      setErrMessage({
-        name: errors.name,
-        email: errors.email,
-        password: errors.password,
-      });
+      if (err.data !== undefined) {
+        const { errors } = err.data;
+        console.log(errors);
+        setErrMessage({
+          name: errors.name,
+          email: errors.email,
+          password: errors.password,
+        });
+      } else console.log(err);
     }
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsButtonLoading(true);
       const user = await signup({
         name: `${fname} ${lname}`,
         email,
         password,
       }).unwrap();
+      setIsButtonLoading(false);
       toast.success(
         () => <ToastMessage>Signed Up Successfully!</ToastMessage>,
         {
@@ -106,22 +114,25 @@ function Register() {
       dispatch(setCredentials(user));
       replace("/");
     } catch (err: any) {
-      const { errors } = err.data;
-      console.log(errors);
-      setErrMessage({
-        name: errors.name,
-        email: errors.email,
-        password: errors.password,
-      });
+      if (err.data !== undefined) {
+        const { errors } = err.data;
+        console.log(errors);
+        setErrMessage({
+          name: errors.name,
+          email: errors.email,
+          password: errors.password,
+        });
+      } else console.log(err);
     }
   };
 
   const FormProps = {
-    visible: visible,
-    setVisible: setVisible,
-    formValues: formValues,
-    setformValues: setformValues,
-    errMessage: errMessage,
+    visible,
+    setVisible,
+    formValues,
+    setformValues,
+    errMessage,
+    isButtonLoading,
   };
 
   return (
@@ -137,6 +148,7 @@ function Register() {
               alt="Tweeter Logo"
               height={30}
               width="100%"
+              priority
             />
             <FormTabUl>
               {TabList.map((item) => (
@@ -193,7 +205,7 @@ function Register() {
 Register.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Register / Tweeter</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="og:site_name" content="Tweeter" />
@@ -202,7 +214,8 @@ Register.getLayout = function getLayout(page: ReactElement) {
           content="A social media app built by Manthan Kuber and Rohit Shelke"
         />
         <meta name="og:title" content={"Register - Tweeter"} />
-      </Head>
+      </Head> */}
+      <MetaHead currentRouteName="Register" pathname="/register" />
       {page}
       <Footer footerBg="white" />
     </>

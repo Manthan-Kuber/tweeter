@@ -128,7 +128,6 @@ const TweetReplyHeading = styled.h1`
 export const LoaderWrapper = styled.div`
   width: fit-content;
   margin-inline: auto;
-  margin-top: 2rem;
   overflow: hidden;
 `;
 

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { MouseEvent } from "react";
+import { MouseEvent, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -19,6 +19,10 @@ const SuggestedFollow = ({
 }: SuggestedFollowProps) => {
   const router = useRouter();
   const [followUser] = useFollowUserMutation();
+  useEffect(() => {
+    if (suggestedFollowList?.length === 4) props.setHasMoreSuggestions(true);
+  }, [suggestedFollowList]);
+  
   return (
     <Article as="article" id="suggestedFollowerScroll">
       <h3>Whom to follow</h3>
@@ -26,7 +30,7 @@ const SuggestedFollow = ({
         <InfiniteScroll
           dataLength={suggestedFollowList.length}
           next={props.getSuggestedFollowers}
-          hasMore={props.hasMore}
+          hasMore={props.hasMoreSuggestions}
           loader={<ContentLoader />}
           scrollableTarget="suggestedFollowerScroll"
           scrollThreshold={0.95}

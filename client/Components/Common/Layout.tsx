@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../Hooks/store";
 import FullScreenLoader from "./FullScreenLoader";
 import { logOut } from "../../features/auth/authSlice";
 import axiosApi from "../../app/services/axiosApi";
+import MetaHead from "./MetaHead";
 
 const NavList = [
   { id: 1, name: "Home", url: "/", icon: <AiFillHome size={24} /> },
@@ -44,41 +45,19 @@ function Layout({ children }: { children: React.ReactElement }) {
 
   if (!token) return <FullScreenLoader />;
 
+  const currentRouteName =
+    router.route === "/"
+      ? "Home"
+      : router.route === "/[userId]"
+      ? `${username}`
+      : router.route === "/[tweetId]"
+      ? `${username}'s Tweet`
+      : router.route.split("/")[1].charAt(0).toUpperCase() +
+        router.route.split("/")[1].substring(1);
+
   return (
     <>
-      <Head>
-        <title>
-          {router.route === "/"
-            ? "Home"
-            : router.route === "/[userId]"
-            ? `${username}`
-            : router.route === "/[tweetId]"
-            ? `${username}'s Tweet`
-            : router.route.split("/")[1].charAt(0).toUpperCase() +
-              router.route.split("/")[1].substring(1)}{" "}
-          / Tweeter
-        </title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta
-          name="description"
-          content="A social media app built by Manthan Kuber and Rohit Shelke"
-        />
-        <meta name="og:site_name" content="Tweeter" />
-        <meta
-          name="og:title"
-          content={
-            router.route === "/"
-              ? "Home"
-              : router.route === "/[userId]"
-              ? `${username}`
-              : router.route === "/[tweetId]"
-              ? `${username}'s Tweet`
-              : router.route.split("/")[1].charAt(0).toUpperCase() +
-                router.route.split("/")[1].substring(1) +
-                " - Tweeter"
-          }
-        />
-      </Head>
+      <MetaHead currentRouteName={currentRouteName} pathname={router.pathname} />
       <Header
         NavList={NavList}
         activeTab={activeTab}

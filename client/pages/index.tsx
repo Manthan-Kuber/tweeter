@@ -33,7 +33,6 @@ const Home = () => {
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.token);
   const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
   const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
   const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
@@ -197,7 +196,7 @@ const Home = () => {
         <SuggestedFollow
           suggestedFollowList={suggestedFollowersArray}
           getSuggestedFollowers={getSuggestedFollowers}
-          hasMore={hasMoreSuggestions}
+          hasMoreSuggestions={hasMoreSuggestions}
           setHasMoreSuggestions={setHasMoreSuggestions}
         />
       </aside>
