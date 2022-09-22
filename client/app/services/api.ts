@@ -3,7 +3,7 @@ import { RootState } from "../store";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://tweeter-uojf.onrender.com/",
+    baseUrl: "https://tweeter-app-backend.herokuapp.com/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set("authorization", `Bearer ${token}`);
