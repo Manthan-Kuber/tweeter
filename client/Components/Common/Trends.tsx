@@ -7,35 +7,39 @@ import NoTweetsToShow from "./NoTweetsToShow";
 
 const Trends = ({ trendList, ...props }: TrendProps) => {
   useEffect(() => {
-    if (trendList.length === 6) props.setHasMoreTrends(true);
+    if (trendList?.length === 6) props.setHasMoreTrends(true);
   }, [trendList]);
   return (
     <Article as="article" id="trendScroll">
       <h3>Trends for you</h3>
       <hr />
       <ul>
-        <InfiniteScroll
-          dataLength={trendList.length}
-          next={props.getHashtags}
-          hasMore={props.hasMore}
-          loader={<ContentLoader />}
-          scrollableTarget="trendScroll"
-          scrollThreshold={0.95}
-        >
-          {trendList.length === 0 ? (
-            <NoTweetsToShow message={"No More Trends to show"} />
-          ) : (
-            trendList.map((item, index) => (
-              // Add onclick function later if req
-              <li key={`${item.id}${index}`}>
-                <h3>{item.tagName}</h3>
-                <span>{`${item.tweetCount} ${
-                  parseInt(item.tweetCount) > 1 ? "tweets" : "tweet"
-                }`}</span>
-              </li>
-            ))
-          )}
-        </InfiniteScroll>
+        {trendList !== undefined ? (
+          <InfiniteScroll
+            dataLength={trendList.length}
+            next={props.getHashtags}
+            hasMore={props.hasMore}
+            loader={<ContentLoader />}
+            scrollableTarget="trendScroll"
+            scrollThreshold={0.95}
+          >
+            {trendList.length === 0 ? (
+              <NoTweetsToShow message={"No More Trends to show"} />
+            ) : (
+              trendList.map((item, index) => (
+                // Add onclick function later if req
+                <li key={`${item._id}${index}`}>
+                  <h3>{item.hashtag}</h3>
+                  <span>{`${item.tweets} ${
+                    item.tweets > 1 ? "tweets" : "tweet"
+                  }`}</span>
+                </li>
+              ))
+            )}
+          </InfiniteScroll>
+        ) : (
+          <ContentLoader size={32} />
+        )}
       </ul>
     </Article>
   );

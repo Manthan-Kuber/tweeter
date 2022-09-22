@@ -22,61 +22,67 @@ const SuggestedFollow = ({
   return (
     <Article as="article" id="suggestedFollowerScroll">
       <h3>Whom to follow</h3>
-      <InfiniteScroll
-        dataLength={suggestedFollowList.length}
-        next={props.getSuggestedFollowers}
-        hasMore={props.hasMore}
-        loader={<ContentLoader />}
-        scrollableTarget="suggestedFollowerScroll"
-        scrollThreshold={0.95}
-      >
-        {suggestedFollowList.length === 0 ? (
-          <NoTweetsToShow message="No More Suggestions to show" />
-        ) : (
-          suggestedFollowList.map((item) => (
-            <FollowerContainer
-              key={item._id}
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push(`/profile/${item._id}`);
-              }}
-            >
-              <hr />
-              <ProfileInfoWrapper>
-                <div>
-                  <ProfileInfo
-                    name={item.name}
-                    username={item.username}
-                    profilePic={item.profilePic}
-                    followerCount={item.followerCount}
-                  />
-                </div>
-                <MoreStyledFollowButton
-                  as={motion.button}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={async (e: MouseEvent<Element>) => {
-                    e.stopPropagation();
-                    try {
-                      await followUser(item._id);
-                      toast.success(() => (
-                        <ToastMessage>Followed User Successfully</ToastMessage>
-                      ));
-                    } catch (error) {
-                      toast.error(() => (
-                        <ToastMessage>Error in Following User</ToastMessage>
-                      ));
-                    }
-                  }}
-                >
-                  <BsFillPersonPlusFill />
-                  Follow
-                </MoreStyledFollowButton>
-              </ProfileInfoWrapper>
-              <p>{item.bio}</p>
-            </FollowerContainer>
-          ))
-        )}
-      </InfiniteScroll>
+      {suggestedFollowList ? (
+        <InfiniteScroll
+          dataLength={suggestedFollowList.length}
+          next={props.getSuggestedFollowers}
+          hasMore={props.hasMore}
+          loader={<ContentLoader />}
+          scrollableTarget="suggestedFollowerScroll"
+          scrollThreshold={0.95}
+        >
+          {suggestedFollowList.length === 0 ? (
+            <NoTweetsToShow message="No More Suggestions to show" />
+          ) : (
+            suggestedFollowList.map((item) => (
+              <FollowerContainer
+                key={item._id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/profile/${item._id}`);
+                }}
+              >
+                <hr />
+                <ProfileInfoWrapper>
+                  <div>
+                    <ProfileInfo
+                      name={item.name}
+                      username={item.username}
+                      profilePic={item.profilePic}
+                      followerCount={item.followerCount}
+                    />
+                  </div>
+                  <MoreStyledFollowButton
+                    as={motion.button}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={async (e: MouseEvent<Element>) => {
+                      e.stopPropagation();
+                      try {
+                        await followUser(item._id);
+                        toast.success(() => (
+                          <ToastMessage>
+                            Followed User Successfully
+                          </ToastMessage>
+                        ));
+                      } catch (error) {
+                        toast.error(() => (
+                          <ToastMessage>Error in Following User</ToastMessage>
+                        ));
+                      }
+                    }}
+                  >
+                    <BsFillPersonPlusFill />
+                    Follow
+                  </MoreStyledFollowButton>
+                </ProfileInfoWrapper>
+                <p>{item.bio}</p>
+              </FollowerContainer>
+            ))
+          )}
+        </InfiniteScroll>
+      ) : (
+        <ContentLoader size={32} />
+      )}
     </Article>
   );
 };

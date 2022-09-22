@@ -1,58 +1,33 @@
-import { AxiosError } from "axios";
-import { GetServerSideProps } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import styled from "styled-components";
 import {
   api,
   useCreateTweetMutation,
+  useGetHashtagsQuery,
   useGetHomeTweetsQuery,
   useGetSuggestedFollowersQuery,
+  useLazyGetHashtagsQuery,
   useLazyGetHomeTweetsQuery,
   useLazyGetSuggestedFollowersQuery,
 } from "../app/services/api";
-import axiosApi from "../app/services/axiosApi";
 import ContentLoader from "../Components/Common/ContentLoader";
 import CreateTweet from "../Components/Common/CreateTweet";
 import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
 import TweetsDataList from "../Components/Common/TweetsDataList";
-import { logOut } from "../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../Hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
 
-const Home = ({
-  initialTrendData = [],
-  isAuthenticated = true,
-}: {
-  initialTrendData: any;
-  isAuthenticated: boolean;
-}) => {
+const Home = () => {
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
-  useEffect(() => {
-    if (!isAuthenticated) {
-      async () => await axiosApi.get("clearcookie");
-      dispatch(logOut());
-    }
-  }, []);
-
-  const [hashtagArray, setHashtagArray] = useState<
-    Array<{ id: string; tagName: string; tweetCount: string }>
-  >(
-    initialTrendData.map((item: typeof initialTrendData) => ({
-      id: item._id,
-      tagName: item.hashtag,
-      tweetCount: `${item.tweets}`,
-    }))
-  );
-
   const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
@@ -64,32 +39,42 @@ const Home = ({
   const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
   const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
   const [homeTweetsSkip, setHomeTweetsSkip] = useState(1);
-
-  const requestConfig = {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  };
+  const { data: HashtagDataArray } = useGetHashtagsQuery({
+    hashtagArrayLength: 0,
+    hashtagLimit: 6,
+  });
+  const [GetTrendsTrigger] = useLazyGetHashtagsQuery();
 
   const getHashtags = async () => {
     try {
-      const response = await axiosApi.get(
-        `home/hashtags/${hashtagArray.length}/${hashtagLimit}`,
-        requestConfig
-      );
-      if (response.data.length < hashtagLimit) setHasMoreTrends(false);
-      response.data.map((item: typeof response.data) =>
-        setHashtagArray((prev) => [
-          ...prev,
-          {
-            id: item._id,
-            tagName: item.hashtag,
-            tweetCount: `${item.tweets}`,
-          },
-        ])
-      );
+      if (HashtagDataArray !== undefined) {
+        if (HashtagDataArray.length < hashtagLimit) setHasMoreTrends(false);
+        else {
+          const newTrendsData = await GetTrendsTrigger({
+            hashtagArrayLength: HashtagDataArray.length,
+            hashtagLimit,
+          }).unwrap();
+          if (newTrendsData.length < HashtagDataArray.length)
+            setHasMoreTrends(false);
+          dispatch(
+            api.util.updateQueryData(
+              "getHashtags",
+              {
+                hashtagArrayLength: 0,
+                hashtagLimit: 6,
+              },
+              (trendData) => {
+                newTrendsData.map((newTrend) => trendData.push(newTrend));
+              }
+            )
+          );
+        }
+      }
     } catch (error) {
       console.log(error);
+      toast.error(() => (
+        <ToastMessage>Error in Fetching HashTags</ToastMessage>
+      ));
     }
   };
 
@@ -97,14 +82,14 @@ const Home = ({
     try {
       if (suggestedFollowersArray !== undefined) {
         if (suggestedFollowersArray.length < suggestedFollowerLimit) {
-          setHasMoreTweets(false);
+          setHasMoreSuggestions(false);
         } else {
           const newFollowerData = await GetSuggestedFollowersTrigger(
             suggestedFollowersArray.length
           ).unwrap();
           console.log(newFollowerData);
           if (newFollowerData.length < suggestedFollowersArray.length)
-            setHasMoreTweets(false);
+            setHasMoreSuggestions(false);
           dispatch(
             api.util.updateQueryData(
               "getSuggestedFollowers",
@@ -204,55 +189,23 @@ const Home = ({
       </div>
       <aside>
         <Trends
-          trendList={hashtagArray}
+          trendList={HashtagDataArray}
           getHashtags={getHashtags}
           hasMore={hasMoreTrends}
           setHasMoreTrends={setHasMoreTrends}
         />
-        {suggestedFollowersArray !== undefined ? (
-          <SuggestedFollow
-            suggestedFollowList={suggestedFollowersArray}
-            getSuggestedFollowers={getSuggestedFollowers}
-            hasMore={hasMoreSuggestions}
-            setHasMoreSuggestions={setHasMoreSuggestions}
-          />
-        ) : (
-          <ContentLoader size={32} />
-        )}
+        <SuggestedFollow
+          suggestedFollowList={suggestedFollowersArray}
+          getSuggestedFollowers={getSuggestedFollowers}
+          hasMore={hasMoreSuggestions}
+          setHasMoreSuggestions={setHasMoreSuggestions}
+        />
       </aside>
     </Container>
   );
 };
 
 export default Home;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const token = ctx.req.cookies.jwt;
-  try {
-    const response = await axiosApi.get(`home/hashtags/0/${hashtagLimit}`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    return {
-      props: {
-        initialTrendData: response.data,
-      },
-    };
-  } catch (err) {
-    console.log((err as AxiosError).response?.status);
-    if ((err as AxiosError).response?.status === 401) {
-      return {
-        props: {
-          isAuthenticated: false,
-        },
-      };
-    }
-  }
-  return {
-    props: {},
-  };
-};
 
 const CreateTweetWrapper = styled.div`
   margin-bottom: 4rem;
