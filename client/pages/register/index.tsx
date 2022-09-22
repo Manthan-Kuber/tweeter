@@ -15,10 +15,8 @@ import {
   FormUnderlinedDiv,
   SignUpBox,
 } from "../../styles/registerPage.styles";
-import Head from "next/head";
 import toast, { Toaster } from "react-hot-toast";
 import { ToastMessage } from "../../styles/Toast.styles";
-import axiosApi from "../../app/services/axiosApi";
 import MetaHead from "../../Components/Common/MetaHead";
 
 // const IconArray = [
@@ -205,16 +203,7 @@ function Register() {
 Register.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
-      {/* <Head>
-        <title>Register / Tweeter</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="og:site_name" content="Tweeter" />
-        <meta
-          name="description"
-          content="A social media app built by Manthan Kuber and Rohit Shelke"
-        />
-        <meta name="og:title" content={"Register - Tweeter"} />
-      </Head> */}
+      
       <MetaHead currentRouteName="Register" pathname="/register" />
       {page}
       <Footer footerBg="white" />
