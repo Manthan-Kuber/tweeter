@@ -42,6 +42,11 @@ export const Button = styled.button`
       45.68627450980392%
     );
   }
+
+  &:disabled {
+    background-color: rgba(47, 128, 237, 0.7);
+    cursor: not-allowed;
+  }
 `;
 
 export const SignInIconsWrapper = styled.div`

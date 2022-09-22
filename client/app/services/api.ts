@@ -246,6 +246,13 @@ export const api = createApi({
         `tweets/followingReplies/${tweetId}/${userId}`,
       providesTags: ["FollowingReplyTweet"],
     }),
+    getHashtags: builder.query<
+      HashtagsResponseElement[],
+      { hashtagArrayLength: number; hashtagLimit: number }
+    >({
+      query: ({ hashtagArrayLength, hashtagLimit }) =>
+        `home/hashtags/${hashtagArrayLength}/${hashtagLimit}`,
+    }),
   }),
 });
 
@@ -285,4 +292,6 @@ export const {
   useGetProfileTweetsMediaQuery,
   useGetProfileTweetsAndRepliesQuery,
   useGetFollowingReplyQuery,
+  useGetHashtagsQuery,
+  useLazyGetHashtagsQuery,
 } = api;

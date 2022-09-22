@@ -74,6 +74,7 @@ interface RegisterFormProps {
     password: string;
   };
   isSignupForm?: boolean;
+  isButtonLoading: boolean;
 }
 
 interface NavProps {
@@ -184,12 +185,15 @@ interface ProfileResponse {
     }
   ];
 }
+
+interface HashtagsResponseElement {
+  _id: string;
+  hashtag: string;
+  tweets: number;
+}
+
 interface TrendProps {
-  trendList: {
-    id: string;
-    tagName: string;
-    tweetCount: string;
-  }[];
+  trendList: HashtagsResponseElement[] | undefined;
   getHashtags: () => Promise<void>;
   hasMore: boolean;
   setHasMoreTrends: Dispatch<SetStateAction<boolean>>;
@@ -282,9 +286,9 @@ interface SuggestedFollowerResponseElement {
 }
 
 interface SuggestedFollowProps {
-  suggestedFollowList: Array<SuggestedFollowerResponse>;
+  suggestedFollowList: Array<SuggestedFollowerResponse> | undefined;
   getSuggestedFollowers: () => Promise<void>;
-  hasMore: boolean;
+  hasMoreSuggestions: boolean;
   setHasMoreSuggestions: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -412,6 +416,11 @@ interface CommentReplyProps {
 }
 
 interface ContentLoaderProps {
-  size?:number;
-  color?:string;
+  size?: number;
+  color?: string;
+}
+
+interface MetaHeadProps {
+  currentRouteName: string;
+  pathname: string;
 }

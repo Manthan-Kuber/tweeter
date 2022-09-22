@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Button } from "../../styles/registerPage.styles";
 import InputGroup from "./InputGroup";
-import {motion} from 'framer-motion'
+import { motion } from "framer-motion";
+import ContentLoader from "./ContentLoader";
 
 const RegisterForm = (props: RegisterFormProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -59,7 +60,18 @@ const RegisterForm = (props: RegisterFormProps) => {
         myRef={passwordRef}
       />
       <ErrorMessage>{props.errMessage.password}</ErrorMessage>
-      <Button type="submit" as={motion.button} whileTap={{ scale: 0.9 }}>{props.btnText}</Button>
+      <Button
+        type="submit"
+        as={motion.button}
+        whileTap={{ scale: 0.9 }}
+        disabled={props.isButtonLoading}
+      >
+        {props.isButtonLoading ? (
+          <ContentLoader color="white" size={24} />
+        ) : (
+          props.btnText
+        )}
+      </Button>
     </form>
   );
 };
