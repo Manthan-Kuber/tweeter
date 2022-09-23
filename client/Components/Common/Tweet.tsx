@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import {
   CancelButton,
   DiscardButton,
@@ -80,7 +80,11 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
     }
   };
 
-  const onDeleteButtonClick = (tweetId: string) => {
+  const onDeleteButtonClick = (
+    tweetId: string,
+    e: MouseEvent<HTMLDivElement>
+  ) => {
+    e.stopPropagation();
     toast.dismiss();
     toast(
       (t) => (
@@ -202,7 +206,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             </ProfileInfoWrapper>
             {currentUserId === props.authorId && props.variant !== "inTweet" && (
               <DeleteIconWrapper
-                onClick={() => onDeleteButtonClick(props.tweetId)}
+                onClick={(e) => onDeleteButtonClick(props.tweetId, e)}
               >
                 <DeleteIcon size={24} />
               </DeleteIconWrapper>
