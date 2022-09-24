@@ -1,12 +1,18 @@
 import styled from "styled-components";
 import { Li, StyledUl, UnderlinedDiv } from "./Navbar.styles";
 
+export const LogoImageWrapper = styled.div`
+  width: fit-content;
+  position:relative;
+  margin-inline: auto;
+`
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 7rem);
+  min-height: calc(100vh - 4.8rem);
   background-color: white;
 `;
 

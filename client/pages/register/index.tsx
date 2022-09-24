@@ -52,8 +52,8 @@ function Register() {
   const [login] = useLoginMutation();
   const [signup] = useSignupMutation();
   const token = useAppSelector((state) => state.auth.token);
-  const [isLoading, setIsLoading] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (token) {
@@ -82,6 +82,7 @@ function Register() {
       replace("/");
     } catch (err: any) {
       if (err.data !== undefined) {
+        setIsButtonLoading(false);
         const { errors } = err.data;
         console.log(errors);
         setErrMessage({
@@ -89,7 +90,10 @@ function Register() {
           email: errors.email,
           password: errors.password,
         });
-      } else console.log(err);
+      } else {
+        setIsButtonLoading(false);
+        console.log(err);
+      }
     }
   };
 
@@ -113,6 +117,7 @@ function Register() {
       replace("/");
     } catch (err: any) {
       if (err.data !== undefined) {
+        setIsButtonLoading(false);
         const { errors } = err.data;
         console.log(errors);
         setErrMessage({
@@ -120,7 +125,10 @@ function Register() {
           email: errors.email,
           password: errors.password,
         });
-      } else console.log(err);
+      } else {
+        setIsButtonLoading(false);
+        console.log(err);
+      }
     }
   };
 
@@ -133,69 +141,67 @@ function Register() {
     isButtonLoading,
   };
 
+  if (isLoading) return <FullScreenLoader />;
+
   return (
     <>
       <Toaster />
-      {isLoading ? (
-        <FullScreenLoader />
-      ) : (
-        <Container>
-          <SignUpBox>
-            <Image
-              src="/tweeter.svg"
-              alt="Tweeter Logo"
-              height={30}
-              width="100%"
-              priority
+      <Container>
+        <SignUpBox>
+          <Image
+            src="/tweeter.svg"
+            alt="Tweeter Logo"
+            height={30}
+            width="100%"
+            priority
+          />
+          <FormTabUl>
+            {TabList.map((item) => (
+              <FormLi
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                }}
+                active={activeTab === item.id ? true : false}
+              >
+                {item.name}
+                {activeTab === item.id && (
+                  <FormUnderlinedDiv
+                    as={motion.div}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  />
+                )}
+              </FormLi>
+            ))}
+          </FormTabUl>
+
+          {activeTab === 1 ? (
+            <RegisterForm
+              {...FormProps}
+              emailPlaceholder="Email"
+              passwordPlaceholder="Password"
+              btnText="Sign In"
+              handleSubmit={handleLogin}
             />
-            <FormTabUl>
-              {TabList.map((item) => (
-                <FormLi
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                  }}
-                  active={activeTab === item.id ? true : false}
-                >
-                  {item.name}
-                  {activeTab === item.id && (
-                    <FormUnderlinedDiv
-                      as={motion.div}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    />
-                  )}
-                </FormLi>
-              ))}
-            </FormTabUl>
+          ) : (
+            <RegisterForm
+              {...FormProps}
+              emailPlaceholder="Email"
+              passwordPlaceholder="Password"
+              btnText="Sign Up"
+              handleSubmit={handleSignup}
+              isSignupForm
+            />
+          )}
 
-            {activeTab === 1 ? (
-              <RegisterForm
-                {...FormProps}
-                emailPlaceholder="Email"
-                passwordPlaceholder="Password"
-                btnText="Sign In"
-                handleSubmit={handleLogin}
-              />
-            ) : (
-              <RegisterForm
-                {...FormProps}
-                emailPlaceholder="Email"
-                passwordPlaceholder="Password"
-                btnText="Sign Up"
-                handleSubmit={handleSignup}
-                isSignupForm
-              />
-            )}
-
-            {/* <SignInIconsWrapper>
+          {/* <SignInIconsWrapper>
               {IconArray.map((icon) => (
                 <SignInIcon key={icon.id} imgUrl={icon.imgUrl} />
               ))}
             </SignInIconsWrapper> */}
-          </SignUpBox>
-        </Container>
-      )}
+        </SignUpBox>
+      </Container>
     </>
   );
 }
@@ -203,7 +209,6 @@ function Register() {
 Register.getLayout = function getLayout(page: ReactElement) {
   return (
     <>
-      
       <MetaHead currentRouteName="Register" pathname="/register" />
       {page}
       <Footer footerBg="white" />
