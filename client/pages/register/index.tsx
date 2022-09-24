@@ -13,6 +13,7 @@ import {
   FormLi,
   FormTabUl,
   FormUnderlinedDiv,
+  LogoImageWrapper,
   SignUpBox,
 } from "../../styles/registerPage.styles";
 import toast, { Toaster } from "react-hot-toast";
@@ -148,13 +149,15 @@ function Register() {
       <Toaster />
       <Container>
         <SignUpBox>
-          <Image
-            src="/tweeter.svg"
-            alt="Tweeter Logo"
-            height={30}
-            width="100%"
-            priority
-          />
+          <LogoImageWrapper>
+            <Image
+              src="/tweeter.svg"
+              alt="Tweeter Logo"
+              height={30}
+              width="130%"
+              priority
+            />
+          </LogoImageWrapper>
           <FormTabUl>
             {TabList.map((item) => (
               <FormLi

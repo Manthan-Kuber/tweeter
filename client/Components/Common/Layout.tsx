@@ -28,7 +28,7 @@ function Layout({ children }: { children: React.ReactElement }) {
   const router = useRouter();
   const username = useAppSelector((state) => state.auth.user?.username);
   const [activeTab, setActiveTab] = useState(router.route);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
 
@@ -71,7 +71,7 @@ function Layout({ children }: { children: React.ReactElement }) {
 export default Layout;
 
 const Main = styled.main`
-  min-height: calc(100vh - 13rem);
+  min-height: calc(100vh - 11rem);
   background-color: #f2f2f2;
   padding-bottom: 2rem;
 `;
