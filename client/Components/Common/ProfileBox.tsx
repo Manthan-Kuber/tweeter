@@ -198,7 +198,7 @@ const ProfileImageWrapper = styled.div`
   margin-inline: auto;
   height: fit-content;
   padding: 4px 4px 0 4px;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: white;
 
   @media screen and (min-width: 55em) {
@@ -208,7 +208,7 @@ const ProfileImageWrapper = styled.div`
 `;
 
 const ProfileImage = styled(BlurImage)`
-  border-radius: 6px;
+  border-radius: 8px;
 `;
 
 const InfoWrapper = styled.div`

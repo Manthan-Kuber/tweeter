@@ -84,7 +84,7 @@ const EditProfile = (props: EditProfileProps) => {
       // dispatch(setCoverp)
       props.setProfileData((prev) => ({ ...prev, name, username, bio }));
       console.log(response.data.data.profilePic);
-      console.log( response.data.data.coverPic);
+      console.log(response.data.data.coverPic);
       profilePictureFile !== undefined &&
         props.setProfileData((prev) => ({
           ...prev,
@@ -160,6 +160,7 @@ const EditProfile = (props: EditProfileProps) => {
           layout="responsive"
           width={100}
           height={30}
+          style={{ borderRadius: "8px" }}
         />
         <EditPhotoIconWrapper
           ref={bannerRef}
@@ -331,12 +332,12 @@ const ProfileImageContainer = styled.div`
   margin-left: 1rem;
   height: fit-content;
   padding: 4px 4px 0 4px;
-  border-radius: 100%;
+  border-radius: 8px;
   background-color: white;
 `;
 
 const ProfileImage = styled(Image)`
-  border-radius: 100%;
+  border-radius: 8px;
 `;
 
 const SubmitButton = styled(TweetButton)`
@@ -352,6 +353,7 @@ const ProfilePicContainer = styled.div`
 
 const BannerContainer = styled.div`
   position: relative;
+  border-radius: 8px;
 `;
 
 const EditPhotoIconWrapper = styled.div`
