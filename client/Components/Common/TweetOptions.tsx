@@ -18,7 +18,6 @@ const TweetOptions = ({
   setIsRetweeted,
   ...props
 }: TweetOptionsProps) => {
-  const { width } = useWindowSize();
   const [isActive, setIsActive] = useState({
     Reply: false,
     Retweet: props.isRetweeted,

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
 import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import {
   CancelButton,
   DiscardButton,
@@ -45,6 +45,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
     { tweetId: props.tweetId, userId: props.authorId },
     { skip: !props.fetchReply } //Conditionally fetch reply only when reply exists
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   const followingReplyTweet = FollowingReplyTweetData?.data[0];
 
@@ -80,7 +81,11 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
     }
   };
 
-  const onDeleteButtonClick = (tweetId: string) => {
+  const onDeleteButtonClick = (
+    tweetId: string,
+    e: MouseEvent<HTMLDivElement>
+  ) => {
+    e.stopPropagation();
     toast.dismiss();
     toast(
       (t) => (
@@ -202,7 +207,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             </ProfileInfoWrapper>
             {currentUserId === props.authorId && props.variant !== "inTweet" && (
               <DeleteIconWrapper
-                onClick={() => onDeleteButtonClick(props.tweetId)}
+                onClick={(e) => onDeleteButtonClick(props.tweetId, e)}
               >
                 <DeleteIcon size={24} />
               </DeleteIconWrapper>
@@ -219,12 +224,14 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
                 >
                   <Link href={mediaItemUrl} passHref>
                     <a target="_blank" rel="noopener noreferrer">
-                      <Image
+                      <BlurImage
                         key={`${mediaItemUrl} ${index}`}
                         src={mediaItemUrl}
                         alt="Tweet Image"
                         layout="fill"
-                        style={{ borderRadius: "16px" }}
+                        objectFit="cover"
+                        isLoading={isLoading}
+                        onLoadingComplete={() => setIsLoading(false)}
                       />
                     </a>
                   </Link>
@@ -306,6 +313,18 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 };
 export default Tweet;
 
+export const BlurImage = styled(Image)<{ isLoading: boolean }>`
+  border-radius: 16px;
+  filter: ${({ isLoading }) =>
+    isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
+  -ms-filter: ${({ isLoading }) =>
+    isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
+  -webkit-filter: ${({ isLoading }) =>
+    isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
+  transform: ${({ isLoading }) => (isLoading ? "scale(1.1)" : "scale(1)")};
+  transition: all 0.7s ease-in-out;
+`;
+
 const ReplyUsername = styled.span`
   display: block;
   margin-block: 4rem 3rem;
@@ -322,17 +341,13 @@ const ImageWrapper = styled.div<{
   variant?: "inTweet" | "tweetPage" | "tweetReply";
 }>`
   position: relative;
+  overflow: hidden; //During blur filter transition
   width: min(45rem, 100%);
-  height: 15rem;
   border-radius: 16px;
+  aspect-ratio: 1/1;
   margin-inline: auto;
-  @media screen and (min-width: 20em) {
-    height: 20rem;
-  }
-  @media screen and (min-width: 55em) {
-    height: 45rem;
-  }
   transition: opacity 0.4s;
+  border: 1px solid lightgray;
   &:hover {
     opacity: ${({ variant }) => variant !== "inTweet" && "0.75"};
   }

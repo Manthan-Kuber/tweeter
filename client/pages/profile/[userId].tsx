@@ -38,6 +38,7 @@ import TweetsDataList from "../../Components/Common/TweetsDataList";
 import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
 import ContentLoader from "../../Components/Common/ContentLoader";
+import { BlurImage } from "../../Components/Common/Tweet";
 
 const filterList = [
   {
@@ -139,8 +140,7 @@ const Profile = ({ userId }: { userId: string }) => {
   const [hasMoreTweetsMedia, setHasMoreTweetsMedia] = useState(true);
   const [tweetsAndRepliesSkip, setTweetsAndRepliesSkip] = useState(1);
   const [hasMoreTweetsAndReplies, setHasMoreTweetsAndReplies] = useState(true);
-
-  var tweetLimit = 10;
+  const [isBannerLoading, setIsBannerLoading] = useState(true);
 
   const getProfile = async () => {
     try {
@@ -275,17 +275,17 @@ const Profile = ({ userId }: { userId: string }) => {
       <ScrollToTopButton />
       {!editProfileModalIsOpen && <Toaster />}
       <BannerWrapper>
-        {coverPic !== undefined && WindowWidth !== undefined ? (
-          <StyledImage
+        {coverPic !== undefined && WindowWidth !== undefined && (
+          <BannerImage
             src={coverPic}
             className="banner-image"
             alt="banner"
             layout="fill"
+            objectFit="cover"
             priority
-            objectFit={WindowWidth < 880 ? "contain" : undefined}
+            isLoading={isBannerLoading}
+            onLoadingComplete={() => setIsBannerLoading(false)}
           />
-        ) : (
-          <ContentLoader size={32} />
         )}
       </BannerWrapper>
       <ProfileBox
@@ -461,18 +461,19 @@ export const getStaticProps: GetStaticProps = (context) => {
   };
 };
 
-const StyledImage = styled(Image)`
-  border-radius: 8px;
+const BannerImage = styled(BlurImage)`
+  border-radius: 6px;
 `;
 
 const BannerWrapper = styled.div`
   position: relative;
   width: min(95%, 120rem);
   margin-inline: auto;
-  height: 25rem;
+  aspect-ratio: 16/9;
   border-radius: 8px;
   border: 1px solid lightgray;
   background-color: white;
+  overflow: hidden;
 
   @media screen and (min-width: 50em) {
     border: revert;
