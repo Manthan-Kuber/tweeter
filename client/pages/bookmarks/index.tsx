@@ -39,8 +39,6 @@ function Bookmarks() {
     }
   };
 
-  console.log(BookmarksData);
-
   return (
     <Container>
       <ScrollToTopButton />

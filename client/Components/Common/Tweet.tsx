@@ -45,6 +45,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
     { tweetId: props.tweetId, userId: props.authorId },
     { skip: !props.fetchReply } //Conditionally fetch reply only when reply exists
   );
+  const [isLoading, setisLoading] = useState(true);
 
   const followingReplyTweet = FollowingReplyTweetData?.data[0];
 
@@ -223,12 +224,14 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
                 >
                   <Link href={mediaItemUrl} passHref>
                     <a target="_blank" rel="noopener noreferrer">
-                      <Image
+                      <BlurImage
                         key={`${mediaItemUrl} ${index}`}
                         src={mediaItemUrl}
                         alt="Tweet Image"
                         layout="fill"
-                        style={{ borderRadius: "16px" }}
+                        objectFit="cover"
+                        isLoading={isLoading}
+                        onLoadingComplete={() => setisLoading(false)}
                       />
                     </a>
                   </Link>
@@ -310,6 +313,18 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 };
 export default Tweet;
 
+const BlurImage = styled(Image)<{ isLoading: boolean }>`
+  border-radius: 16px;
+  filter: ${({ isLoading }) =>
+    isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
+  -ms-filter: ${({ isLoading }) =>
+    isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
+  -webkit-filter: ${({ isLoading }) =>
+    isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
+  transform: ${({ isLoading }) => (isLoading ? "scale(1.1)" : "scale(1)")};
+  transition: all 0.7s ease-in-out;
+`;
+
 const ReplyUsername = styled.span`
   display: block;
   margin-block: 4rem 3rem;
@@ -326,17 +341,13 @@ const ImageWrapper = styled.div<{
   variant?: "inTweet" | "tweetPage" | "tweetReply";
 }>`
   position: relative;
+  overflow: hidden; //During blur filter transition
   width: min(45rem, 100%);
-  height: 15rem;
   border-radius: 16px;
+  aspect-ratio: 1/1;
   margin-inline: auto;
-  @media screen and (min-width: 20em) {
-    height: 20rem;
-  }
-  @media screen and (min-width: 55em) {
-    height: 45rem;
-  }
   transition: opacity 0.4s;
+  border: 1px solid lightgray;
   &:hover {
     opacity: ${({ variant }) => variant !== "inTweet" && "0.75"};
   }
