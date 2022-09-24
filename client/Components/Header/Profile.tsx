@@ -9,6 +9,7 @@ import axiosApi from "../../app/services/axiosApi";
 import { setProfilePic } from "../../features/auth/authSlice";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import OutsideClickHandler from "react-outside-click-handler";
+import { BlurImage } from "../Common/Tweet";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
@@ -18,6 +19,7 @@ const Profile = () => {
   const userId = useAppSelector((state) => state.auth.user?.id);
   const dispatch = useAppDispatch();
   const { width: WindowWidth } = useWindowSize();
+  const [isLoading, setIsLoading] = useState(true);
 
   const getProfile = async () => {
     try {
@@ -40,12 +42,17 @@ const Profile = () => {
   return (
     <ProfileContainer>
       {profilePic !== undefined && (
-        <ProfilePic
-          src={profilePic} //Add loading indicator till pfp loading
-          alt={`${name}'s Profile Pic`}
-          width={42}
-          height={37}
-        />
+        <ImageWrapper>
+          <ProfilePic
+            src={profilePic}
+            alt={`${name}'s Profile Pic`}
+            width={42}
+            height={37}
+            isLoading={isLoading}
+            onLoadingComplete={() => setIsLoading(false)}
+            priority
+          />
+        </ImageWrapper>
       )}
       {WindowWidth! > 880 && <h4>{name}</h4>}
       <OutsideClickHandler onOutsideClick={() => setVisible(false)}>
@@ -64,7 +71,13 @@ const Profile = () => {
 };
 export default Profile;
 
-const ProfilePic = styled(Image)`
+const ProfilePic = styled(BlurImage)`
+  border-radius: 6px;
+`;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  overflow: hidden; //During blur filter transition
   border-radius: 6px;
 `;
 

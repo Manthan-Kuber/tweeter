@@ -15,6 +15,7 @@ import {
 import toast from "react-hot-toast";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
 import { Loader } from "./FullScreenLoader";
+import { BlurImage } from "./Tweet";
 
 const ProfileBox = ({
   setFollowerModalIsOpen,
@@ -33,7 +34,7 @@ const ProfileBox = ({
 }: ProfileBoxProps) => {
   const { width } = useWindowSize();
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [followUser] = useFollowUserMutation();
   const [unfollowUser] = useUnfollowUserMutation();
 
@@ -66,24 +67,16 @@ const ProfileBox = ({
   return (
     <ProfileContainer>
       <ProfileImageWrapper>
-        {isLoading ? (
-          <></>
-        ) : (
-          <>
-            {profilePic !== undefined ? (
-              <ProfileImage
-                src={profilePic}
-                alt="profilePic"
-                priority
-                width={width! > 880 ? 160 : 120}
-                height={width! > 880 ? 160 : 120}
-              />
-            ) : (
-              <LoaderWrapper>
-                <Loader size={32} color="var(--clr-primary)" />
-              </LoaderWrapper>
-            )}
-          </>
+        {profilePic !== undefined && (
+          <ProfileImage
+            src={profilePic}
+            alt="profilePic"
+            priority
+            width={width! > 880 ? 160 : 120}
+            height={width! > 880 ? 160 : 120}
+            isLoading={isLoading}
+            onLoadingComplete={() => setIsLoading(false)}
+          />
         )}
       </ProfileImageWrapper>
       <ContentWrapper>
@@ -205,7 +198,7 @@ const ProfileImageWrapper = styled.div`
   margin-inline: auto;
   height: fit-content;
   padding: 4px 4px 0 4px;
-  border-radius: 8px;
+  border-radius: 6px;
   background-color: white;
 
   @media screen and (min-width: 55em) {
@@ -214,8 +207,8 @@ const ProfileImageWrapper = styled.div`
   }
 `;
 
-const ProfileImage = styled(Image)`
-  border-radius: 8px;
+const ProfileImage = styled(BlurImage)`
+  border-radius: 6px;
 `;
 
 const InfoWrapper = styled.div`

@@ -45,7 +45,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
     { tweetId: props.tweetId, userId: props.authorId },
     { skip: !props.fetchReply } //Conditionally fetch reply only when reply exists
   );
-  const [isLoading, setisLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const followingReplyTweet = FollowingReplyTweetData?.data[0];
 
@@ -231,7 +231,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
                         layout="fill"
                         objectFit="cover"
                         isLoading={isLoading}
-                        onLoadingComplete={() => setisLoading(false)}
+                        onLoadingComplete={() => setIsLoading(false)}
                       />
                     </a>
                   </Link>
@@ -313,7 +313,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 };
 export default Tweet;
 
-const BlurImage = styled(Image)<{ isLoading: boolean }>`
+export const BlurImage = styled(Image)<{ isLoading: boolean }>`
   border-radius: 16px;
   filter: ${({ isLoading }) =>
     isLoading ? "grayscale(100%) blur(40px)" : "grayscale(0) blur(0)"};
