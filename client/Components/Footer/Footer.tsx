@@ -21,13 +21,12 @@ export default Footer;
 
 export const StyledFooter = styled.footer<{footerBg?:string}>`
   margin-top: auto;
-  padding-top: 2.4rem;
-  padding-bottom: 9.6rem;
+  padding-block: 1.5rem;
   background-color: ${props => props.footerBg || "#f2f2f2" };
 
-  @media (min-width: 55em) {
+  /* @media (min-width: 55em) {
     padding-bottom: 2.4rem;
-  }
+  } */
 `;
 
 export const FooterText = styled.p`

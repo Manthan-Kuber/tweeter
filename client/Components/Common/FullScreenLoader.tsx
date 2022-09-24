@@ -11,7 +11,7 @@ const FullScreenLoader = () => {
 export default FullScreenLoader;
 
 const Wrapper = styled.div`
-  height: 100vh;
+  height: calc(100vh - 4.8rem);
   width: 100%;
   display: grid;
   place-items: center;
