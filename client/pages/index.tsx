@@ -17,7 +17,7 @@ import ScrollToTopButton from "../Components/Common/ScrollToTopButton";
 import SuggestedFollow from "../Components/Common/SuggestedFollow";
 import Trends from "../Components/Common/Trends";
 import TweetsDataList from "../Components/Common/TweetsDataList";
-import { useAppDispatch, useAppSelector } from "../Hooks/store";
+import { useAppDispatch } from "../Hooks/store";
 import { ToastMessage } from "../styles/Toast.styles";
 
 var hashtagLimit = 6;
