@@ -104,7 +104,7 @@ interface ProfileDropDownProps {
 }
 
 interface ModalProps {
-  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   modalIsOpen: boolean;
   name?: string;
   username?: string;
@@ -113,12 +113,15 @@ interface ModalProps {
   following?: number;
   followers?: number;
   children?: React.ReactNode;
-  modalTitle?: string;
+  modalTitle?: string | JSX.Element;
   shouldCloseOnOverlayClick?: boolean;
   closeIconOnClick?: MouseEventHandler<SVGElement>;
   modalWidth?: string;
   modalHeight?: string;
   maxModalHeight?: string;
+  modalTop?:string;
+  modalLeft?:string;
+  modalTransfrom?:string;
 }
 
 interface ProfileBoxProps
@@ -424,3 +427,5 @@ interface MetaHeadProps {
   currentRouteName: string;
   pathname: string;
 }
+
+

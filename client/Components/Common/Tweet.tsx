@@ -130,7 +130,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 
   return (
     <>
-      <CustomModal
+      {/* <CustomModal
         setModalIsOpen={setIsModalOpen}
         modalIsOpen={isModalOpen}
         modalHeight="fit-content"
@@ -156,6 +156,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           retweetedUsers={0}
           savedBy={0}
           fetchReply={false} // Don't fetch reply for reply modal
+          
         />
         <CreateTweet
           isReplyImageVisible={true}
@@ -170,7 +171,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           variant="inTweet"
           focusOnClick={true}
         />
-      </CustomModal>
+      </CustomModal> */}
       <TweetWrapper>
         {props.isRetweeted && props.variant !== "tweetReply" && (
           <RetweetWrapper>

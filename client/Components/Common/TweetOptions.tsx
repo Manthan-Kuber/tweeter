@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { AiFillHeart, AiOutlineRetweet } from "react-icons/ai";
@@ -27,6 +28,7 @@ const TweetOptions = ({
   const [likeTweet] = useLikeTweetMutation();
   const [saveTweet] = useSaveTweetMutation();
   const [retweetTweet] = useRetweetTweetMutation();
+  const { push, pathname, query } = useRouter();
 
   const optionsList = [
     {
@@ -39,7 +41,29 @@ const TweetOptions = ({
       onClick: (e: MouseEvent) => {
         e.stopPropagation();
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
-        props.setIsModalOpen(true);
+        const urlParam = `?replyTweetId=${props.tweetId}`;
+        // props.setIsModalOpen(true);
+        // push(
+        //   `${pathname !== "/" && `${pathname}/`}?replyTweetId=${props.tweetId}`,
+        //   undefined, // alias for href
+        //   { shallow: true, scroll: false }
+        // );
+        switch (pathname) {
+          case "/tweet/[tweetId]":
+            push(`/tweet/${query.tweetId}/${urlParam}`, undefined, {
+              shallow: true,
+              scroll: false,
+            });
+            break;
+          case "/profile/[userId]":
+            push(`/profile/${query.userId}/${urlParam}`, undefined, {
+              shallow: true,
+              scroll: false,
+            });
+            break;
+          default:
+            push(`${urlParam}`, undefined, { shallow: true, scroll: false });
+        }
       },
     },
     {

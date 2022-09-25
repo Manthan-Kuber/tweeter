@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { GrClose } from "react-icons/gr";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 Modal.setAppElement("#__next");
 
@@ -11,17 +12,26 @@ const CustomModal = ({
   children,
   ...props
 }: ModalProps) => {
+  const { style: bodyStyle } = document.body;
   useEffect(() => {
-    if (modalIsOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "unset";
+    bodyStyle.overflowY = modalIsOpen ? "hidden" : "auto";
   }, [modalIsOpen]);
+
+  const router = useRouter();
 
   return (
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={(e) => {
         e.stopPropagation();
-        setModalIsOpen(false);
+        if (setModalIsOpen) setModalIsOpen(false);
+        else {
+          router.beforePopState((state) => {
+            state.options.scroll = false;
+            return true;
+          });
+          router.back();
+        }
       }}
       contentLabel={`${props.modalTitle} Modal`}
       shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick || false}
@@ -36,18 +46,18 @@ const CustomModal = ({
           zIndex: 2,
         },
         content: {
-          top: "10%",
-          left: "50%",
+          top: props.modalTop || "10%",
+          left: props.modalLeft || "50%",
           transform: "translateX(-50%)",
-          width: "min(95% , 60rem)",
+          width: props.modalWidth || "min(95% , 60rem)",
           border: "1px solid #ccc",
           background: "#fff",
           overflow: "auto",
           WebkitOverflowScrolling: "touch",
           borderRadius: "8px",
           outline: "none",
-          maxHeight: `${props.maxModalHeight || "80vh"}`,
-          height: `${props.modalHeight || "650px"}`,
+          maxHeight: props.maxModalHeight || "80vh",
+          height: props.modalHeight || "650px",
           padding: "2rem",
         },
       }}
@@ -61,7 +71,14 @@ const CustomModal = ({
                 ? props.closeIconOnClick
                 : (e) => {
                     e.stopPropagation();
-                    setModalIsOpen(false);
+                    if (setModalIsOpen) setModalIsOpen(false);
+                    else {
+                      router.beforePopState((state) => {
+                        state.options.scroll = false;
+                        return true;
+                      });
+                      router.back();
+                    }
                   }
             }
           >

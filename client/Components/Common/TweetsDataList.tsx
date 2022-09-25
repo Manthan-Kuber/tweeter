@@ -1,10 +1,13 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
 import ContentLoader from "./ContentLoader";
+import CustomModal from "./CustomModal";
 import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
+import ReplyModal from "./ReplyModal";
 import Tweet from "./Tweet";
 
 const TweetsDataList = ({
@@ -14,48 +17,51 @@ const TweetsDataList = ({
   variant,
 }: TweetsDataListProps) => {
   return (
-    <InfiniteScroll
-      dataLength={TweetsData.data.length}
-      next={getMoreTweets}
-      hasMore={hasMoreTweets}
-      loader={<ContentLoader size={32} />}
-      scrollThreshold={0.95}
-    >
-      {TweetsData.data.length === 0 ? (
-        <NoTweetsToShow message="No Tweets To Show !" />
-      ) : (
-        TweetsData.data.map((tweet, key) => (
-          <>
-            {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
-            <Tweet
-              key={tweet._id}
-              authorName={tweet.creator[0].name}
-              authorId={tweet.creator[0]._id}
-              authorUserName={tweet.creator[0].username}
-              authorFollowers={6969} //Change
-              authorProfilePic={tweet.creator[0].profilePic}
-              mediaList={tweet.media}
-              authorTweet={tweet.tweet}
-              tweetId={tweet._id}
-              tweetCreationDate={tweet.createdAt}
-              isSaved={tweet.saved.length === 0 ? false : true}
-              isLiked={
-                tweet.liked !== undefined && tweet.liked.length === 0
-                  ? false
-                  : true
-              }
-              isRetweeted={tweet.retweeted.length === 0 ? false : true}
-              commentCount={tweet.commentCount[0]}
-              likes={tweet.likes}
-              retweetedUsers={tweet.retweetedUsers}
-              savedBy={tweet.savedBy}
-              variant={variant}
-              fetchReply={tweet.fetchReply}
-            />
-          </>
-        ))
-      )}
-    </InfiniteScroll>
+    <>
+      <InfiniteScroll
+        dataLength={TweetsData.data.length}
+        next={getMoreTweets}
+        hasMore={hasMoreTweets}
+        loader={<ContentLoader size={32} />}
+        scrollThreshold={0.95}
+      >
+        {TweetsData.data.length === 0 ? (
+          <NoTweetsToShow message="No Tweets To Show !" />
+        ) : (
+          TweetsData.data.map((tweet, key) => (
+            <>
+              {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
+              <Tweet
+                key={tweet._id}
+                authorName={tweet.creator[0].name}
+                authorId={tweet.creator[0]._id}
+                authorUserName={tweet.creator[0].username}
+                authorFollowers={6969} //Change
+                authorProfilePic={tweet.creator[0].profilePic}
+                mediaList={tweet.media}
+                authorTweet={tweet.tweet}
+                tweetId={tweet._id}
+                tweetCreationDate={tweet.createdAt}
+                isSaved={tweet.saved.length === 0 ? false : true}
+                isLiked={
+                  tweet.liked !== undefined && tweet.liked.length === 0
+                    ? false
+                    : true
+                }
+                isRetweeted={tweet.retweeted.length === 0 ? false : true}
+                commentCount={tweet.commentCount[0]}
+                likes={tweet.likes}
+                retweetedUsers={tweet.retweetedUsers}
+                savedBy={tweet.savedBy}
+                variant={variant}
+                fetchReply={tweet.fetchReply}
+              />
+            </>
+          ))
+        )}
+      </InfiniteScroll>
+      <ReplyModal />
+    </>
   );
 };
 export default TweetsDataList;

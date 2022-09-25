@@ -57,7 +57,10 @@ function Layout({ children }: { children: React.ReactElement }) {
 
   return (
     <>
-      <MetaHead currentRouteName={currentRouteName} pathname={router.pathname} />
+      <MetaHead
+        currentRouteName={currentRouteName}
+        pathname={router.pathname}
+      />
       <Header
         NavList={NavList}
         activeTab={activeTab}
