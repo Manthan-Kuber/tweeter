@@ -34,13 +34,12 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const currentUsername = useAppSelector((state) => state.auth.user?.name);
   const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
-  const { push } = useRouter();
+  const { push, route } = useRouter();
   const { data: FollowingReplyTweetData } = useGetFollowingReplyQuery(
     { tweetId: props.tweetId, userId: props.authorId },
     { skip: !props.fetchReply } //Conditionally fetch reply only when reply exists
   );
   const [isLoading, setIsLoading] = useState(true);
-
   const followingReplyTweet = FollowingReplyTweetData?.data[0];
 
   const onDeleteButtonClick = (
@@ -100,6 +99,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
       )}
       <TweetBox
         variant={props.variant}
+        currentRoute={route}
         onClick={(e) => {
           e.stopPropagation();
           if (props.variant !== "inTweet") {
@@ -247,7 +247,8 @@ const TweetContentWrapper = styled.div<{
   margin-left: ${({ variant }) => variant !== "tweetReply" && "2rem"};
   border-left: ${({ variant, fetchReply }) =>
     variant !== "tweetReply" && fetchReply && "5px solid lightgray"};
-  padding-left: ${({ variant }) => variant === "tweetReply" ? "6rem" : "4rem"};
+  padding-left: ${({ variant }) =>
+    variant === "tweetReply" ? "6rem" : "4rem"};
 `;
 
 export const BlurImage = styled(Image)<{ isLoading: boolean }>`
@@ -349,7 +350,8 @@ const RetweetWrapper = styled.div`
 `;
 
 export const TweetBox = styled.div<{
-  variant: "inTweet" | "tweetPage" | "tweetReply" | undefined;
+  variant?: "inTweet" | "tweetPage" | "tweetReply";
+  currentRoute: string;
 }>`
   box-shadow: ${(props) =>
     props.variant === "inTweet" || props.variant === "tweetReply"
@@ -359,7 +361,10 @@ export const TweetBox = styled.div<{
   font-family: var(--ff-noto);
   background-color: ${({ variant }) =>
     variant === "tweetReply" ? "transparent" : "white"};
-  padding: ${({ variant }) => variant !== "tweetReply" && "2rem"};
+  padding: ${({ variant, currentRoute }) =>
+    variant === "tweetReply" && currentRoute !== "/tweet/[tweetId]"
+      ? "0rem"
+      : "2rem"};
   cursor: ${({ variant }) => variant !== "inTweet" && "pointer"};
   transition: all 0.4s;
   &:hover {

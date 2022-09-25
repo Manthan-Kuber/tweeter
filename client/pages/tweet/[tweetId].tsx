@@ -8,6 +8,7 @@ import {
   useGetTweetRepliesQuery,
   useLazyGetTweetRepliesQuery,
 } from "../../app/services/api";
+import ContentLoader from "../../Components/Common/ContentLoader";
 import FullScreenLoader, {
   Loader,
 } from "../../Components/Common/FullScreenLoader";
@@ -101,9 +102,7 @@ function TweetPage() {
               variant="tweetReply"
             />
           ) : (
-            <LoaderWrapper>
-              <Loader size={32} color="var(--clr-primary)" />
-            </LoaderWrapper>
+            <ContentLoader size={32} />
           )}
         </TweetDataListWrapper>
       </Container>
