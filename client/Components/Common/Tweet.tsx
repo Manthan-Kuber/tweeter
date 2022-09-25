@@ -22,14 +22,10 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
 import { Loader } from "./FullScreenLoader";
+import { MdModeComment } from "react-icons/md";
 
 const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
-  const [message, setMessage] = useState<string>("");
-  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
-    []
-  );
   const [isCommentButtonClicked, setIsCommentButtonClicked] = useState(false);
-  const [createTweet] = useCreateTweetMutation();
   const [deleteTweet] = useDeleteTweetMutation();
   const tweetCreationDate = new Date(props.tweetCreationDate);
   const [isLiked, setIsLiked] = useState(props.isLiked);
@@ -111,6 +107,12 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
           }
         }}
       >
+        {props.fetchReply && followingReplyTweet && (
+          <ReplyUsernameContainer>
+            <MdModeComment size={16} />
+            <p>{followingReplyTweet.creator[0].username} Replied</p>
+          </ReplyUsernameContainer>
+        )}
         <ProfileInfoContainer>
           <ProfileInfoWrapper
             variant={props.variant}
@@ -137,62 +139,66 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
             </DeleteIconWrapper>
           )}
         </ProfileInfoContainer>
-        <TweetText>{props.authorTweet}</TweetText>
-        {props.variant !== "inTweet" ? (
-          <ImagesWrapper numOfImages={props.mediaList.length}>
-            {props.mediaList.map((mediaItemUrl, index) => (
-              <ImageWrapper
-                key={`${mediaItemUrl}${index}`}
-                onClick={(e) => e.stopPropagation()}
-                variant={props.variant}
-              >
-                <Link href={mediaItemUrl} passHref>
-                  <a target="_blank" rel="noopener noreferrer">
-                    <BlurImage
-                      key={`${mediaItemUrl} ${index}`}
-                      src={mediaItemUrl}
-                      alt="Tweet Image"
-                      layout="fill"
-                      objectFit="cover"
-                      isLoading={isLoading}
-                      onLoadingComplete={() => setIsLoading(false)}
-                    />
-                  </a>
-                </Link>
-              </ImageWrapper>
-            ))}
-          </ImagesWrapper>
-        ) : (
-          props.mediaList.map((mediaItemUrl, index) => (
-            <LinkText key={`${mediaItemUrl}${index}`}>{mediaItemUrl}</LinkText>
-          ))
-        )}
-        {props.variant !== "inTweet" && (
-          <TweetInfo>
-            <span>{props.commentCount || 0} Comments</span>
-            <span>{props.retweetedUsers || 0} Retweets</span>
-            <span>{props.likes || 0} Likes</span>
-            <span>{props.savedBy || 0} Saved</span>
-          </TweetInfo>
-        )}
-        {props.variant !== "inTweet" && (
-          <TweetOptions
-            setIsModalOpen={setIsModalOpen}
-            setIsCommentButtonClicked={setIsCommentButtonClicked}
-            tweetId={props.tweetId}
-            isLiked={isLiked}
-            isSaved={isSaved}
-            isRetweeted={isRetweeted}
-            setIsLiked={setIsLiked}
-            setIsSaved={setIsSaved}
-            setIsRetweeted={setIsRetweeted}
-          />
-        )}
+        <TweetContentWrapper
+          variant={props.variant}
+          fetchReply={props.fetchReply}
+        >
+          <TweetText>{props.authorTweet}</TweetText>
+          {props.variant !== "inTweet" ? (
+            <ImagesWrapper numOfImages={props.mediaList.length}>
+              {props.mediaList.map((mediaItemUrl, index) => (
+                <ImageWrapper
+                  key={`${mediaItemUrl}${index}`}
+                  onClick={(e) => e.stopPropagation()}
+                  variant={props.variant}
+                >
+                  <Link href={mediaItemUrl} passHref>
+                    <a target="_blank" rel="noopener noreferrer">
+                      <BlurImage
+                        key={`${mediaItemUrl} ${index}`}
+                        src={mediaItemUrl}
+                        alt="Tweet Image"
+                        layout="fill"
+                        objectFit="cover"
+                        isLoading={isLoading}
+                        onLoadingComplete={() => setIsLoading(false)}
+                      />
+                    </a>
+                  </Link>
+                </ImageWrapper>
+              ))}
+            </ImagesWrapper>
+          ) : (
+            props.mediaList.map((mediaItemUrl, index) => (
+              <LinkText key={`${mediaItemUrl}${index}`}>
+                {mediaItemUrl}
+              </LinkText>
+            ))
+          )}
+          {props.variant !== "inTweet" && (
+            <TweetInfo>
+              <span>{props.commentCount || 0} Comments</span>
+              <span>{props.retweetedUsers || 0} Retweets</span>
+              <span>{props.likes || 0} Likes</span>
+              <span>{props.savedBy || 0} Saved</span>
+            </TweetInfo>
+          )}
+          {props.variant !== "inTweet" && (
+            <TweetOptions
+              setIsModalOpen={setIsModalOpen}
+              setIsCommentButtonClicked={setIsCommentButtonClicked}
+              tweetId={props.tweetId}
+              isLiked={isLiked}
+              isSaved={isSaved}
+              isRetweeted={isRetweeted}
+              setIsLiked={setIsLiked}
+              setIsSaved={setIsSaved}
+              setIsRetweeted={setIsRetweeted}
+            />
+          )}
+        </TweetContentWrapper>
         {props.fetchReply && followingReplyTweet ? (
           <>
-            <ReplyUsername>
-              {followingReplyTweet.creator[0].username} Replied
-            </ReplyUsername>
             <Tweet
               authorId={followingReplyTweet.creator[0]._id}
               authorName={followingReplyTweet.creator[0].name}
@@ -234,6 +240,16 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 };
 export default Tweet;
 
+const TweetContentWrapper = styled.div<{
+  variant?: string;
+  fetchReply: boolean;
+}>`
+  margin-left: ${({ variant }) => variant !== "tweetReply" && "2rem"};
+  border-left: ${({ variant, fetchReply }) =>
+    variant !== "tweetReply" && fetchReply && "5px solid lightgray"};
+  padding-left: ${({ variant }) => variant === "tweetReply" ? "6rem" : "4rem"};
+`;
+
 export const BlurImage = styled(Image)<{ isLoading: boolean }>`
   border-radius: 16px;
   filter: ${({ isLoading }) =>
@@ -246,9 +262,10 @@ export const BlurImage = styled(Image)<{ isLoading: boolean }>`
   transition: all 0.7s ease-in-out;
 `;
 
-const ReplyUsername = styled.span`
-  display: block;
-  margin-block: 4rem 3rem;
+const ReplyUsernameContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
   font: 600 1.4rem var(--ff-montserrat);
 `;
 
@@ -342,7 +359,7 @@ export const TweetBox = styled.div<{
   font-family: var(--ff-noto);
   background-color: ${({ variant }) =>
     variant === "tweetReply" ? "transparent" : "white"};
-  padding: 2rem;
+  padding: ${({ variant }) => variant !== "tweetReply" && "2rem"};
   cursor: ${({ variant }) => variant !== "inTweet" && "pointer"};
   transition: all 0.4s;
   &:hover {
