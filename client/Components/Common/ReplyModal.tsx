@@ -1,12 +1,28 @@
 import { useRouter } from "next/router";
-import { useGetTweetQuery } from "../../app/services/api";
+import toast from "react-hot-toast";
+import {
+  useCreateTweetMutation,
+  useGetTweetQuery,
+} from "../../app/services/api";
+import { ToastMessage } from "../../styles/Toast.styles";
 import ContentLoader from "./ContentLoader";
+import CreateTweetComponent from "./CreateTweet";
 import CustomModal from "./CustomModal";
 import Tweet from "./Tweet";
+import { useState } from "react";
+import { useAppSelector } from "../../Hooks/store";
 
 const ReplyModal = () => {
   const { query } = useRouter();
   const { data: TweetData } = useGetTweetQuery(query.replyTweetId as string);
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+  const [createTweet] = useCreateTweetMutation();
+  const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
+  const router = useRouter();
+
   return (
     <CustomModal
       modalIsOpen={!!query.replyTweetId}
@@ -19,6 +35,7 @@ const ReplyModal = () => {
         )
       }
       shouldCloseOnOverlayClick={true}
+      maxModalHeight="60%"
     >
       {TweetData ? (
         <>
@@ -41,6 +58,15 @@ const ReplyModal = () => {
             retweetedUsers={0}
             savedBy={0}
             fetchReply={false} // Don't fetch reply for reply modal
+          />
+          <CreateTweetComponent
+            isReplyImageVisible={true}
+            placeholder="Tweet your Reply"
+            btnText="Reply"
+            replyImageUrl={currentUserPfp}
+            variant="inTweet"
+            focusOnClick={true}
+            shouldCreateReply={true}
           />
         </>
       ) : (

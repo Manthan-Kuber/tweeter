@@ -5,19 +5,57 @@ import { MdOutlineImage } from "react-icons/md";
 import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
 import { nanoid } from "@reduxjs/toolkit";
+import { useCreateTweetMutation } from "../../app/services/api";
+import toast from "react-hot-toast";
+import { ToastMessage } from "../../styles/Toast.styles";
+import { useRouter } from "next/router";
 
 const CreateTweet = ({
-  fileList,
-  message,
   isMediaInputVisible = true,
-  setMessage,
-  setFileList,
-  onSubmit,
+  shouldCreateReply = false,
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const tweetInputRef = useRef<HTMLTextAreaElement>(null);
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+  const [createTweet] = useCreateTweetMutation();
+  const { query } = useRouter();
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
+    const fileArray = fileList.map((item) => item.file);
+    setFileList([]);
+    setMessage("");
+    const formData = new FormData();
+    if (shouldCreateReply)
+      formData.append("tweetId", query.replyTweetId as string);
+    formData.append("shared", "true");
+    formData.append("tweet", message);
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+    }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
+    }
+    try {
+      await createTweet(formData).unwrap();
+      toast.success(() => (
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
+    }
+  };
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -81,12 +119,16 @@ const CreateTweet = ({
             onChange={imageHandler}
           />
           {fileList.length > 0 && (
-            <TweetImageArrayWrapper numOfImages={fileList.length}>
+            <TweetImageArrayWrapper
+              numOfImages={fileList.length}
+              variant={props.variant}
+            >
               {fileList.map((arrObject) => (
-                <TweetImageWrapper key={arrObject.id}>
+                <TweetImageWrapper key={arrObject.id} variant={props.variant}>
                   <TweetImage
                     src={URL.createObjectURL(arrObject.file)}
                     layout="fill"
+                    alt="Preview Image"
                   />
                   <CloseIcon
                     size={32}
@@ -220,10 +262,10 @@ const TweetImage = styled(Image)`
   border-radius: 16px;
 `;
 
-const TweetImageWrapper = styled.div`
+const TweetImageWrapper = styled.div<{ variant?: string }>`
   position: relative;
   width: min(45rem, 100%);
-  height: 15rem;
+  aspect-ratio: 1/1;
   border-radius: 16px;
   margin-inline: auto;
   @media screen and (min-width: 20em) {
@@ -232,6 +274,7 @@ const TweetImageWrapper = styled.div`
   @media screen and (min-width: 55em) {
     height: 45rem;
   }
+  margin-top: ${({ variant }) => variant !== "Home" && "1rem"};
 `;
 
 const MediaIcon = styled(Icon)`
@@ -264,10 +307,14 @@ const CloseIcon = styled(GrClose)`
   }
 `;
 
-export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
+export const TweetImageArrayWrapper = styled.div<{
+  numOfImages: number;
+  variant?: string;
+}>`
   margin-block: 1rem;
-  ${(props) =>
-    props.numOfImages >= 2 &&
+  ${({ numOfImages, variant = "Home" }) =>
+    numOfImages >= 2 &&
+    variant === "Home" &&
     css`
       display: grid;
       grid-template-columns: 1fr 1fr;
