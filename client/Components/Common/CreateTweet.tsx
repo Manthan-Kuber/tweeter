@@ -81,12 +81,16 @@ const CreateTweet = ({
             onChange={imageHandler}
           />
           {fileList.length > 0 && (
-            <TweetImageArrayWrapper numOfImages={fileList.length}>
+            <TweetImageArrayWrapper
+              numOfImages={fileList.length}
+              variant={props.variant}
+            >
               {fileList.map((arrObject) => (
-                <TweetImageWrapper key={arrObject.id}>
+                <TweetImageWrapper key={arrObject.id} variant={props.variant}>
                   <TweetImage
                     src={URL.createObjectURL(arrObject.file)}
                     layout="fill"
+                    alt="Preview Image"
                   />
                   <CloseIcon
                     size={32}
@@ -220,10 +224,10 @@ const TweetImage = styled(Image)`
   border-radius: 16px;
 `;
 
-const TweetImageWrapper = styled.div`
+const TweetImageWrapper = styled.div<{ variant?: string }>`
   position: relative;
   width: min(45rem, 100%);
-  height: 15rem;
+  aspect-ratio: 1/1;
   border-radius: 16px;
   margin-inline: auto;
   @media screen and (min-width: 20em) {
@@ -232,6 +236,7 @@ const TweetImageWrapper = styled.div`
   @media screen and (min-width: 55em) {
     height: 45rem;
   }
+  margin-top: ${({ variant }) => variant !== "Home" && "1rem"};
 `;
 
 const MediaIcon = styled(Icon)`
@@ -264,10 +269,14 @@ const CloseIcon = styled(GrClose)`
   }
 `;
 
-export const TweetImageArrayWrapper = styled.div<{ numOfImages: number }>`
+export const TweetImageArrayWrapper = styled.div<{
+  numOfImages: number;
+  variant?: string;
+}>`
   margin-block: 1rem;
-  ${(props) =>
-    props.numOfImages >= 2 &&
+  ${({ numOfImages, variant = "Home" }) =>
+    numOfImages >= 2 &&
+    variant === "Home" &&
     css`
       display: grid;
       grid-template-columns: 1fr 1fr;

@@ -70,6 +70,7 @@ const ReplyModal = () => {
         )
       }
       shouldCloseOnOverlayClick={true}
+      maxModalHeight="60%"
     >
       {TweetData ? (
         <>
