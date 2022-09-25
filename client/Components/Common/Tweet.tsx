@@ -3,7 +3,7 @@ import { AiOutlineDelete, AiOutlineRetweet } from "react-icons/ai";
 import styled from "styled-components";
 import ProfileInfo from "./ProfileInfo";
 import TweetOptions from "./TweetOptions";
-import CreateTweet, { TweetImageArrayWrapper } from "./CreateTweet";
+import { TweetImageArrayWrapper } from "./CreateTweet";
 import { MouseEvent, useState } from "react";
 import {
   CancelButton,
@@ -18,7 +18,6 @@ import {
   useGetFollowingReplyQuery,
 } from "../../app/services/api";
 import { useAppSelector } from "../../Hooks/store";
-import CustomModal from "./CustomModal";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
@@ -36,7 +35,6 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [isLiked, setIsLiked] = useState(props.isLiked);
   const [isSaved, setIsSaved] = useState(props.isSaved);
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
-  const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const currentUsername = useAppSelector((state) => state.auth.user?.name);
   const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
@@ -49,37 +47,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
 
   const followingReplyTweet = FollowingReplyTweetData?.data[0];
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const isHashtagPresent = /#[a-z]+/gi;
-    const fileArray = fileList.map((item) => item.file);
-    setFileList([]);
-    setMessage("");
-    const formData = new FormData();
-    formData.append("tweetId", props.tweetId);
-    formData.append("shared", "true");
-    formData.append("tweet", message);
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("media", fileArray[i]);
-    }
-    if (isHashtagPresent.test(message)) {
-      const hashtagArray = message.match(isHashtagPresent);
-      if (hashtagArray !== null) {
-        for (let i = 0; i < hashtagArray.length; i++) {
-          formData.append("hashtags", hashtagArray[i]);
-        }
-      }
-    }
-    try {
-      await createTweet(formData).unwrap();
-      toast.success(() => (
-        <ToastMessage>Created Tweet Successfully</ToastMessage>
-      ));
-      setIsModalOpen(false);
-    } catch (error) {
-      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
-    }
-  };
+  
 
   const onDeleteButtonClick = (
     tweetId: string,
