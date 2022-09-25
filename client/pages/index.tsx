@@ -28,7 +28,6 @@ const Home = () => {
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
     []
   );
-  const [createTweet] = useCreateTweetMutation();
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
@@ -128,36 +127,6 @@ const Home = () => {
     }
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const isHashtagPresent = /#[a-z]+/gi;
-    const fileArray = fileList.map((item) => item.file);
-    setFileList([]);
-    setMessage("");
-    const formData = new FormData();
-    formData.append("shared", "true");
-    formData.append("tweet", message);
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append("media", fileArray[i]);
-    }
-    if (isHashtagPresent.test(message)) {
-      const hashtagArray = message.match(isHashtagPresent);
-      if (hashtagArray !== null) {
-        for (let i = 0; i < hashtagArray.length; i++) {
-          formData.append("hashtags", hashtagArray[i]);
-        }
-      }
-    }
-    try {
-      await createTweet(formData).unwrap();
-      toast.success(() => (
-        <ToastMessage>Created Tweet Successfully</ToastMessage>
-      ));
-    } catch (error) {
-      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
-    }
-  };
-
   return (
     <Container>
       <ScrollToTopButton />
@@ -169,11 +138,6 @@ const Home = () => {
             placeholder="Whats happening?"
             btnText="Tweet"
             variant="Home"
-            message={message}
-            setMessage={setMessage}
-            fileList={fileList}
-            setFileList={setFileList}
-            onSubmit={onSubmit}
           />
         </CreateTweetWrapper>
         {HomeTweetsData !== undefined ? (

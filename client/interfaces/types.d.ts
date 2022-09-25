@@ -207,24 +207,10 @@ interface CreateTweetProps {
   placeholder: string;
   btnText: string;
   variant?: string;
-  message: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  fileList: {
-    id: string;
-    file: File;
-  }[];
-  setFileList: React.Dispatch<
-    React.SetStateAction<
-      {
-        id: string;
-        file: File;
-      }[]
-    >
-  >;
-  onSubmit: (e: React.FormEvent) => void;
   replyImageUrl?: string;
   isMediaInputVisible?: boolean;
   focusOnClick?: boolean;
+  shouldCreateReply?:boolean;
 }
 
 interface TweetProps {

@@ -5,19 +5,57 @@ import { MdOutlineImage } from "react-icons/md";
 import styled, { css } from "styled-components";
 import { Icon } from "../../styles/inputGroup.styles";
 import { nanoid } from "@reduxjs/toolkit";
+import { useCreateTweetMutation } from "../../app/services/api";
+import toast from "react-hot-toast";
+import { ToastMessage } from "../../styles/Toast.styles";
+import { useRouter } from "next/router";
 
 const CreateTweet = ({
-  fileList,
-  message,
   isMediaInputVisible = true,
-  setMessage,
-  setFileList,
-  onSubmit,
+  shouldCreateReply = false,
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const tweetInputRef = useRef<HTMLTextAreaElement>(null);
+  const [message, setMessage] = useState<string>("");
+  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
+    []
+  );
+  const [createTweet] = useCreateTweetMutation();
+  const { query } = useRouter();
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const isHashtagPresent = /#[a-z]+/gi;
+    const fileArray = fileList.map((item) => item.file);
+    setFileList([]);
+    setMessage("");
+    const formData = new FormData();
+    if (shouldCreateReply)
+      formData.append("tweetId", query.replyTweetId as string);
+    formData.append("shared", "true");
+    formData.append("tweet", message);
+    for (let i = 0; i < fileList.length; i++) {
+      formData.append("media", fileArray[i]);
+    }
+    if (isHashtagPresent.test(message)) {
+      const hashtagArray = message.match(isHashtagPresent);
+      if (hashtagArray !== null) {
+        for (let i = 0; i < hashtagArray.length; i++) {
+          formData.append("hashtags", hashtagArray[i]);
+        }
+      }
+    }
+    try {
+      await createTweet(formData).unwrap();
+      toast.success(() => (
+        <ToastMessage>Created Tweet Successfully</ToastMessage>
+      ));
+    } catch (error) {
+      toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
+    }
+  };
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
