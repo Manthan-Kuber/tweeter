@@ -1,6 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
+function providesTagsList<R extends { _id: string }[], T extends string>(
+  resultsWithIds: R | undefined,
+  tagType: T
+) {
+  return resultsWithIds
+    ? [
+        { type: tagType, id: `${tagType.toUpperCase()}LIST` },
+        ...resultsWithIds.map(({ _id }) => ({ type: tagType, id: _id })),
+      ]
+    : [{ type: tagType, id: `${tagType.toUpperCase()}LIST` }];
+}
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://tweeter-app-backend.herokuapp.com/",
@@ -104,7 +116,7 @@ export const api = createApi({
     }),
     getHomeTweets: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/tweets/${skip}`,
-      providesTags: ["HomeTweets"],
+      providesTags: (result) => providesTagsList(result?.data, "HomeTweets"),
     }),
     getFollowers: builder.query<GetFollowingAndFollowersResponse, string>({
       query: (userId) => `users/followers/${userId}/0`,
@@ -120,17 +132,20 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId }, //invalidate tags for liked tweets fetch
       }),
-      invalidatesTags: [
-        "Tweets",
-        "HomeTweets",
-        "Bookmarks",
-        "TweetsAndReplies",
-        "TweetsLikes",
-        "TweetsMedia",
-        "Tweet",
-        "ReplyToTweet",
-        "FollowingReplyTweet",
-      ],
+      // invalidatesTags: [
+      //   "Tweets",
+      //   "HomeTweets",
+      //   "Bookmarks",
+      //   "TweetsAndReplies",
+      //   "TweetsLikes",
+      //   "TweetsMedia",
+      //   "Tweet",
+      //   "ReplyToTweet",
+      //   "FollowingReplyTweet",
+      // ],
+      // invalidatesTags: (result, error, tweetId) => [
+      //   { type: "HomeTweets", id: tweetId },
+      // ],
     }),
     saveTweet: builder.mutation<string, string>({
       query: (tweetId) => ({

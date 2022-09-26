@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import Layout from "../Components/Common/Layout";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
+import NextNProgress from "nextjs-progressbar";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -22,7 +23,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     ((page) => (
       <Provider store={store}>
         <GlobalStyles />
-        <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
+        <NextNProgress color="var(--clr-primary)" showOnShallow={false} options={{showSpinner:false}} />
+        <PersistGate persistor={persistor}>
           <Layout>{page}</Layout>
         </PersistGate>
       </Provider>
@@ -30,7 +32,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return getLayout(
     <Provider store={store}>
       <GlobalStyles />
-      <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
+      <NextNProgress color="var(--clr-primary)" showOnShallow={false} options={{showSpinner:false}} />
+      <PersistGate persistor={persistor}>
         <Component {...pageProps} />
       </PersistGate>
     </Provider>

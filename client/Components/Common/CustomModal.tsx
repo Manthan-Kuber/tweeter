@@ -19,6 +19,8 @@ const CustomModal = ({
 
   const router = useRouter();
 
+  const goBackPath = router.asPath.split("?")[0];
+
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -30,7 +32,7 @@ const CustomModal = ({
             state.options.scroll = false;
             return true;
           });
-          router.back();
+          router.push(goBackPath, undefined, { shallow: true });
         }
       }}
       contentLabel={`${props.modalTitle} Modal`}
@@ -77,7 +79,7 @@ const CustomModal = ({
                         state.options.scroll = false;
                         return true;
                       });
-                      router.back();
+                      router.push(goBackPath, undefined, { shallow: true });
                     }
                   }
             }
