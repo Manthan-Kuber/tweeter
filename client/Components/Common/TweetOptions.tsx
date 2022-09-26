@@ -28,7 +28,7 @@ const TweetOptions = ({
   const [likeTweet] = useLikeTweetMutation();
   const [saveTweet] = useSaveTweetMutation();
   const [retweetTweet] = useRetweetTweetMutation();
-  const { push, pathname, query } = useRouter();
+  const { push, asPath } = useRouter();
 
   const optionsList = [
     {
@@ -42,28 +42,10 @@ const TweetOptions = ({
         e.stopPropagation();
         props.setIsCommentButtonClicked((prev: boolean) => !prev);
         const urlParam = `?replyTweetId=${props.tweetId}`;
-        // props.setIsModalOpen(true);
-        // push(
-        //   `${pathname !== "/" && `${pathname}/`}?replyTweetId=${props.tweetId}`,
-        //   undefined, // alias for href
-        //   { shallow: true, scroll: false }
-        // );
-        switch (pathname) {
-          case "/tweet/[tweetId]":
-            push(`/tweet/${query.tweetId}/${urlParam}`, undefined, {
-              shallow: true,
-              scroll: false,
-            });
-            break;
-          case "/profile/[userId]":
-            push(`/profile/${query.userId}/${urlParam}`, undefined, {
-              shallow: true,
-              scroll: false,
-            });
-            break;
-          default:
-            push(`${urlParam}`, undefined, { shallow: true, scroll: false });
-        }
+        push(`${asPath}${urlParam}`, undefined, {
+          shallow: true,
+          scroll: false,
+        });
       },
     },
     {

@@ -110,7 +110,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
         {props.fetchReply && followingReplyTweet && (
           <ReplyUsernameContainer>
             <MdModeComment size={16} />
-            <p>{followingReplyTweet.creator[0].username} Replied</p>
+            <p>{followingReplyTweet.creator[0].username} replied</p>
           </ReplyUsernameContainer>
         )}
         <ProfileInfoContainer>
@@ -268,6 +268,7 @@ const ReplyUsernameContainer = styled.div`
   gap: 1rem;
   margin-bottom: 2rem;
   font: 600 1.4rem var(--ff-montserrat);
+  color: hsla(0, 0%, 42%, 1);
 `;
 
 const LinkText = styled.p`
