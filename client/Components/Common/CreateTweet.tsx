@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { GrClose } from "react-icons/gr";
 import { MdOutlineImage } from "react-icons/md";
 import styled, { css } from "styled-components";
@@ -16,7 +16,6 @@ const CreateTweet = ({
   ...props
 }: CreateTweetProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const tweetInputRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState<string>("");
   const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
@@ -67,24 +66,20 @@ const CreateTweet = ({
     }
   };
 
-  useEffect(() => {
-    if (message.length || fileList.length > 0) setIsDisabled(false);
-    else setIsDisabled(true);
-  }, [message, fileList]);
-
-  useEffect(() => {
-    (() => {
-      if (tweetInputRef.current) {
-        tweetInputRef.current.style.height = "auto";
-        tweetInputRef.current.style.height =
-          tweetInputRef.current.scrollHeight + "px";
-      }
-    })();
-  }, [message]);
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.currentTarget.value);
+    if (tweetInputRef.current) {
+      tweetInputRef.current.style.height = "auto";
+      tweetInputRef.current.style.height =
+        tweetInputRef.current.scrollHeight + "px";
+    }
+  };
 
   useEffect(() => {
     props.focusOnClick && tweetInputRef.current?.focus();
-  }, []);
+  }, [props.focusOnClick]);
+
+  const isBtnDisabled = message.length > 0 || fileList.length > 0;
 
   return (
     <ReplyContainer>
@@ -108,7 +103,7 @@ const CreateTweet = ({
             rows={1}
             value={message}
             onClick={(e) => e.stopPropagation()}
-            onChange={(e) => setMessage((prev) => (prev = e.target.value))}
+            onChange={(e) => handleInputChange(e)}
           />
           <input
             type="file"
@@ -157,7 +152,7 @@ const CreateTweet = ({
                 }
               />
             )}
-            <TweetButton disabled={isDisabled}>{props.btnText}</TweetButton>
+            <TweetButton disabled={!isBtnDisabled}>{props.btnText}</TweetButton>
           </OptionsWrapper>
         </form>
       </InputFormWrapper>
