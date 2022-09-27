@@ -1,11 +1,6 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
-import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
 import ContentLoader from "./ContentLoader";
-import CustomModal from "./CustomModal";
-import { Loader } from "./FullScreenLoader";
 import NoTweetsToShow from "./NoTweetsToShow";
 import ReplyModal from "./ReplyModal";
 import Tweet from "./Tweet";

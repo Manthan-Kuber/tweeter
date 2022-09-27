@@ -24,10 +24,6 @@ var hashtagLimit = 6;
 var suggestedFollowerLimit = 4;
 
 const Home = () => {
-  const [message, setMessage] = useState<string>("");
-  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
-    []
-  );
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
   const [hasMoreTweets, setHasMoreTweets] = useState(true);

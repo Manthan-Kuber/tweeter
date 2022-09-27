@@ -10,7 +10,6 @@ import {
   useRetweetTweetMutation,
   useSaveTweetMutation,
 } from "../../app/services/api";
-import useWindowSize from "../../Hooks/useWindowDimensions";
 import { ToastMessage } from "../../styles/Toast.styles";
 
 const TweetOptions = ({
@@ -123,7 +122,7 @@ const TweetOptions = ({
             onActiveColor={option.onActiveColor}
           >
             {option.icon}
-            {option.count}
+            {option.count || null}
           </OptionWrapper>
         ))}
       </OptionsWrapper>
