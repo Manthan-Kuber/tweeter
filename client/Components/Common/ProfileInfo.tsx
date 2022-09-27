@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
 
 const ProfileInfo = ({
@@ -25,6 +26,25 @@ const ProfileInfo = ({
   );
 };
 export default ProfileInfo;
+
+export const ProfileInfoSkeleton = () => {
+  return (
+    <ProfileInfoWrapper>
+      <ProfilePicWrapper>
+        <Skeleton width={42} height={42} borderRadius={6} />
+      </ProfilePicWrapper>
+      <InfoWrapper>
+        <UsernameContainer>
+          <Skeleton />
+          <Skeleton />
+        </UsernameContainer>
+        <DateText>
+          <Skeleton />
+        </DateText>
+      </InfoWrapper>
+    </ProfileInfoWrapper>
+  );
+};
 
 const InfoWrapper = styled.div`
   font: 500 clamp(1.2rem, 1.5vw, 1.4rem) var(--ff-poppins);

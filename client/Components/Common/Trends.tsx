@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
 import ContentLoader from "./ContentLoader";
 import { AsideContainer } from "./FilterBox";
@@ -38,7 +39,18 @@ const Trends = ({ trendList, ...props }: TrendProps) => {
             )}
           </InfiniteScroll>
         ) : (
-          <ContentLoader size={32} />
+          Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <li key={index}>
+                <h3>
+                  <Skeleton />
+                </h3>
+                <span>
+                  <Skeleton />
+                </span>
+              </li>
+            ))
         )}
       </ul>
     </Article>
