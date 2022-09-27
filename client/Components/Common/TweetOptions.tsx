@@ -117,7 +117,7 @@ const TweetOptions = ({
           <OptionWrapper
             key={option.id}
             onClick={option.onClick}
-            isActive={(isActive as any)[option.name]}
+            isActive={isActive[option.name as keyof typeof isActive]}
             activeColor={option.activeColor}
             hoverColor={option.hoverColor}
             onActiveColor={option.onActiveColor}

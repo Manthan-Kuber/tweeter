@@ -13,7 +13,6 @@ import {
 } from "../../styles/Toast.styles";
 import toast from "react-hot-toast";
 import {
-  useCreateTweetMutation,
   useDeleteTweetMutation,
   useGetFollowingReplyQuery,
 } from "../../app/services/api";
