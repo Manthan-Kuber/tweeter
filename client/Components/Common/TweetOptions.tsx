@@ -33,6 +33,7 @@ const TweetOptions = ({
   const optionsList = [
     {
       id: 1,
+      count: props.commentCount,
       name: "Reply",
       icon: <MdModeComment size={16} />,
       activeColor: "rgba(47, 128, 237,1)",
@@ -50,6 +51,7 @@ const TweetOptions = ({
     },
     {
       id: 2,
+      count: props.retweetedUsers,
       name: "Retweet",
       icon: <AiOutlineRetweet size={16} />,
       activeColor: "rgba(40, 175, 96,1)",
@@ -70,6 +72,7 @@ const TweetOptions = ({
     },
     {
       id: 3,
+      count: props.likes,
       name: "Like",
       icon: <AiFillHeart size={16} />,
       activeColor: "rgba(235, 86, 86,1)",
@@ -88,6 +91,7 @@ const TweetOptions = ({
     },
     {
       id: 4,
+      count: props.savedBy,
       name: "Saved",
       icon: <BsBookmarkFill size={16} />,
       activeColor: "rgba(46, 156, 220,1)",
@@ -119,6 +123,7 @@ const TweetOptions = ({
             onActiveColor={option.onActiveColor}
           >
             {option.icon}
+            {option.count}
             {/* {width !== undefined && width > 880 && <span>{option.name}</span>} */}
           </OptionWrapper>
         ))}
@@ -145,7 +150,7 @@ export const OptionWrapper = styled.div<{
   display: flex;
   align-items: center;
   gap: 1rem;
-  line-height: 14px;
+  line-height: 16px;
   font: 500 1.4rem var(--ff-noto);
   color: ${(props) =>
     props.isActive ? props.activeColor : "hsla(0, 0%, 31%, 1)"};

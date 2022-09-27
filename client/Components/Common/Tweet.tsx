@@ -175,14 +175,14 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               </LinkText>
             ))
           )}
-          {props.variant !== "inTweet" && (
+          {/* {props.variant !== "inTweet" && (
             <TweetInfo>
               <span>{props.commentCount || 0} Comments</span>
               <span>{props.retweetedUsers || 0} Retweets</span>
               <span>{props.likes || 0} Likes</span>
               <span>{props.savedBy || 0} Saved</span>
             </TweetInfo>
-          )}
+          )} */}
           {props.variant !== "inTweet" && (
             <TweetOptions
               setIsModalOpen={setIsModalOpen}
@@ -194,6 +194,10 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
               setIsLiked={setIsLiked}
               setIsSaved={setIsSaved}
               setIsRetweeted={setIsRetweeted}
+              commentCount={props.commentCount}
+              retweetedUsers={props.retweetedUsers}
+              likes={props.likes}
+              savedBy={props.savedBy}
             />
           )}
         </TweetContentWrapper>
@@ -365,7 +369,7 @@ export const TweetBox = styled.div<{
   padding: ${({ variant, currentRoute }) =>
     variant === "tweetReply" && currentRoute !== "/tweet/[tweetId]"
       ? "0rem"
-      : "2rem"};
+      : "1.5rem"};
   cursor: ${({ variant }) => variant !== "inTweet" && "pointer"};
   transition: all 0.4s;
   &:hover {
@@ -373,6 +377,12 @@ export const TweetBox = styled.div<{
       variant === "tweetReply" || variant === "inTweet"
         ? "none"
         : "0px 2px 4px 2px rgba(0, 0, 0, 0.1)"};
+  }
+  @media screen and (min-width: 40em) {
+    padding: ${({ variant, currentRoute }) =>
+      variant === "tweetReply" && currentRoute !== "/tweet/[tweetId]"
+        ? "0rem"
+        : "2rem"};
   }
 `;
 

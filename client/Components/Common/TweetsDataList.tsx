@@ -18,6 +18,7 @@ const TweetsDataList = ({
 }: TweetsDataListProps) => {
   return (
     <>
+      <ReplyModal />
       <InfiniteScroll
         dataLength={TweetsData.data.length}
         next={getMoreTweets}
@@ -60,7 +61,6 @@ const TweetsDataList = ({
           ))
         )}
       </InfiniteScroll>
-      <ReplyModal />
     </>
   );
 };
