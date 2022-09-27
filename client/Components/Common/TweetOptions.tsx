@@ -124,7 +124,6 @@ const TweetOptions = ({
           >
             {option.icon}
             {option.count}
-            {/* {width !== undefined && width > 880 && <span>{option.name}</span>} */}
           </OptionWrapper>
         ))}
       </OptionsWrapper>

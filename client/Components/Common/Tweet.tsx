@@ -253,6 +253,11 @@ const TweetContentWrapper = styled.div<{
     variant !== "tweetReply" && fetchReply && "5px solid lightgray"};
   padding-left: ${({ variant }) =>
     variant === "tweetReply" ? "6rem" : "4rem"};
+
+  &::after {
+    content: "UwU";
+    color: transparent;
+  }
 `;
 
 export const BlurImage = styled(Image)<{ isLoading: boolean }>`
@@ -370,6 +375,7 @@ export const TweetBox = styled.div<{
     variant === "tweetReply" && currentRoute !== "/tweet/[tweetId]"
       ? "0rem"
       : "1.5rem"};
+  padding-bottom: 0.75rem;
   cursor: ${({ variant }) => variant !== "inTweet" && "pointer"};
   transition: all 0.4s;
   &:hover {
@@ -383,6 +389,7 @@ export const TweetBox = styled.div<{
       variant === "tweetReply" && currentRoute !== "/tweet/[tweetId]"
         ? "0rem"
         : "2rem"};
+    padding-bottom: 1rem;
   }
 `;
 
