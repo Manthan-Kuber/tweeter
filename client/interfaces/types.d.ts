@@ -417,3 +417,15 @@ interface MetaHeadProps {
   currentRouteName: string;
   pathname: string;
 }
+
+interface FollowerFollowingModalProps {
+  name: string;
+  username: string;
+  setFollowerModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  followerModalIsOpen: boolean;
+  GetFollowersData: GetFollowingAndFollowersResponse | undefined;
+  followers: number;
+  following: number;
+  shouldCloseOnOverlayClick:boolean;
+  modalTitle:string;
+}

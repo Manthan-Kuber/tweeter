@@ -2,7 +2,6 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import { Button } from "../../styles/registerPage.styles";
 import { motion } from "framer-motion";
 import styled from "styled-components";
-import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import { useAppSelector } from "../../Hooks/store";
 import { MdEdit } from "react-icons/md";
@@ -13,8 +12,6 @@ import {
   useUnfollowUserMutation,
 } from "../../app/services/api";
 import toast from "react-hot-toast";
-import { LoaderWrapper } from "../../pages/tweet/[tweetId]";
-import { Loader } from "./FullScreenLoader";
 import { BlurImage } from "./Tweet";
 
 const ProfileBox = ({
@@ -88,8 +85,8 @@ const ProfileBox = ({
               <span
                 onClick={async () => {
                   try {
-                    await props.GetFollowingTrigger(userId).unwrap();
                     setFollowingModalIsOpen(true);
+                    await props.GetFollowingTrigger(userId).unwrap();
                   } catch (err) {
                     <ToastMessage> Error in Fetching Following </ToastMessage>;
                   }
@@ -100,8 +97,8 @@ const ProfileBox = ({
               <span
                 onClick={async () => {
                   try {
-                    await props.GetFollowersTrigger(userId).unwrap();
                     setFollowerModalIsOpen(true);
+                    await props.GetFollowersTrigger(userId).unwrap();
                   } catch (err) {
                     <ToastMessage> Error in Fetching Followers </ToastMessage>;
                   }
