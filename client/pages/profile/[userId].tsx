@@ -450,7 +450,7 @@ export const getStaticProps: GetStaticProps = (context) => {
 };
 
 const BannerImage = styled(BlurImage)`
-  border-radius: 6px;
+  border-radius: 6px 6px 0 0;
 `;
 
 const BannerWrapper = styled.div`
@@ -458,7 +458,7 @@ const BannerWrapper = styled.div`
   width: min(95%, 120rem);
   margin-inline: auto;
   aspect-ratio: 16/9;
-  border-radius: 8px;
+  border-radius: 6px 6px 0 0;
   border: 1px solid lightgray;
   background-color: white;
   overflow: hidden;

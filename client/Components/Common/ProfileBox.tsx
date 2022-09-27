@@ -170,7 +170,7 @@ const ProfileContainer = styled.div`
   padding-block: 2.5rem;
   font-family: var(--ff-poppins);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  border-radius: 0 0 6px 6px;
   margin-inline: auto;
   margin-top: 0%;
   position: relative;

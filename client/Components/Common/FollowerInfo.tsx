@@ -12,8 +12,7 @@ import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
-const FollowerInfo = ({ RawData, setModalIsOpen }: FollowerInfoProps) => {
-  const router = useRouter();
+const FollowerInfo = ({ RawData }: FollowerInfoProps) => {
   const [followUser] = useFollowUserMutation();
   const [unfollowUser] = useUnfollowUserMutation();
 
