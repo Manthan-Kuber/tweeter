@@ -9,6 +9,7 @@ import { useCreateTweetMutation } from "../../app/services/api";
 import toast from "react-hot-toast";
 import { ToastMessage } from "../../styles/Toast.styles";
 import { useRouter } from "next/router";
+import { Loader } from "./FullScreenLoader";
 
 const CreateTweet = ({
   isMediaInputVisible = true,
@@ -23,6 +24,7 @@ const CreateTweet = ({
   );
   const [createTweet] = useCreateTweetMutation();
   const { query } = useRouter();
+  const [isBtnLoading, setisBtnLoading] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,11 +49,14 @@ const CreateTweet = ({
       }
     }
     try {
+      setisBtnLoading(true);
       await createTweet(formData).unwrap();
+      setisBtnLoading(false);
       toast.success(() => (
         <ToastMessage>Created Tweet Successfully</ToastMessage>
       ));
     } catch (error) {
+      setisBtnLoading(false);
       toast.error(() => <ToastMessage>Error in creating Tweet</ToastMessage>);
     }
   };
@@ -152,7 +157,13 @@ const CreateTweet = ({
                 }
               />
             )}
-            <TweetButton disabled={!isBtnDisabled}>{props.btnText}</TweetButton>
+            <TweetButton disabled={!isBtnDisabled || isBtnLoading}>
+              {isBtnLoading ? (
+                <Loader size={16} color="white" />
+              ) : (
+                props.btnText
+              )}
+            </TweetButton>
           </OptionsWrapper>
         </form>
       </InputFormWrapper>
