@@ -4,6 +4,7 @@ import { MouseEvent, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
 import { useFollowUserMutation } from "../../app/services/api";
 import { ToastMessage } from "../../styles/Toast.styles";
@@ -11,7 +12,7 @@ import ContentLoader from "./ContentLoader";
 import { AsideContainer } from "./FilterBox";
 import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
-import ProfileInfo from "./ProfileInfo";
+import ProfileInfo, { ProfileInfoSkeleton } from "./ProfileInfo";
 
 const SuggestedFollow = ({
   suggestedFollowList,
@@ -22,7 +23,7 @@ const SuggestedFollow = ({
   useEffect(() => {
     if (suggestedFollowList?.length === 4) props.setHasMoreSuggestions(true);
   }, [suggestedFollowList]);
-  
+
   return (
     <Article as="article" id="suggestedFollowerScroll">
       <h3>Whom to follow</h3>
@@ -85,7 +86,22 @@ const SuggestedFollow = ({
           )}
         </InfiniteScroll>
       ) : (
-        <ContentLoader size={32} />
+        Array(4)
+          .fill(0)
+          .map((_, key) => (
+            <FollowerContainer key={key}>
+              <hr />
+              <ProfileInfoWrapper>
+                <div>
+                  <ProfileInfoSkeleton />
+                </div>
+                <div>
+                  <Skeleton count={2} />
+                </div>
+              </ProfileInfoWrapper>
+              <Skeleton />
+            </FollowerContainer>
+          ))
       )}
     </Article>
   );

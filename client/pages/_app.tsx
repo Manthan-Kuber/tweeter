@@ -8,6 +8,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import Layout from "../Components/Common/Layout";
 import FullScreenLoader from "../Components/Common/FullScreenLoader";
 import NextNProgress from "nextjs-progressbar";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

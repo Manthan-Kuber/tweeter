@@ -119,9 +119,9 @@ interface ModalProps {
   modalWidth?: string;
   modalHeight?: string;
   maxModalHeight?: string;
-  modalTop?:string;
-  modalLeft?:string;
-  modalTransfrom?:string;
+  modalTop?: string;
+  modalLeft?: string;
+  modalTransfrom?: string;
 }
 
 interface ProfileBoxProps
@@ -210,7 +210,7 @@ interface CreateTweetProps {
   replyImageUrl?: string;
   isMediaInputVisible?: boolean;
   focusOnClick?: boolean;
-  shouldCreateReply?:boolean;
+  shouldCreateReply?: boolean;
 }
 
 interface TweetProps {
@@ -291,6 +291,10 @@ interface TweetOptionsProps {
   setIsLiked: React.Dispatch<SetStateAction<boolean>>;
   setIsRetweeted: React.Dispatch<SetStateAction<boolean>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  commentCount: number;
+  retweetedUsers: number;
+  likes: number;
+  savedBy: number;
 }
 
 interface GetTweetsResponseElement {
@@ -414,4 +418,14 @@ interface MetaHeadProps {
   pathname: string;
 }
 
-
+interface FollowerFollowingModalProps {
+  name: string;
+  username: string;
+  setFollowerModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  followerModalIsOpen: boolean;
+  GetFollowersData: GetFollowingAndFollowersResponse | undefined;
+  followers: number;
+  following: number;
+  shouldCloseOnOverlayClick:boolean;
+  modalTitle:string;
+}

@@ -39,6 +39,7 @@ import ScrollToTopButton from "../../Components/Common/ScrollToTopButton";
 import { useRouter } from "next/router";
 import ContentLoader from "../../Components/Common/ContentLoader";
 import { BlurImage } from "../../Components/Common/Tweet";
+import FollowerFollowingModal from "../../Components/Common/FollowerFollowingModal";
 
 const filterList = [
   {
@@ -268,6 +269,14 @@ const Profile = ({ userId }: { userId: string }) => {
     }
   };
 
+  const folModalProps = {
+    name: name,
+    username: username,
+    followers: followers,
+    following: following,
+    shouldCloseOnOverlayClick: true,
+  };
+
   return isFallback || isLoading ? (
     <FullScreenLoader />
   ) : (
@@ -307,41 +316,20 @@ const Profile = ({ userId }: { userId: string }) => {
         userId={userId}
         getProfile={getProfile}
       />
-      {/* Extact into a separate component */}
-      <CustomModal
-        setModalIsOpen={setFollowerModalIsOpen}
-        modalIsOpen={followerModalIsOpen}
-        name={name}
-        username={username}
-        followers={followers}
-        following={following}
-        modalTitle={`${name} is Followed By`}
-        shouldCloseOnOverlayClick={true}
-      >
-        {GetFollowersData !== undefined && (
-          <FollowerInfo
-            RawData={GetFollowersData}
-            setModalIsOpen={setFollowerModalIsOpen} //Remove if not needed
-          />
-        )}
-      </CustomModal>
-      <CustomModal
-        setModalIsOpen={setFollowingModalIsOpen}
-        modalIsOpen={followingModalIsOpen}
-        name={name}
-        username={username}
-        followers={followers}
-        following={following}
+      <FollowerFollowingModal
+        {...folModalProps}
+        setFollowerModalIsOpen={setFollowingModalIsOpen}
+        followerModalIsOpen={followingModalIsOpen}
         modalTitle={`${name} is Following`}
-        shouldCloseOnOverlayClick={true}
-      >
-        {GetFollowingData !== undefined && (
-          <FollowerInfo
-            RawData={GetFollowingData}
-            setModalIsOpen={setFollowingModalIsOpen} //Remove if not needed
-          />
-        )}
-      </CustomModal>
+        GetFollowersData={GetFollowingData}
+      />
+      <FollowerFollowingModal
+        {...folModalProps}
+        setFollowerModalIsOpen={setFollowerModalIsOpen}
+        followerModalIsOpen={followerModalIsOpen}
+        modalTitle={`${name} is Followed By`}
+        GetFollowersData={GetFollowersData}
+      />
       <CustomModal
         setModalIsOpen={setEditProfileModalIsOpen}
         modalIsOpen={editProfileModalIsOpen}
@@ -462,7 +450,7 @@ export const getStaticProps: GetStaticProps = (context) => {
 };
 
 const BannerImage = styled(BlurImage)`
-  border-radius: 6px;
+  border-radius: 6px 6px 0 0;
 `;
 
 const BannerWrapper = styled.div`
@@ -470,7 +458,7 @@ const BannerWrapper = styled.div`
   width: min(95%, 120rem);
   margin-inline: auto;
   aspect-ratio: 16/9;
-  border-radius: 8px;
+  border-radius: 6px 6px 0 0;
   border: 1px solid lightgray;
   background-color: white;
   overflow: hidden;
