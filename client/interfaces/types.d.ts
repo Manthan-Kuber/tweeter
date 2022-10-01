@@ -377,7 +377,7 @@ interface NoTweetsToShowProps {
 }
 
 interface TweetsDataListProps {
-  TweetsData: GetTweetsResponse;
+  TweetsData: GetTweetsResponseElement[];
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   variant?: "inTweet" | "tweetPage" | "tweetReply";

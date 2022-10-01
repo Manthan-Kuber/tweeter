@@ -44,7 +44,7 @@ function Bookmarks() {
       <ScrollToTopButton />
       {BookmarksData !== undefined ? (
         <TweetsDataList
-          TweetsData={BookmarksData}
+          TweetsData={BookmarksData.data}
           getMoreTweets={getMoreBookmarks}
           hasMoreTweets={hasMoreTweets}
         />
