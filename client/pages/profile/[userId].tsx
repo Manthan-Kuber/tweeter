@@ -381,7 +381,7 @@ const Profile = ({ userId }: { userId: string }) => {
           {tab === 0 ? (
             TweetsData !== undefined ? (
               <TweetsDataList
-                TweetsData={TweetsData}
+                TweetsData={TweetsData.data}
                 getMoreTweets={getMoreTweets}
                 hasMoreTweets={hasMoreTweets}
               />
@@ -391,7 +391,7 @@ const Profile = ({ userId }: { userId: string }) => {
           ) : tab === 1 ? (
             TweetsAndRepliesData !== undefined ? (
               <TweetsDataList
-                TweetsData={TweetsAndRepliesData}
+                TweetsData={TweetsAndRepliesData.data}
                 getMoreTweets={getMoreTweetsAndReplies}
                 hasMoreTweets={hasMoreTweetsAndReplies}
               />
@@ -401,7 +401,7 @@ const Profile = ({ userId }: { userId: string }) => {
           ) : tab === 2 ? (
             TweetsMediaData !== undefined ? (
               <TweetsDataList
-                TweetsData={TweetsMediaData}
+                TweetsData={TweetsMediaData.data}
                 getMoreTweets={getMoreTweetsMedia}
                 hasMoreTweets={hasMoreTweetsMedia}
               />
@@ -412,7 +412,7 @@ const Profile = ({ userId }: { userId: string }) => {
             tab === 3 &&
             (TweetsLikesData !== undefined ? (
               <TweetsDataList
-                TweetsData={TweetsLikesData}
+                TweetsData={TweetsLikesData.data}
                 getMoreTweets={getMoreTweetsLikes}
                 hasMoreTweets={hasMoreTweetsLikes}
               />

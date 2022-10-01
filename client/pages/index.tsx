@@ -138,7 +138,7 @@ const Home = () => {
         </CreateTweetWrapper>
         {HomeTweetsData !== undefined ? (
           <TweetsDataList
-            TweetsData={HomeTweetsData}
+            TweetsData={HomeTweetsData.data}
             hasMoreTweets={hasMoreTweets}
             getMoreTweets={getMoreHomeTweets}
           />
