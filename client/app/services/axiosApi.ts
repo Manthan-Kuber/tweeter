@@ -1,6 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  // baseURL: "https://tweeter-app-backend.herokuapp.com/"
-  baseURL: "http://localhost:6969/"
+  baseURL: "https://tweeter-app-backend.herokuapp.com/",
 });

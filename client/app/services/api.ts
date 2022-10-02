@@ -15,8 +15,7 @@ function providesTagsList<R extends { _id: string }[], T extends string>(
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    // baseUrl: "https://tweeter-app-backend.herokuapp.com/",
-    baseUrl: "http://localhost:6969/",
+    baseUrl: "https://tweeter-app-backend.herokuapp.com/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set("authorization", `Bearer ${token}`);
@@ -156,16 +155,16 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId },
       }),
-      invalidatesTags: [
-        "Tweets",
-        "Bookmarks",
-        "TweetsAndReplies",
-        "TweetsLikes",
-        "TweetsMedia",
-        "Tweet",
-        "ReplyToTweet",
-        "FollowingReplyTweet",
-      ],
+      // invalidatesTags: [
+      //   "Tweets",
+      //   "Bookmarks",
+      //   "TweetsAndReplies",
+      //   "TweetsLikes",
+      //   "TweetsMedia",
+      //   "Tweet",
+      //   "ReplyToTweet",
+      //   "FollowingReplyTweet",
+      // ],
     }),
     retweetTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -173,16 +172,16 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId },
       }),
-      invalidatesTags: [
-        "Tweets",
-        "Bookmarks",
-        "TweetsAndReplies",
-        "TweetsLikes",
-        "TweetsMedia",
-        "Tweet",
-        "ReplyToTweet",
-        "FollowingReplyTweet",
-      ],
+      // invalidatesTags: [
+      //   "Tweets",
+      //   "Bookmarks",
+      //   "TweetsAndReplies",
+      //   "TweetsLikes",
+      //   "TweetsMedia",
+      //   "Tweet",
+      //   "ReplyToTweet",
+      //   "FollowingReplyTweet",
+      // ],
     }),
     deleteTweet: builder.mutation({
       query: (tweetId: string) => ({
@@ -199,6 +198,7 @@ export const api = createApi({
         "Tweet",
         "ReplyToTweet",
         "FollowingReplyTweet",
+        "HomeTweets",
       ],
     }),
     followUser: builder.mutation<void, string>({

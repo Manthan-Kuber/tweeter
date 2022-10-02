@@ -29,10 +29,17 @@ const TweetOptions = ({
   const [retweetTweet] = useRetweetTweetMutation();
   const { push, asPath } = useRouter();
 
+  const [counts, setCounts] = useState({
+    comments: props.commentCount,
+    retweets: props.retweetedUsers,
+    likes: props.likes,
+    saves: props.savedBy,
+  });
+
   const optionsList = [
     {
       id: 1,
-      count: props.commentCount,
+      count: counts.comments,
       name: "Reply",
       icon: <MdModeComment size={16} />,
       activeColor: "rgba(47, 128, 237,1)",
@@ -50,7 +57,7 @@ const TweetOptions = ({
     },
     {
       id: 2,
-      count: props.retweetedUsers,
+      count: counts.retweets,
       name: "Retweet",
       icon: <AiOutlineRetweet size={16} />,
       activeColor: "rgba(40, 175, 96,1)",
@@ -59,8 +66,11 @@ const TweetOptions = ({
       onClick: async (e: MouseEvent) => {
         e.stopPropagation();
         try {
-          await retweetTweet(props.tweetId).unwrap();
           setIsActive({ ...isActive, Retweet: !isActive.Retweet });
+          isActive.Retweet
+            ? setCounts((prev) => ({ ...prev, retweets: prev.retweets - 1 }))
+            : setCounts((prev) => ({ ...prev, retweets: prev.retweets + 1 }));
+          await retweetTweet(props.tweetId).unwrap();
           setIsRetweeted(!props.isRetweeted);
         } catch (error) {
           toast.error(() => (
@@ -71,7 +81,7 @@ const TweetOptions = ({
     },
     {
       id: 3,
-      count: props.likes,
+      count: counts.likes,
       name: "Like",
       icon: <AiFillHeart size={16} />,
       activeColor: "rgba(235, 86, 86,1)",
@@ -80,8 +90,11 @@ const TweetOptions = ({
       onClick: async (e: MouseEvent) => {
         e.stopPropagation();
         try {
-          await likeTweet(props.tweetId).unwrap();
           setIsActive({ ...isActive, Like: !isActive.Like });
+          isActive.Like
+            ? setCounts((prev) => ({ ...prev, likes: prev.likes - 1 }))
+            : setCounts((prev) => ({ ...prev, likes: prev.likes + 1 }));
+          await likeTweet(props.tweetId).unwrap();
           setIsLiked(!props.isLiked);
         } catch (error) {
           toast.error(() => <ToastMessage>Error in Liking Tweet</ToastMessage>);
@@ -90,7 +103,7 @@ const TweetOptions = ({
     },
     {
       id: 4,
-      count: props.savedBy,
+      count: counts.saves,
       name: "Saved",
       icon: <BsBookmarkFill size={16} />,
       activeColor: "rgba(46, 156, 220,1)",
@@ -99,8 +112,11 @@ const TweetOptions = ({
       onClick: async (e: MouseEvent) => {
         e.stopPropagation();
         try {
-          await saveTweet(props.tweetId).unwrap();
           setIsActive({ ...isActive, Saved: !isActive.Saved });
+          isActive.Saved
+            ? setCounts((prev) => ({ ...prev, saves: prev.saves - 1 }))
+            : setCounts((prev) => ({ ...prev, saves: prev.saves + 1 }));
+          await saveTweet(props.tweetId).unwrap();
           setIsSaved(!props.isSaved);
         } catch (error) {
           toast.error(() => <ToastMessage>Error in Saving Tweet</ToastMessage>);

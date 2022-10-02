@@ -111,7 +111,6 @@ const Home = () => {
           const { data: newTweetData } = await GetHomeTweetsTrigger(
             HomeTweetsData.data.length / 10
           ).unwrap();
-          console.log(HomeTweetsData.data.length / 10);
           if (newTweetData.length < HomeTweetsData.data.length)
             setHasMoreTweets(false);
           dispatch(
