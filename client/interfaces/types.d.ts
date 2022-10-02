@@ -381,6 +381,7 @@ interface TweetsDataListProps {
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   variant?: "inTweet" | "tweetPage" | "tweetReply";
+  setHasMoreTweets: Dispatch<SetStateAction<boolean>>
 }
 
 interface GetCommentRepliesElement {

@@ -15,7 +15,8 @@ function providesTagsList<R extends { _id: string }[], T extends string>(
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://tweeter-app-backend.herokuapp.com/",
+    // baseUrl: "https://tweeter-app-backend.herokuapp.com/",
+    baseUrl: "http://localhost:6969/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set("authorization", `Bearer ${token}`);
@@ -23,7 +24,7 @@ export const api = createApi({
     },
     credentials: "include",
   }),
-  // refetchOnMountOrArgChange: true,
+  refetchOnMountOrArgChange: true,
   tagTypes: [
     "HomeTweets",
     "Tweets", //  <== Profile Tweets
@@ -136,7 +137,6 @@ export const api = createApi({
       //      * dispatch(api.util.invalidateTags(['Post']))
       //      */
       //   }
-
       // }
       // invalidatesTags: [
       //   "Tweets",

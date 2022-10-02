@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import ContentLoader from "./ContentLoader";
@@ -10,7 +11,13 @@ const TweetsDataList = ({
   getMoreTweets,
   hasMoreTweets,
   variant,
+  setHasMoreTweets,
 }: TweetsDataListProps) => {
+
+  useEffect(() => {
+    if (TweetsData.length === 10) setHasMoreTweets(true);
+  }, [TweetsData]);
+
   return (
     <>
       <ReplyModal />

@@ -35,12 +35,12 @@ function TweetPage() {
   const getMoreTweetReplies = async () => {
     try {
       if (TweetReplyData !== undefined) {
-        if (TweetReplyData.data.length < tweetLimit) {
+        if (TweetReplyData.data.length < 10) {
           setHasMoreTweets(false);
         } else {
           const { data: newTweetData } = await GetTweetRepliesTrigger({
             tweetId: data?.data[0]._id ?? "", //change
-            skip: TweetReplyData.data.length / tweetLimit,
+            skip: TweetReplyData.data.length / 10,
           }).unwrap();
           if (newTweetData.length < TweetReplyData.data.length)
             setHasMoreTweets(false);
@@ -99,6 +99,7 @@ function TweetPage() {
               TweetsData={TweetReplyData.data}
               hasMoreTweets={hasMoreTweets}
               getMoreTweets={getMoreTweetReplies}
+              setHasMoreTweets={setHasMoreTweets}
               variant="tweetReply"
             />
           ) : (
