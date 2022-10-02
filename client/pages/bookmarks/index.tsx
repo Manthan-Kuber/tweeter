@@ -26,8 +26,8 @@ function Bookmarks() {
         if (newTweetData.length === 0) setHasMoreTweets(false);
         else setSkip(skip + 1);
         dispatch(
-          api.util.updateQueryData("getBookmarks", 0, (tweetData) => {
-            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+          api.util.updateQueryData("getBookmarks", 0, (draftTweetData) => {
+            newTweetData.map((newTweet) => draftTweetData.data.push(newTweet));
           })
         );
       }

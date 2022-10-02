@@ -96,7 +96,7 @@ function TweetPage() {
         <TweetDataListWrapper>
           {TweetReplyData !== undefined ? (
             <TweetsDataList
-              TweetsData={TweetReplyData}
+              TweetsData={TweetReplyData.data}
               hasMoreTweets={hasMoreTweets}
               getMoreTweets={getMoreTweetReplies}
               variant="tweetReply"

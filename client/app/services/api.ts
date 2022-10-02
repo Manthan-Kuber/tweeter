@@ -23,6 +23,7 @@ export const api = createApi({
     },
     credentials: "include",
   }),
+  // refetchOnMountOrArgChange: true,
   tagTypes: [
     "HomeTweets",
     "Tweets", //  <== Profile Tweets
@@ -96,27 +97,13 @@ export const api = createApi({
         "FollowingReplyTweet",
       ],
     }),
-    //Needs tweetid and skip
-    // getComments: builder.query<GetCommentsResponse, string>({
-    //   //change to object later for skip if req
-    //   query: (tweetId: string) => `comment/${tweetId}/0`,
-    //   providesTags: ["Comments"],
-    // }),
-    // createComment: builder.mutation({
-    //   query: (body) => ({
-    //     url: "comment",
-    //     method: "POST",
-    //     body: body,
-    //   }),
-    //   invalidatesTags: ["Comments", "Tweets"],
-    // }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/bookmarks/${skip}`,
-      providesTags: ["Bookmarks"],
+      providesTags: ["Bookmarks"]
     }),
     getHomeTweets: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/tweets/${skip}`,
-      providesTags: (result) => providesTagsList(result?.data, "HomeTweets"),
+      providesTags: ["HomeTweets"],
     }),
     getFollowers: builder.query<GetFollowingAndFollowersResponse, string>({
       query: (userId) => `users/followers/${userId}/0`,
@@ -132,6 +119,25 @@ export const api = createApi({
         method: "PUT",
         body: { tweetId }, //invalidate tags for liked tweets fetch
       }),
+      // async onQueryStarted(tweetId,{dispatch,queryFulfilled}) {
+      //   const patchResult = dispatch(
+      //     api.util.updateQueryData('getBookmarks', tweetId, (draft) => {
+      //       Object.assign(draft, patch)
+      //     })
+      //   )
+      //   try {
+      //     await queryFulfilled
+      //   } catch {
+      //     patchResult.undo()
+
+      //     /**
+      //      * Alternatively, on failure you can invalidate the corresponding cache tags
+      //      * to trigger a re-fetch:
+      //      * dispatch(api.util.invalidateTags(['Post']))
+      //      */
+      //   }
+
+      // }
       // invalidatesTags: [
       //   "Tweets",
       //   "HomeTweets",
@@ -142,9 +148,6 @@ export const api = createApi({
       //   "Tweet",
       //   "ReplyToTweet",
       //   "FollowingReplyTweet",
-      // ],
-      // invalidatesTags: (result, error, tweetId) => [
-      //   { type: "HomeTweets", id: tweetId },
       // ],
     }),
     saveTweet: builder.mutation<string, string>({
@@ -223,25 +226,6 @@ export const api = createApi({
       }),
       providesTags: ["SuggestedFollowers"],
     }),
-    // likeComment: builder.mutation<void, string>({
-    //   //same api for likeReply
-    //   query: (commentId) => ({
-    //     url: `comment/like`,
-    //     method: "PUT",
-    //     body: { commentId },
-    //   }),
-    //   invalidatesTags: ["CommentsReplies", "Comments"],
-    // }),
-    // getCommentReplies: builder.query<GetCommentRepliesResponse, string>({
-    //   query: (commentId) => ({
-    //     url: `comment/replies/${commentId}/0`,
-    //   }),
-    //   providesTags: ["CommentsReplies"],
-    // }),
-    // createReply: builder.mutation({
-    //   query: (body) => ({ url: "comment/reply", method: "POST", body }),
-    //   invalidatesTags: ["CommentsReplies"],
-    // }),
     getTweet: builder.query<GetTweetsResponse, string>({
       query: (tweetId) => `tweets/${tweetId}`,
       providesTags: ["Tweet"],
@@ -277,9 +261,6 @@ export const {
   useGetProfileTweetsQuery,
   useCreateTweetMutation,
   useDeleteTweetMutation,
-  // useCreateCommentMutation,
-  // useLazyGetCommentsQuery,
-  // useGetCommentsQuery,
   useGetBookmarksQuery,
   useGetHomeTweetsQuery,
   useLazyGetHomeTweetsQuery,
@@ -298,9 +279,6 @@ export const {
   useUnfollowUserMutation,
   useLazyGetSuggestedFollowersQuery,
   useGetSuggestedFollowersQuery,
-  // useLikeCommentMutation,
-  // useLazyGetCommentRepliesQuery,
-  // useCreateReplyMutation,
   useGetTweetQuery,
   useGetTweetRepliesQuery,
   useLazyGetTweetRepliesQuery,
