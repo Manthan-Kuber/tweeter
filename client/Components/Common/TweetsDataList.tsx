@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import ContentLoader from "./ContentLoader";
@@ -10,21 +11,27 @@ const TweetsDataList = ({
   getMoreTweets,
   hasMoreTweets,
   variant,
+  setHasMoreTweets,
 }: TweetsDataListProps) => {
+
+  useEffect(() => {
+    if (TweetsData.length === 10) setHasMoreTweets(true);
+  }, [TweetsData]);
+
   return (
     <>
       <ReplyModal />
       <InfiniteScroll
-        dataLength={TweetsData.data.length}
+        dataLength={TweetsData.length}
         next={getMoreTweets}
         hasMore={hasMoreTweets}
         loader={<ContentLoader size={32} />}
         scrollThreshold={0.95}
       >
-        {TweetsData.data.length === 0 ? (
+        {TweetsData.length === 0 ? (
           <NoTweetsToShow message="No Tweets To Show !" />
         ) : (
-          TweetsData.data.map((tweet, key) => (
+          TweetsData.map((tweet, key) => (
             <>
               {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
               <Tweet

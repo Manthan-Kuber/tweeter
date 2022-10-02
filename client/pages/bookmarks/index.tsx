@@ -22,14 +22,20 @@ function Bookmarks() {
   const getMoreBookmarks = async () => {
     try {
       if (BookmarksData !== undefined) {
-        const { data: newTweetData } = await getBookmarksTrigger(skip).unwrap();
-        if (newTweetData.length === 0) setHasMoreTweets(false);
-        else setSkip(skip + 1);
-        dispatch(
-          api.util.updateQueryData("getBookmarks", 0, (tweetData) => {
-            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-          })
-        );
+        if (BookmarksData.data.length < 10) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await getBookmarksTrigger(
+            BookmarksData.data.length / 10
+          ).unwrap();
+          if (newTweetData.length < BookmarksData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData("getBookmarks", 0, (tweetData) => {
+              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+            })
+          );
+        }
       }
     } catch (error) {
       console.log(error);
@@ -44,9 +50,10 @@ function Bookmarks() {
       <ScrollToTopButton />
       {BookmarksData !== undefined ? (
         <TweetsDataList
-          TweetsData={BookmarksData}
+          TweetsData={BookmarksData.data}
           getMoreTweets={getMoreBookmarks}
           hasMoreTweets={hasMoreTweets}
+          setHasMoreTweets={setHasMoreTweets}
         />
       ) : (
         <ContentLoader size={32} />

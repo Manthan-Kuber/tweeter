@@ -26,7 +26,7 @@ var suggestedFollowerLimit = 4;
 const Home = () => {
   const [hasMoreTrends, setHasMoreTrends] = useState(false);
   const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
-  const [hasMoreTweets, setHasMoreTweets] = useState(true);
+  const [hasMoreTweets, setHasMoreTweets] = useState(false);
   const dispatch = useAppDispatch();
   const [GetHomeTweetsTrigger] = useLazyGetHomeTweetsQuery();
   const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
@@ -81,7 +81,6 @@ const Home = () => {
           const newFollowerData = await GetSuggestedFollowersTrigger(
             suggestedFollowersArray.length
           ).unwrap();
-          console.log(newFollowerData);
           if (newFollowerData.length < suggestedFollowersArray.length)
             setHasMoreSuggestions(false);
           dispatch(
@@ -106,16 +105,20 @@ const Home = () => {
   const getMoreHomeTweets = async () => {
     try {
       if (HomeTweetsData !== undefined) {
-        const { data: newTweetData } = await GetHomeTweetsTrigger(
-          homeTweetsSkip
-        ).unwrap();
-        if (newTweetData.length === 0) setHasMoreTweets(false);
-        else setHomeTweetsSkip(homeTweetsSkip + 1);
-        dispatch(
-          api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
-            newTweetData.map((newTweet) => tweetData.data.push(newTweet));
-          })
-        );
+        if (HomeTweetsData.data.length < 10) {
+          setHasMoreTweets(false);
+        } else {
+          const { data: newTweetData } = await GetHomeTweetsTrigger(
+            HomeTweetsData.data.length / 10
+          ).unwrap();
+          if (newTweetData.length < HomeTweetsData.data.length)
+            setHasMoreTweets(false);
+          dispatch(
+            api.util.updateQueryData("getHomeTweets", 0, (tweetData) => {
+              newTweetData.map((newTweet) => tweetData.data.push(newTweet));
+            })
+          );
+        }
       }
     } catch (error) {
       console.log(error);
@@ -138,9 +141,10 @@ const Home = () => {
         </CreateTweetWrapper>
         {HomeTweetsData !== undefined ? (
           <TweetsDataList
-            TweetsData={HomeTweetsData}
+            TweetsData={HomeTweetsData.data}
             hasMoreTweets={hasMoreTweets}
             getMoreTweets={getMoreHomeTweets}
+            setHasMoreTweets={setHasMoreTweets}
           />
         ) : (
           <ContentLoader size={32} />

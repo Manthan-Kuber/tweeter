@@ -32,7 +32,7 @@ const Tweet = ({ TweetReplyData, ...props }: TweetProps) => {
   const [isRetweeted, setIsRetweeted] = useState(props.isRetweeted);
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
   const currentUsername = useAppSelector((state) => state.auth.user?.name);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Maybe lift up to stop scroll
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { push, route } = useRouter();
   const { data: FollowingReplyTweetData } = useGetFollowingReplyQuery(
     { tweetId: props.tweetId, userId: props.authorId },
