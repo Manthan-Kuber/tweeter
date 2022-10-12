@@ -80,35 +80,34 @@ const ProfileBox = ({
         <ProfileWrapper>
           <InfoWrapper>
             <h3>{name}</h3>
-            <FollowerContainer>
-              {/* Replace With Following Modal */}
-              <span
-                onClick={async () => {
-                  try {
-                    setFollowingModalIsOpen(true);
-                    await props.GetFollowingTrigger(userId).unwrap();
-                  } catch (err) {
-                    <ToastMessage> Error in Fetching Following </ToastMessage>;
-                  }
-                }}
-              >
-                <span>{props.following}</span> Following
-              </span>
-              <span
-                onClick={async () => {
-                  try {
-                    setFollowerModalIsOpen(true);
-                    await props.GetFollowersTrigger(userId).unwrap();
-                  } catch (err) {
-                    <ToastMessage> Error in Fetching Followers </ToastMessage>;
-                  }
-                }}
-              >
-                <span>{props.followers}</span> Followers
-              </span>
-            </FollowerContainer>
+            <h4>{`@ ${username}`}</h4>
           </InfoWrapper>
-          <h4>{`@ ${username}`}</h4>
+          <FollowerContainer>
+            <span
+              onClick={async () => {
+                try {
+                  setFollowingModalIsOpen(true);
+                  await props.GetFollowingTrigger(userId).unwrap();
+                } catch (err) {
+                  <ToastMessage> Error in Fetching Following </ToastMessage>;
+                }
+              }}
+            >
+              <span>{props.following}</span> Following
+            </span>
+            <span
+              onClick={async () => {
+                try {
+                  setFollowerModalIsOpen(true);
+                  await props.GetFollowersTrigger(userId).unwrap();
+                } catch (err) {
+                  <ToastMessage> Error in Fetching Followers </ToastMessage>;
+                }
+              }}
+            >
+              <span>{props.followers}</span> Followers
+            </span>
+          </FollowerContainer>
           <p>{`${bio}`}</p>
         </ProfileWrapper>
         {userId === currentUserId ? (
@@ -209,12 +208,16 @@ const ProfileImage = styled(BlurImage)`
 `;
 
 const InfoWrapper = styled.div`
+  h4 {
+    font-size: clamp(1.2rem, 1vw + 0.5rem, 1.4rem);
+    color: hsla(0, 0%, 51%, 1);
+  }
   h3 {
     font-size: clamp(2.4rem, 2.5vw + 1rem, 2.8rem);
   }
   @media screen and (min-width: 55em) {
     display: flex;
-    gap: 3rem;
+    gap: 1rem;
     align-items: center;
     width: 100%;
   }
@@ -271,17 +274,13 @@ const ContentWrapper = styled.div`
 
 const ProfileWrapper = styled.div`
   & > p {
-    font: 500 1.8rem var(--ff-noto);
+    font: 500 clamp(1.4rem, 2.5vw, 1.6rem) var(--ff-noto);
     color: hsla(0, 0%, 51%, 1);
     margin-top: 2rem;
   }
-  & > h4 {
-    font-size: clamp(1.2rem, 1vw + 0.5rem, 1.4rem);
-    color: hsla(0, 0%, 51%, 1);
-  }
+
   @media screen and (min-width: 55em) {
     & > p {
-      font-size: 1.4rem;
       margin-top: revert;
     }
   }
