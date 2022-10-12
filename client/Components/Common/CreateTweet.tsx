@@ -42,11 +42,7 @@ const CreateTweet = ({
     }
     if (isHashtagPresent.test(message)) {
       const hashtagArray = message.match(isHashtagPresent);
-      if (hashtagArray !== null) {
-        for (let i = 0; i < hashtagArray.length; i++) {
-          formData.append("hashtags", hashtagArray[i]);
-        }
-      }
+      formData.append("hashtags", JSON.stringify(hashtagArray));
     }
     try {
       setisBtnLoading(true);
