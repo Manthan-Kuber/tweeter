@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import {
   useCreateTweetMutation,
   useGetTweetQuery,
 } from "../../app/services/api";
-import { ToastMessage } from "../../styles/Toast.styles";
 import ContentLoader from "./ContentLoader";
 import CreateTweetComponent from "./CreateTweet";
 import CustomModal from "./CustomModal";
@@ -15,13 +13,7 @@ import { useAppSelector } from "../../Hooks/store";
 const ReplyModal = () => {
   const { query } = useRouter();
   const { data: TweetData } = useGetTweetQuery(query.replyTweetId as string);
-  const [message, setMessage] = useState<string>("");
-  const [fileList, setFileList] = useState<Array<{ id: string; file: File }>>(
-    []
-  );
-  const [createTweet] = useCreateTweetMutation();
   const currentUserPfp = useAppSelector((state) => state.auth.user?.profilePic);
-  const router = useRouter();
 
   return (
     <CustomModal
