@@ -252,11 +252,8 @@ const TweetContentWrapper = styled.div<{
     variant !== "tweetReply" && fetchReply && "5px solid lightgray"};
   padding-left: ${({ variant }) =>
     variant === "tweetReply" ? "6rem" : "4rem"};
-
-  &::after {
-    content: "UwU";
-    color: transparent;
-  }
+  margin-bottom: -2rem; //Removes gaps
+  padding-bottom: 2rem;
 `;
 
 export const BlurImage = styled(Image)<{ isLoading: boolean }>`

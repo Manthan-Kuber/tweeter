@@ -9,15 +9,11 @@ import {
   useLazyGetTweetRepliesQuery,
 } from "../../app/services/api";
 import ContentLoader from "../../Components/Common/ContentLoader";
-import FullScreenLoader, {
-  Loader,
-} from "../../Components/Common/FullScreenLoader";
+import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import Tweet from "../../Components/Common/Tweet";
 import TweetsDataList from "../../Components/Common/TweetsDataList";
 import { useAppDispatch } from "../../Hooks/store";
 import { ToastMessage } from "../../styles/Toast.styles";
-
-var tweetLimit = 10;
 
 function TweetPage() {
   const {
@@ -64,10 +60,13 @@ function TweetPage() {
     }
   };
 
-  if (tweetId !== undefined && data !== undefined) {
-    const tweet = data?.data[0];
-    return (
-      <Container>
+  if (tweetId === undefined || data === undefined) return <FullScreenLoader />;
+
+  const tweet = data?.data[0];
+  return (
+    <Container>
+      <TweetReplyHeading>Tweet Replies</TweetReplyHeading>
+      <TweetAndRepliesWrapper>
         <Tweet
           key={tweet._id}
           authorName={tweet.creator[0].name}
@@ -88,12 +87,11 @@ function TweetPage() {
           likes={tweet.likes}
           retweetedUsers={tweet.retweetedUsers}
           savedBy={tweet.savedBy}
-          variant="tweetPage"
+          variant="tweetReply"
           TweetReplyData={TweetReplyData}
           fetchReply={false}
         />
-        <TweetReplyHeading>Tweet Replies</TweetReplyHeading>
-        <TweetDataListWrapper>
+        <ReplyTweetsListWrapper>
           {TweetReplyData !== undefined ? (
             <TweetsDataList
               TweetsData={TweetReplyData.data}
@@ -105,13 +103,17 @@ function TweetPage() {
           ) : (
             <ContentLoader size={32} />
           )}
-        </TweetDataListWrapper>
-      </Container>
-    );
-  }
-  return <FullScreenLoader />;
+        </ReplyTweetsListWrapper>
+      </TweetAndRepliesWrapper>
+    </Container>
+  );
 }
 export default TweetPage;
+
+const ReplyTweetsListWrapper = styled.div`
+  margin-top: -2rem;
+  padding-bottom: 2rem;
+`;
 
 const Container = styled.div`
   width: min(95%, 85.5rem);
@@ -123,6 +125,7 @@ const TweetReplyHeading = styled.h1`
   font-weight: 700;
   font-family: var(--ff-noto);
   color: #333;
+  margin-bottom: 1rem;
 `;
 
 export const LoaderWrapper = styled.div`
@@ -131,9 +134,8 @@ export const LoaderWrapper = styled.div`
   overflow: hidden;
 `;
 
-const TweetDataListWrapper = styled.div`
+const TweetAndRepliesWrapper = styled.div`
   background-color: white;
-  margin-top: 2rem;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
 `;

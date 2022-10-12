@@ -48,6 +48,7 @@ function Bookmarks() {
   return (
     <Container>
       <ScrollToTopButton />
+      <TweetHeading>Bookmarks</TweetHeading>
       {BookmarksData !== undefined ? (
         <TweetsDataList
           TweetsData={BookmarksData.data}
@@ -68,4 +69,11 @@ const Container = styled.div`
   width: min(95%, 95rem);
   margin-inline: auto;
   padding-block: 2rem;
+`;
+
+const TweetHeading = styled.h1`
+  font-weight: 700;
+  font-family: var(--ff-noto);
+  color: #333;
+  margin-bottom: 2rem;
 `;

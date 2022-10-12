@@ -131,6 +131,7 @@ const Home = () => {
       <ScrollToTopButton />
       <Toaster />
       <div>
+        <TweetHeading>Home Tweets</TweetHeading>
         <CreateTweetWrapper>
           <CreateTweet
             isReplyImageVisible={false}
@@ -170,8 +171,15 @@ const Home = () => {
 
 export default Home;
 
+const TweetHeading = styled.h1`
+  font-weight: 700;
+  font-family: var(--ff-noto);
+  color: #333;
+  margin-bottom: 2rem;
+`;
+
 const CreateTweetWrapper = styled.div`
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 `;
 
 const Container = styled.div`
