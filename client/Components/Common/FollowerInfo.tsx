@@ -81,6 +81,7 @@ const ProfileElementWrapper = styled.div`
   margin-top: 1rem;
   margin-bottom: 2rem;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
 
@@ -88,6 +89,10 @@ const ProfileElementWrapper = styled.div`
     margin-top: 1rem;
     color: hsla(0, 0%, 51%, 1);
     font-weight: 500;
+  }
+
+  @media screen and (min-width: 30em) {
+    flex-direction: row;
   }
 `;
 const StyledFollowButton = styled(FollowButton)`

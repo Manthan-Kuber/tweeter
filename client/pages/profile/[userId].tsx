@@ -78,10 +78,7 @@ const Profile = ({ userId }: { userId: string }) => {
     followed: false,
     bio: "",
   });
-  const { data: TweetsData } = useGetProfileTweetsQuery(
-    { userId, skip: 0 }
-    // { refetchOnMountOrArgChange: true }
-  ); //Resets api cache on mount
+  const { data: TweetsData } = useGetProfileTweetsQuery({ userId, skip: 0 });
   const { data: TweetsAndRepliesData } = useGetProfileTweetsAndRepliesQuery(
     {
       userId,
@@ -134,9 +131,6 @@ const Profile = ({ userId }: { userId: string }) => {
   const { width: WindowWidth } = useWindowSize();
   const { isFallback } = useRouter();
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
-  const [hasMoreTweetsLikes, setHasMoreTweetsLikes] = useState(true);
-  const [hasMoreTweetsMedia, setHasMoreTweetsMedia] = useState(true);
-  const [hasMoreTweetsAndReplies, setHasMoreTweetsAndReplies] = useState(true);
   const [isBannerLoading, setIsBannerLoading] = useState(true);
 
   const getProfile = async () => {

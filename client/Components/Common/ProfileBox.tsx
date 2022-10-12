@@ -81,7 +81,6 @@ const ProfileBox = ({
           <InfoWrapper>
             <h3>{name}</h3>
             <FollowerContainer>
-              {/* Replace With Following Modal */}
               <span
                 onClick={async () => {
                   try {
