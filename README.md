@@ -3,6 +3,8 @@
 Tweeter is a Twitter like social media app. <br>
 Made with 💗 by **Rohit Shelke** and **Manthan Kuber**. <br>
 App Url: https://tweeter-self.vercel.app/ <br>
+Backend Repo Url (for latest changes) : https://github.com/RohitShelkeBot/tweeter-backend <br>
+(Due to certain constraints of hosting services we had to create a separate repo for our backend) <br>
 Don't forget to ⭐ the repo 
 
 ## Contributions & Roles
@@ -43,6 +45,8 @@ Don't forget to ⭐ the repo
 
 - Infinite Scroll ♾️
 - Instagram like Modals (Using shallow routing)
+- Home Feed
+- Lazy Loading Images
 - Responsive Layout
 - Signup / Login
 - Post tweets with media, Delete tweets, Reply on tweets
