@@ -47,6 +47,7 @@ Don't forget to ⭐ the repo
 - Instagram like Modals (Using shallow routing)
 - Home Feed
 - Lazy Loading Images
+- Partially Cached Data
 - Responsive Layout
 - Signup / Login
 - Post tweets with media, Delete tweets, Reply on tweets
