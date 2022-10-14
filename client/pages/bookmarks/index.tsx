@@ -17,7 +17,6 @@ function Bookmarks() {
   const { data: BookmarksData } = useGetBookmarksQuery(0);
   const [getBookmarksTrigger] = useLazyGetBookmarksQuery();
   const dispatch = useAppDispatch();
-  const [skip, setSkip] = useState(1);
 
   const getMoreBookmarks = async () => {
     try {

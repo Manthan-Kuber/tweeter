@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FilterBox from "../../Components/Common/FilterBox";
-import Image from "next/image";
 import useWindowSize from "../../Hooks/useWindowDimensions";
 import ProfileBox from "../../Components/Common/ProfileBox";
 import CustomModal from "../../Components/Common/CustomModal";
-import FollowerInfo from "../../Components/Common/FollowerInfo";
 import axiosApi from "../../app/services/axiosApi";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../Hooks/store";
-import FullScreenLoader, {
-  Loader,
-} from "../../Components/Common/FullScreenLoader";
+import FullScreenLoader from "../../Components/Common/FullScreenLoader";
 import toast, { Toaster } from "react-hot-toast";
 import {
   CancelButton,

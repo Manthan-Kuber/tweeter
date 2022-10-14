@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 import styled from "styled-components";
 import ContentLoader from "./ContentLoader";
@@ -13,7 +14,6 @@ const TweetsDataList = ({
   variant,
   setHasMoreTweets,
 }: TweetsDataListProps) => {
-
   useEffect(() => {
     if (TweetsData.length === 10) setHasMoreTweets(true);
   }, [TweetsData]);
@@ -21,6 +21,7 @@ const TweetsDataList = ({
   return (
     <>
       <ReplyModal />
+      <Toaster />
       <InfiniteScroll
         dataLength={TweetsData.length}
         next={getMoreTweets}

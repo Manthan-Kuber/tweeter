@@ -1,17 +1,26 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
-function providesTagsList<R extends { _id: string }[], T extends string>(
-  resultsWithIds: R | undefined,
-  tagType: T
-) {
-  return resultsWithIds
-    ? [
-        { type: tagType, id: `${tagType.toUpperCase()}LIST` },
-        ...resultsWithIds.map(({ _id }) => ({ type: tagType, id: _id })),
-      ]
-    : [{ type: tagType, id: `${tagType.toUpperCase()}LIST` }];
-}
+// function providesTagsList<R extends { _id: string }[], T extends string>(
+//   resultsWithIds: R | undefined,
+//   tagType: T
+// ) {
+//   return resultsWithIds
+//     ? [
+//         { type: tagType, id: `${tagType.toUpperCase()}LIST` },
+//         ...resultsWithIds.map(({ _id }) => ({ type: tagType, id: _id })),
+//       ]
+//     : [{ type: tagType, id: `${tagType.toUpperCase()}LIST` }];
+// }
+
+// function providesTagsList<R extends { _id: string }[], T extends string>(
+//   resultsWithIds: R | undefined,
+//   tagType: T
+// ) {
+//   return resultsWithIds
+//     ? resultsWithIds.map(({ _id }) => ({ type: tagType, id: _id }))
+//     : [{ type: tagType, id: `${tagType.toLocaleUpperCase()}LIST` }];
+// }
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -24,6 +33,7 @@ export const api = createApi({
     credentials: "include",
   }),
   refetchOnMountOrArgChange: true,
+  keepUnusedDataFor: 1,
   tagTypes: [
     "HomeTweets",
     "Tweets", //  <== Profile Tweets
@@ -99,7 +109,7 @@ export const api = createApi({
     }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/bookmarks/${skip}`,
-      providesTags: ["Bookmarks"]
+      providesTags: ["Bookmarks"],
     }),
     getHomeTweets: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/tweets/${skip}`,
@@ -224,6 +234,7 @@ export const api = createApi({
       query: (skip) => ({
         url: `home/people/${skip}/4`,
       }),
+      keepUnusedDataFor: 60,
       providesTags: ["SuggestedFollowers"],
     }),
     getTweet: builder.query<GetTweetsResponse, string>({
@@ -251,6 +262,7 @@ export const api = createApi({
     >({
       query: ({ hashtagArrayLength, hashtagLimit }) =>
         `home/hashtags/${hashtagArrayLength}/${hashtagLimit}`,
+      keepUnusedDataFor: 60,
     }),
   }),
 });

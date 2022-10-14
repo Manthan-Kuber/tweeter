@@ -8,14 +8,14 @@ export const StyledUl = styled.ul`
 
 export const Li = styled.li<{ active: boolean }>`
   font: 500 1.4rem var(--ff-poppins);
-  color: ${(props) =>
-    props.active ? "var(--clr-primary)" : "var(--clr-gray)"};
-  cursor: pointer;
   position: relative;
-  &:hover {
+  & a:hover {
     color: var(--clr-primary);
   }
-  & a{
+  & a {
+    color: ${(props) =>
+      props.active ? "var(--clr-primary)" : "var(--clr-gray)"};
+    cursor: pointer;
     outline: none;
   }
 `;
