@@ -41,6 +41,10 @@ Don't forget to ⭐ the repo
 - **Node Js + Express Js** for server side app 
 - **MongoDB** as no-sql database
 
+## Page Quality Insights
+
+![screenshot](page-qual-ss.png)
+
 ## Features
 
 - Infinite Scroll ♾️
