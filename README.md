@@ -45,6 +45,7 @@ Don't forget to ⭐ the repo
 
 - Infinite Scroll ♾️
 - Instagram like Modals (Using shallow routing)
+- SEO Friendly
 - Home Feed
 - Lazy Loading Images
 - Partially Cached Data
