@@ -1,5 +1,5 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import styled from "styled-components";
 import {
   api,
@@ -129,7 +129,6 @@ const Home = () => {
   return (
     <Container>
       <ScrollToTopButton />
-      <Toaster />
       <div>
         <TweetHeading>Home Tweets</TweetHeading>
         <CreateTweetWrapper>
