@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import styled from "styled-components";
 import {
   api,
-  useCreateTweetMutation,
   useGetHashtagsQuery,
   useGetHomeTweetsQuery,
   useGetSuggestedFollowersQuery,
@@ -32,7 +31,6 @@ const Home = () => {
   const [GetSuggestedFollowersTrigger] = useLazyGetSuggestedFollowersQuery();
   const { data: suggestedFollowersArray } = useGetSuggestedFollowersQuery(0);
   const { data: HomeTweetsData } = useGetHomeTweetsQuery(0);
-  const [homeTweetsSkip, setHomeTweetsSkip] = useState(1);
   const { data: HashtagDataArray } = useGetHashtagsQuery({
     hashtagArrayLength: 0,
     hashtagLimit: 6,
