@@ -49,6 +49,7 @@ export const api = createApi({
     "Tweet",
     "ReplyToTweet", // <== Tweet Page Replies
     "FollowingReplyTweet", // <== Reply to Following tweet for Home Feed and Tweets and Replies in Profile
+    "Hashtags"
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -105,6 +106,7 @@ export const api = createApi({
         "HomeTweets",
         "ReplyToTweet",
         "FollowingReplyTweet",
+        "Hashtags"
       ],
     }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
@@ -262,6 +264,7 @@ export const api = createApi({
     >({
       query: ({ hashtagArrayLength, hashtagLimit }) =>
         `home/hashtags/${hashtagArrayLength}/${hashtagLimit}`,
+      providesTags:["Hashtags"],
       keepUnusedDataFor: 60,
     }),
   }),
