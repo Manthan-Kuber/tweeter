@@ -10,6 +10,7 @@ const CustomModal = ({
   setModalIsOpen,
   modalIsOpen,
   children,
+  isCloseButtonDisabled = false,
   ...props
 }: ModalProps) => {
   const { style: bodyStyle } = document.body;
@@ -26,7 +27,7 @@ const CustomModal = ({
       isOpen={modalIsOpen}
       onRequestClose={(e) => {
         e.stopPropagation();
-        if (setModalIsOpen) setModalIsOpen(false);
+        if (setModalIsOpen) isCloseButtonDisabled && setModalIsOpen(false);
         else {
           router.beforePopState((state) => {
             state.options.scroll = false;

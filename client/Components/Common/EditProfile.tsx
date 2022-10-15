@@ -13,9 +13,14 @@ import {
   Text,
   Wrapper,
 } from "../../styles/inputGroup.styles";
+import ContentLoader from "./ContentLoader";
 import { TweetButton } from "./CreateTweet";
 
-const EditProfile = (props: EditProfileProps) => {
+const EditProfile = ({
+  isLoading,
+  setIsLoading,
+  ...props
+}: EditProfileProps) => {
   const InitialState = {
     name: props.name,
     username: props.username,
@@ -53,8 +58,7 @@ const EditProfile = (props: EditProfileProps) => {
 
   const handleEditProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    props.setEditProfileModalIsOpen(false);
+    setIsLoading(true);
 
     const profileFormData = new FormData();
 
@@ -78,27 +82,32 @@ const EditProfile = (props: EditProfileProps) => {
         requestConfig
       );
       const { name, username, bio } = formValues;
-      // const pfp = profilePictureFile as Blob;
-      // const coverpic = coverPictureFile as Blob;
-      dispatch(setProfilePic(response.data.data.profilePic)); //set with response's url
-      // dispatch(setCoverp)
+      // dispatch(setProfilePic(response.data.data.profilePic)); //set with response's url //gives prev url
+      // dispatch(setCo)
       props.setProfileData((prev) => ({ ...prev, name, username, bio }));
-      console.log(response.data.data.profilePic);
-      console.log(response.data.data.coverPic);
-      profilePictureFile !== undefined &&
+      if (profilePictureFile !== undefined) {
+        const pfp = URL.createObjectURL(profilePictureFile);
+        dispatch(setProfilePic(pfp)); //set with response's url
         props.setProfileData((prev) => ({
           ...prev,
-          profilePic: response.data.data.profilePic, //set with response's url
+          profilePic: pfp, //set with response's url
         }));
-      coverPictureFile !== undefined &&
+      }
+      if (coverPictureFile !== undefined) {
+        const coverpic = URL.createObjectURL(coverPictureFile);
         props.setProfileData((prev) => ({
           ...prev,
-          coverPic: response.data.data.coverPic, //set with response's url
+          coverPic: coverpic, //set with response's url
         }));
-      if (profilePictureFile !== undefined || coverPictureFile !== undefined)
-        window.location.reload();
+      }
+      setIsLoading(false);
+      props.setEditProfileModalIsOpen(false);
+
+      // if (profilePictureFile !== undefined || coverPictureFile !== undefined)
+      //   window.location.reload();
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -164,9 +173,7 @@ const EditProfile = (props: EditProfileProps) => {
         />
         <EditPhotoIconWrapper
           ref={bannerRef}
-          onClick={(e: React.SyntheticEvent) =>
-            bannerRef.current && bannerRef.current.click()
-          }
+          onClick={() => bannerRef.current && bannerRef.current.click()}
         >
           <MdOutlineAddPhotoAlternate size={22} />
         </EditPhotoIconWrapper>
@@ -313,7 +320,13 @@ const EditProfile = (props: EditProfileProps) => {
             <Text className="text">Bio</Text>
           </PlaceholderText>
         </Wrapper>
-        <SubmitButton disabled={isFormInvalid}>Save Changes</SubmitButton>
+        <SubmitButton disabled={isFormInvalid || isLoading}>
+          {isLoading ? (
+            <ContentLoader color="white" size={24} />
+          ) : (
+            "Save Changes"
+          )}
+        </SubmitButton>
       </form>
     </EditProfileContentContainer>
   );
