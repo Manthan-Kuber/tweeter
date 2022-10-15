@@ -34,7 +34,7 @@ const TweetsDataList = ({
         ) : (
           TweetsData.map((tweet, key) => (
             <>
-              {variant === "tweetReply" && key !== 0 && <TweetSeparator />}
+              {variant === "tweetReply"  && <TweetSeparator />}
               <Tweet
                 key={tweet._id}
                 authorName={tweet.creator[0].name}
