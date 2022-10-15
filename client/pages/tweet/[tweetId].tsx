@@ -91,6 +91,7 @@ function TweetPage() {
           TweetReplyData={TweetReplyData}
           fetchReply={false}
         />
+        <RepliesText as="h2">Replies Received</RepliesText>
         <ReplyTweetsListWrapper>
           {TweetReplyData !== undefined ? (
             <TweetsDataList
@@ -110,6 +111,7 @@ function TweetPage() {
 }
 export default TweetPage;
 
+
 const ReplyTweetsListWrapper = styled.div`
   margin-top: -2rem;
   padding-bottom: 2rem;
@@ -127,6 +129,12 @@ const TweetReplyHeading = styled.h1`
   color: #333;
   margin-bottom: 1rem;
 `;
+
+const RepliesText = styled(TweetReplyHeading)`
+  margin-left:2rem;
+  margin-bottom: 6rem;
+  font-size:1.6rem;
+`
 
 export const LoaderWrapper = styled.div`
   width: fit-content;
