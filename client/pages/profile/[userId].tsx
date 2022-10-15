@@ -367,7 +367,6 @@ const Profile = ({ userId }: { userId: string }) => {
           );
         }}
       >
-        <Toaster />
         <EditProfile
           coverPic={coverPic}
           profilePic={profilePic}
