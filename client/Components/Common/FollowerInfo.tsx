@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import styled from "styled-components";
@@ -12,7 +12,7 @@ import NoTweetsToShow from "./NoTweetsToShow";
 import { FollowButton } from "./ProfileBox";
 import ProfileInfo from "./ProfileInfo";
 
-const FollowerInfo = ({ RawData }: FollowerInfoProps) => {
+const FollowerInfo = ({ RawData, setModalIsOpen }: FollowerInfoProps) => {
   const [followUser] = useFollowUserMutation();
   const [unfollowUser] = useUnfollowUserMutation();
 
@@ -48,12 +48,16 @@ const FollowerInfo = ({ RawData }: FollowerInfoProps) => {
           <div key={item._id}>
             <ProfileElementWrapper>
               <div>
-                <ProfileInfo
-                  name={item.name}
-                  username={item.username}
-                  profilePic={item.profilePic}
-                />
-                <p>{item.bio}</p>
+                <Link href={`/profile/${item._id}`} passHref>
+                  <a onClick={() => setModalIsOpen(false)}>
+                    <ProfileInfo
+                      name={item.name}
+                      username={item.username}
+                      profilePic={item.profilePic}
+                    />
+                    <p>{item.bio}</p>
+                  </a>
+                </Link>
               </div>
               <StyledFollowButton
                 as={motion.button}
@@ -85,7 +89,7 @@ const ProfileElementWrapper = styled.div`
   justify-content: space-between;
   align-items: flex-start;
 
-  & > div > p:last-child {
+  & > div > a > p:last-child {
     margin-top: 1rem;
     color: hsla(0, 0%, 51%, 1);
     font-weight: 500;

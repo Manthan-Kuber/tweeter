@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import ContentLoader from "./ContentLoader";
 import CustomModal from "./CustomModal";
 import FollowerInfo from "./FollowerInfo";
@@ -17,12 +18,18 @@ const FollowerFollowingModal = (props: FollowerFollowingModalProps) => {
       {props.GetFollowersData !== undefined ? (
         <FollowerInfo
           RawData={props.GetFollowersData}
-          setModalIsOpen={props.setFollowerModalIsOpen} //Remove if not needed
+          setModalIsOpen={props.setFollowerModalIsOpen}
         />
       ) : (
-        <ContentLoader size={16} />
+        <LoaderWrapper>
+          <ContentLoader size={16} />
+        </LoaderWrapper>
       )}
     </CustomModal>
   );
 };
 export default FollowerFollowingModal;
+
+const LoaderWrapper = styled.div`
+  margin-top: 1rem;
+`;
