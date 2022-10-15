@@ -13,14 +13,17 @@ import { RootState } from "../store";
 //     : [{ type: tagType, id: `${tagType.toUpperCase()}LIST` }];
 // }
 
-// function providesTagsList<R extends { _id: string }[], T extends string>(
-//   resultsWithIds: R | undefined,
-//   tagType: T
-// ) {
-//   return resultsWithIds
-//     ? resultsWithIds.map(({ _id }) => ({ type: tagType, id: _id }))
-//     : [{ type: tagType, id: `${tagType.toLocaleUpperCase()}LIST` }];
-// }
+function providesTagsList<R extends { _id: string }[], T extends string>(
+  resultsWithIds: R | undefined,
+  tagType: T
+) {
+  return resultsWithIds
+    ? [
+        tagType,
+        ...resultsWithIds.map(({ _id }) => ({ type: tagType, id: _id })),
+      ]
+    : [{ type: tagType, id: `${tagType.toLocaleUpperCase()}LIST` }];
+}
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -33,7 +36,7 @@ export const api = createApi({
     credentials: "include",
   }),
   refetchOnMountOrArgChange: true,
-  keepUnusedDataFor: 1,
+  // keepUnusedDataFor: 1,
   tagTypes: [
     "HomeTweets",
     "Tweets", //  <== Profile Tweets
@@ -49,7 +52,7 @@ export const api = createApi({
     "Tweet",
     "ReplyToTweet", // <== Tweet Page Replies
     "FollowingReplyTweet", // <== Reply to Following tweet for Home Feed and Tweets and Replies in Profile
-    "Hashtags"
+    "Hashtags",
   ],
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, Omit<UserRequest, "name">>({
@@ -71,28 +74,28 @@ export const api = createApi({
       { userId: string; skip: number }
     >({
       query: ({ userId, skip }) => `profile/tweets/${userId}/${skip}`,
-      providesTags: ["Tweets"],
+      providesTags: (result) => providesTagsList(result?.data, "Tweets"),
     }),
     getProfileTweetsAndReplies: builder.query<
       GetTweetsResponse,
       { userId: string; skip: number }
     >({
       query: ({ userId, skip }) => `profile/tweetsandreplies/${userId}/${skip}`,
-      providesTags: ["TweetsAndReplies"],
+      providesTags: (result) => providesTagsList(result?.data, "TweetsAndReplies"),
     }),
     getProfileTweetsMedia: builder.query<
       GetTweetsResponse,
       { userId: string; skip: number }
     >({
       query: ({ userId, skip }) => `profile/media/${userId}/${skip}`,
-      providesTags: ["TweetsMedia"],
+      providesTags: (result) => providesTagsList(result?.data, "TweetsMedia"),
     }),
     getProfileTweetsLikes: builder.query<
       GetTweetsResponse,
       { userId: string; skip: number }
     >({
       query: ({ userId, skip }) => `profile/likes/${userId}/${skip}`,
-      providesTags: ["TweetsLikes"],
+      providesTags: (result) => providesTagsList(result?.data, "TweetsLikes"),
     }),
     createTweet: builder.mutation({
       query: (body) => ({
@@ -106,16 +109,16 @@ export const api = createApi({
         "HomeTweets",
         "ReplyToTweet",
         "FollowingReplyTweet",
-        "Hashtags"
+        "Hashtags",
       ],
     }),
     getBookmarks: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/bookmarks/${skip}`,
-      providesTags: ["Bookmarks"],
+      providesTags: (result) => providesTagsList(result?.data, "Bookmarks"),
     }),
     getHomeTweets: builder.query<GetTweetsResponse, number>({
       query: (skip) => `home/tweets/${skip}`,
-      providesTags: ["HomeTweets"],
+      providesTags: (result) => providesTagsList(result?.data, "HomeTweets"),
     }),
     getFollowers: builder.query<GetFollowingAndFollowersResponse, string>({
       query: (userId) => `users/followers/${userId}/0`,
@@ -160,6 +163,17 @@ export const api = createApi({
       //   "ReplyToTweet",
       //   "FollowingReplyTweet",
       // ],
+      invalidatesTags: (result, error, tweetId) => [
+        { type: "Tweets", id: tweetId },
+        { type: "HomeTweets", id: tweetId },
+        { type: "Bookmarks", id: tweetId },
+        { type: "TweetsAndReplies", id: tweetId },
+        { type: "TweetsLikes", id: tweetId },
+        { type: "TweetsMedia", id: tweetId },
+        { type: "Tweet", id: tweetId },
+        { type: "ReplyToTweet", id: tweetId },
+        { type: "FollowingReplyTweet", id: tweetId },
+      ],
     }),
     saveTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -177,6 +191,17 @@ export const api = createApi({
       //   "ReplyToTweet",
       //   "FollowingReplyTweet",
       // ],
+      invalidatesTags: (result, error, tweetId) => [
+        { type: "Tweets", id: tweetId },
+        { type: "HomeTweets", id: tweetId },
+        { type: "Bookmarks", id: tweetId },
+        { type: "TweetsAndReplies", id: tweetId },
+        { type: "TweetsLikes", id: tweetId },
+        { type: "TweetsMedia", id: tweetId },
+        { type: "Tweet", id: tweetId },
+        { type: "ReplyToTweet", id: tweetId },
+        { type: "FollowingReplyTweet", id: tweetId },
+      ],
     }),
     retweetTweet: builder.mutation<string, string>({
       query: (tweetId) => ({
@@ -194,6 +219,16 @@ export const api = createApi({
       //   "ReplyToTweet",
       //   "FollowingReplyTweet",
       // ],
+      invalidatesTags: (result, error, tweetId) => [
+        { type: "Tweets", id: tweetId },
+        { type: "Bookmarks", id: tweetId },
+        { type: "TweetsAndReplies", id: tweetId },
+        { type: "TweetsLikes", id: tweetId },
+        { type: "TweetsMedia", id: tweetId },
+        { type: "Tweet", id: tweetId },
+        { type: "ReplyToTweet", id: tweetId },
+        { type: "FollowingReplyTweet", id: tweetId },
+      ],
     }),
     deleteTweet: builder.mutation({
       query: (tweetId: string) => ({
@@ -248,7 +283,7 @@ export const api = createApi({
       { tweetId: string; skip: number }
     >({
       query: ({ tweetId, skip }) => `tweets/replies/${tweetId}/${skip}`,
-      providesTags: ["ReplyToTweet"],
+      providesTags: (result) => providesTagsList(result?.data, "ReplyToTweet"),
     }),
     getFollowingReply: builder.query<
       GetTweetsResponse,
@@ -256,7 +291,7 @@ export const api = createApi({
     >({
       query: ({ tweetId, userId }) =>
         `tweets/followingReplies/${tweetId}/${userId}`,
-      providesTags: ["FollowingReplyTweet"],
+      providesTags: (result) => providesTagsList(result?.data, "FollowingReplyTweet"),
     }),
     getHashtags: builder.query<
       HashtagsResponseElement[],
@@ -264,7 +299,7 @@ export const api = createApi({
     >({
       query: ({ hashtagArrayLength, hashtagLimit }) =>
         `home/hashtags/${hashtagArrayLength}/${hashtagLimit}`,
-      providesTags:["Hashtags"],
+      providesTags: ["Hashtags"],
       keepUnusedDataFor: 60,
     }),
   }),
