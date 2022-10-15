@@ -122,6 +122,7 @@ interface ModalProps {
   modalTop?: string;
   modalLeft?: string;
   modalTransfrom?: string;
+  isCloseButtonDisabled?: boolean;
 }
 
 interface ProfileBoxProps
@@ -254,6 +255,8 @@ interface EditProfileProps {
       bio: string;
     }>
   >;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 interface ComponentLoaderProps {
@@ -381,7 +384,7 @@ interface TweetsDataListProps {
   getMoreTweets: () => Promise<void>;
   hasMoreTweets: boolean;
   variant?: "inTweet" | "tweetPage" | "tweetReply";
-  setHasMoreTweets: Dispatch<SetStateAction<boolean>>
+  setHasMoreTweets: Dispatch<SetStateAction<boolean>>;
 }
 
 interface GetCommentRepliesElement {
@@ -427,6 +430,6 @@ interface FollowerFollowingModalProps {
   GetFollowersData: GetFollowingAndFollowersResponse | undefined;
   followers: number;
   following: number;
-  shouldCloseOnOverlayClick:boolean;
-  modalTitle:string;
+  shouldCloseOnOverlayClick: boolean;
+  modalTitle: string;
 }

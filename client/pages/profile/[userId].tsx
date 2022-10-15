@@ -128,6 +128,7 @@ const Profile = ({ userId }: { userId: string }) => {
   const { isFallback } = useRouter();
   const [hasMoreTweets, setHasMoreTweets] = useState(true);
   const [isBannerLoading, setIsBannerLoading] = useState(true);
+  const [isEditButtonLoading, setIsEditButtonLoading] = useState(false);
 
   const getProfile = async () => {
     try {
@@ -338,33 +339,36 @@ const Profile = ({ userId }: { userId: string }) => {
         modalIsOpen={editProfileModalIsOpen}
         modalTitle={"Edit Profile"}
         shouldCloseOnOverlayClick={false}
+        isCloseButtonDisabled={isEditButtonLoading}
         closeIconOnClick={() => {
-          toast.dismiss();
-          toast(
-            (t) => (
-              <span>
-                <ToastMessage>Discard changes?</ToastMessage>
-                <SubToastMessage>
-                  This cannot be undone and you will lose your changes.
-                </SubToastMessage>
-                <DiscardButton
-                  onClick={() => {
-                    toast.dismiss(t.id);
-                    setEditProfileModalIsOpen(false);
-                  }}
-                >
-                  Discard
-                </DiscardButton>
-                <CancelButton onClick={() => toast.dismiss(t.id)}>
-                  Cancel
-                </CancelButton>
-              </span>
-            ),
-            {
-              duration: Infinity,
-              position: "top-right",
-            }
-          );
+          if (!isEditButtonLoading) {
+            toast.dismiss();
+            toast(
+              (t) => (
+                <span>
+                  <ToastMessage>Discard changes?</ToastMessage>
+                  <SubToastMessage>
+                    This cannot be undone and you will lose your changes.
+                  </SubToastMessage>
+                  <DiscardButton
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      setEditProfileModalIsOpen(false);
+                    }}
+                  >
+                    Discard
+                  </DiscardButton>
+                  <CancelButton onClick={() => toast.dismiss(t.id)}>
+                    Cancel
+                  </CancelButton>
+                </span>
+              ),
+              {
+                duration: Infinity,
+                position: "top-right",
+              }
+            );
+          }
         }}
       >
         <EditProfile
@@ -375,6 +379,8 @@ const Profile = ({ userId }: { userId: string }) => {
           bio={bio}
           setEditProfileModalIsOpen={setEditProfileModalIsOpen}
           setProfileData={setProfileData}
+          isLoading={isEditButtonLoading}
+          setIsLoading={setIsEditButtonLoading}
         />
       </CustomModal>
       <ContentContainer>

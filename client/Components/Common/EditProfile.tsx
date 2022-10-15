@@ -16,7 +16,11 @@ import {
 import ContentLoader from "./ContentLoader";
 import { TweetButton } from "./CreateTweet";
 
-const EditProfile = (props: EditProfileProps) => {
+const EditProfile = ({
+  isLoading,
+  setIsLoading,
+  ...props
+}: EditProfileProps) => {
   const InitialState = {
     name: props.name,
     username: props.username,
@@ -45,7 +49,6 @@ const EditProfile = (props: EditProfileProps) => {
   const cpasswordIconRef = useRef<HTMLInputElement>(null);
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
-  const [isLoading, setIsLoading] = useState(false);
 
   const requestConfig = {
     headers: {
