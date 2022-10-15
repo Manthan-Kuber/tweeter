@@ -37,7 +37,7 @@ Don't forget to ⭐ the repo
 - **NextJs** for client app and static site generator 
 - **Redux Toolkit** for client side state management
 - **Styled Components** for styling
-- **RTK Query** for handlng server side state (API consumption and handling)
+- **RTK Query** for handling server side state (API consumption and handling) and as data caching solution 
 - **Node Js + Express Js** for server side app 
 - **MongoDB** as no-sql database
 
@@ -50,9 +50,9 @@ Don't forget to ⭐ the repo
 - Infinite Scroll ♾️
 - Instagram like Modals (Using shallow routing)
 - SEO Friendly
+- Data Caching
 - Home Feed
 - Lazy Loading Images
-- Partially Cached Data
 - Responsive Layout
 - Signup / Login
 - Post tweets with media, Delete tweets, Reply on tweets
