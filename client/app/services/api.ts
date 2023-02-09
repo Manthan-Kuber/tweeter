@@ -27,7 +27,7 @@ function providesTagsList<R extends { _id: string }[], T extends string>(
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://tweeter-app-backend.herokuapp.com/",
+    baseUrl: "https://tweeter-uojf.onrender.com/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) headers.set("authorization", `Bearer ${token}`);
@@ -81,7 +81,8 @@ export const api = createApi({
       { userId: string; skip: number }
     >({
       query: ({ userId, skip }) => `profile/tweetsandreplies/${userId}/${skip}`,
-      providesTags: (result) => providesTagsList(result?.data, "TweetsAndReplies"),
+      providesTags: (result) =>
+        providesTagsList(result?.data, "TweetsAndReplies"),
     }),
     getProfileTweetsMedia: builder.query<
       GetTweetsResponse,
@@ -291,7 +292,8 @@ export const api = createApi({
     >({
       query: ({ tweetId, userId }) =>
         `tweets/followingReplies/${tweetId}/${userId}`,
-      providesTags: (result) => providesTagsList(result?.data, "FollowingReplyTweet"),
+      providesTags: (result) =>
+        providesTagsList(result?.data, "FollowingReplyTweet"),
     }),
     getHashtags: builder.query<
       HashtagsResponseElement[],
