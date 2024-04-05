@@ -1,7 +1,7 @@
 # Tweeter
 
 Tweeter is a Twitter like social media app. <br>
-Made with 💗 by **Rohit Shelke** and **Manthan Kuber**. <br>
+Made with 💗 by **Rohit Shelke**,**Manthan Kuber** and **Anway Agte**. <br>
 App Url: https://tweeter-self.vercel.app/ <br>
 Backend Repo Url (for latest changes) : https://github.com/RohitShelkeBot/tweeter-backend <br>
 (Due to certain constraints of hosting services we had to create a separate repo for our backend) <br>
